@@ -1,0 +1,6 @@
+-  name: Setup Elastic repo
+   yum_repository:
+     name: 'Copr repo for rocknsm-2.1 owned by @rocknsm'
+     description: 'Rockrepo'
+     baseurl: 'https://copr-be.cloud.fedoraproject.org/results/@rocknsm/rocknsm-2.1/epel-7-$basearch/'
+     gpgcheck: no
