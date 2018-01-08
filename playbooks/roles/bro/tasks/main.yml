@@ -104,7 +104,7 @@
 - name: Create bro networks.cfg
   copy:
     src: bro-networks.cfg
-    dest: /opt/bro/etc/networks.cfg
+    dest: /etc/bro/networks.cfg
     mode: 0644
     owner: root
     group: root
