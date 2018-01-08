@@ -95,7 +95,7 @@
 - name: Create Bro node.cfg
   template:
     src: templates/bro-node.cfg.j2
-    dest: "/opt/bro/etc/node.cfg"
+    dest: '/etc/bro/node.cfg'
     mode: 0644
     owner: root
     group: root
