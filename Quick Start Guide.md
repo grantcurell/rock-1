@@ -18,7 +18,6 @@ git clone -b <github_branch> <github_url> /opt/rock
 /opt/rock/bin/generate_defaults.sh
 ```
 5. Open /etc/rocknsm/config.yml and verify that the rock_monifs only has the monitoring interface listed
-6. Choose the playbook file to run. This will start installing software
 6. Run the deploy script and choose the appropriate option
 ```bash
 /opt/rock/bin/deploy_rock.sh
