@@ -190,7 +190,7 @@
     when: with_fsf and stat_result.stat.exists
 
   - name: 'Build list of enabled services'
-    raw: find /etc/systemd/system/rock.target.wants -type f -name "*.service"
+    raw: find /etc/systemd/system/rock.target.wants -type l -name "*.service"
     register: services_dir
   - debug: var=services_dir
 
