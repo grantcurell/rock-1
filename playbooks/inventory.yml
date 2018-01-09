@@ -65,7 +65,7 @@ all:
     with_suricata: true
     with_zookeeper: true
 
-    rocknsm_package_list:
+    centos_package_list:
       - java-1.8.0-openjdk-headless
       - jq
       - GeoIP
@@ -81,6 +81,27 @@ all:
       - nmap-ncat
       - logrotate
       - perl-LWP-Protocol-https
+      - perl-Sys-Syslog
+      - perl-Crypt-SSLeay
+      - perl-Archive-Tar
+      - easy-rsa
+
+    redhat_package_list:
+      - java-1.8.0-openjdk-headless
+      - jq
+      - GeoIP
+      - GeoIP-update
+      - tcpreplay
+      - tcpdump
+      - bats
+      - policycoreutils-python
+      - htop
+      - vim
+      - git
+      - tmux
+      - nmap-ncat
+      - logrotate
+      - perl-Crypt-SSLeay
       - perl-Sys-Syslog
       - perl-Crypt-SSLeay
       - perl-Archive-Tar

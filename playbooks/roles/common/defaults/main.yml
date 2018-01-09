@@ -14,7 +14,7 @@ rocknsm_local_baseurl: file:///srv/rocknsm
 #Common role variables
 common_mgnt_nets: "{{ rock_mgmt_nets }}"
 
-rocknsm_package_list:
+centos_package_list:
   - java-1.8.0-openjdk-headless
   - jq
   - GeoIP
@@ -30,6 +30,27 @@ rocknsm_package_list:
   - nmap-ncat
   - logrotate
   - perl-LWP-Protocol-https
+  - perl-Sys-Syslog
+  - perl-Crypt-SSLeay
+  - perl-Archive-Tar
+  - easy-rsa
+
+redhat_package_list:
+  - java-1.8.0-openjdk-headless
+  - jq
+  - GeoIP
+  - GeoIP-update
+  - tcpreplay
+  - tcpdump
+  - bats
+  - policycoreutils-python
+  - htop
+  - vim
+  - git
+  - tmux
+  - nmap-ncat
+  - logrotate
+  - perl-Crypt-SSLeay
   - perl-Sys-Syslog
   - perl-Crypt-SSLeay
   - perl-Archive-Tar
