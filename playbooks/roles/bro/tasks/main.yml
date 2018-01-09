@@ -3,6 +3,11 @@
 #######################################################
 ---
 
+- name: Install Bro package
+  yum:
+    name: bro
+    state: installed
+
 - name: Create bro group
   group:
     name: "{{ bro_group }}"
