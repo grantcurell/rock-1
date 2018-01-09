@@ -42,20 +42,20 @@
     dest: /etc/systemd/system/rock.target.wants/{{ item }}
     state: link
   with_items:
-    - {{ 'bro.service' if with_bro }}
-    - {{ 'snort.service' if with_snort }}
-    - {{ 'kafka.service' if with_kafka }}
-    - {{ 'lighttpd.service' if with_lighttpd }}
-    - {{ 'harbor.service' if with_harbor }}
-    - {{ 'docker.service' if with_docker }}
-    - {{ 'elasticsearch.service' if with_elasticsearch }}
-    - {{ 'zookeeper.service' if with_zookeeper }}
-    - {{ 'logstash.service' if with_logstash }}
-    - {{ 'portainer.service' if with_portainer }}
-    - {{ 'kibana.service' if with_kibana }}
-    - {{ 'suricata.service' if with_suricata }}
-    - {{ 'stenographer.service' if with_stenographer }}
-    - {{ 'fsf.service' if with_fsf }}
+    - "{{ 'bro.service' if with_bro }}
+    - "{{ 'snort.service' if with_snort }}"
+    - "{{ 'kafka.service' if with_kafka }}"
+    - "{{ 'lighttpd.service' if with_lighttpd }}"
+    - "{{ 'harbor.service' if with_harbor }}"
+    - "{{ 'docker.service' if with_docker }}"
+    - "{{ 'elasticsearch.service' if with_elasticsearch }}"
+    - "{{ 'zookeeper.service' if with_zookeeper }}"
+    - "{{ 'logstash.service' if with_logstash }}"
+    - "{{ 'portainer.service' if with_portainer }}"
+    - "{{ 'kibana.service' if with_kibana }}"
+    - "{{ 'suricata.service' if with_suricata }}"
+    - "{{ 'stenographer.service' if with_stenographer }}"
+    - "{{ 'fsf.service' if with_fsf }}"
 
 - name: 'Check default runlevel'
   command: systemctl get-default
