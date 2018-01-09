@@ -3,6 +3,8 @@
 ######################################################
 ---
 - hosts: all
+  vars:
+    sed_command: "'s/\[Service\]/\[Service\]\nRestart=on-failure/' /etc/systemd/system/rock.target.wants/*"
   tasks:
   - name: 'Render rock_start template'
     template:
@@ -190,7 +192,8 @@
     when: with_fsf and stat_result.stat.exists
 
   - name: 'Configure services to restart on failure'
-    command: sed "'s/\[Service\]/\[Service\]\nRestart=on-failure/' /etc/systemd/system/rock.target.wants/*"
+    command: sed "{{ sed_command }}"
+    debug: var=sed_command
 
   - name: 'Check default runlevel'
     command: systemctl get-default
