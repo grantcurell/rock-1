@@ -44,20 +44,20 @@
     dest: /etc/systemd/system/rock.target.wants/{{ item }}
     state: link
   with_items:
-    - "{{ 'bro.service' if with_bro }}"
-    - "{{ 'snort.service' if with_snort }}"
-    - "{{ 'kafka.service' if with_kafka }}"
-    - "{{ 'lighttpd.service' if with_lighttpd }}"
-    - "{{ 'harbor.service' if with_harbor }}"
-    - "{{ 'docker.service' if with_docker }}"
-    - "{{ 'elasticsearch.service' if with_elasticsearch }}"
-    - "{{ 'zookeeper.service' if with_zookeeper }}"
-    - "{{ 'logstash.service' if with_logstash }}"
-    - "{{ 'portainer.service' if with_portainer }}"
-    - "{{ 'kibana.service' if with_kibana }}"
-    - "{{ 'suricata.service' if with_suricata }}"
-    - "{{ 'stenographer.service' if with_stenographer }}"
-    - "{{ 'fsf.service' if with_fsf }}"
+    - "{{ 'bro.service' if with_bro else continue }}"
+    - "{{ 'snort.service' if with_snort else continue }}"
+    - "{{ 'kafka.service' if with_kafka else continue }}"
+    - "{{ 'lighttpd.service' if with_lighttpd else continue }}"
+    - "{{ 'harbor.service' if with_harbor else continue }}"
+    - "{{ 'docker.service' if with_docker else continue }}"
+    - "{{ 'elasticsearch.service' if with_elasticsearch else continue }}"
+    - "{{ 'zookeeper.service' if with_zookeeper else continue }}"
+    - "{{ 'logstash.service' if with_logstash else continue }}"
+    - "{{ 'portainer.service' if with_portainer else continue }}"
+    - "{{ 'kibana.service' if with_kibana else continue }}"
+    - "{{ 'suricata.service' if with_suricata else continue }}"
+    - "{{ 'stenographer.service' if with_stenographer else continue }}"
+    - "{{ 'fsf.service' if with_fsf else continue }}"
 
 - name: 'Check default runlevel'
   command: systemctl get-default
