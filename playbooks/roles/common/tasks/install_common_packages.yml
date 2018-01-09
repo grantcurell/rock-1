@@ -14,7 +14,7 @@
 - name: Configure packages for Red Hat
   set_fact:
     rocknsm_package_list: "{{ centos_package_list }} + [ '{{ item.pkg }}']"
-  when: (ansible_distribution == "Red Hat Enterprise Linux") and ((item.test is undefined) or (item.test))
+  when: (ansible_distribution == "RedHat") and ((item.test is undefined) or (item.test))
   with_items:
     - { pkg: chrony, state: installed }
 # TODO: These lines need to be moved to the sensor common
