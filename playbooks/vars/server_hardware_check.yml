@@ -1,0 +1,19 @@
+#############################################################
+############ Verify Server Hardware Requirements ############
+#############################################################
+---
+
+-  name: Elastic Hardware check
+    description: "Memory check"
+    assert:
+      that:
+        - ansible_memtotal_mb >= 2048
+        debug:
+          - msg: "Elastic minimum RAM requirements is 2GB"
+
+    description: "CPU Core check"
+    assert:
+      that:
+        - ansible_processor_cores >= 10
+        debug:
+          - msg: "Elastic minimum CPU core requirements is 10"
