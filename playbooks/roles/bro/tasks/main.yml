@@ -8,6 +8,17 @@
     name: bro
     state: installed
 
+- name: Install Bro plugin for af_packet
+  yum:
+    name: bro-plugin-af_packet
+    state: installed
+
+- name: Install Bro plugin for Kafka
+  yum:
+    name: bro-plugin-kafka
+    state: installed
+  when: with_kafka
+
 - name: Create bro group
   group:
     name: "{{ bro_group }}"
