@@ -200,6 +200,7 @@
   - name: 'Check current runlevel'
     command: systemctl is-active rock.target
     register: runlevel_active
+    failed_when: result.rc != 3
     ignore_errors: yes
 
   - name: 'Switch to rock.target'
