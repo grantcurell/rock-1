@@ -42,7 +42,7 @@
     dest: /etc/systemd/system/rock.target.wants/{{ item }}
     state: link
   with_items:
-    - "{{ 'bro.service' if with_bro }}
+    - "{{ 'bro.service' if with_bro }}"
     - "{{ 'snort.service' if with_snort }}"
     - "{{ 'kafka.service' if with_kafka }}"
     - "{{ 'lighttpd.service' if with_lighttpd }}"
