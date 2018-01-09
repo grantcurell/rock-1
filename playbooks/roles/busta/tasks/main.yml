@@ -1,6 +1,0 @@
--  name: Setup Rock Repo
-   yum_repository:
-     name: 'RockNSMRepo'
-     description: 'Rockrepo'
-     baseurl: 'https://copr-be.cloud.fedoraproject.org/results/@rocknsm/rocknsm-2.1/epel-7-$basearch/'
-     gpgcheck: no
