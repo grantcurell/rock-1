@@ -196,7 +196,7 @@
 
   - name: 'Configure services to restart on failure'
     lineinfile: dest={{item}} backup=yes state=present regexp="^[Install]" insertafter="^[Install]" line="\nRestart=on-failure"
-    with_items: services_dir.stdout_lines
+    with_items: {{services_dir.stdout_lines}}
 
   - name: 'Check default runlevel'
     command: systemctl get-default
