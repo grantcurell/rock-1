@@ -9,4 +9,4 @@
     gpgcheck: false
     gpgkey: "{{ rocknsm_gpgurl }}"
     name: rocknsm
-  tags: repo
+  tags: 'repo'
