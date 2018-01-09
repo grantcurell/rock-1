@@ -1,6 +1,7 @@
 # Defining Docker as a role dependency for Portainer (will always run in a docker container).
 # Duplicate roles allowed as a precaution because, frankly, I do not understand this sytem well enough yet. Remove if not needed.
 ---
-Dependencies:
+dependencies:
 - { role: docker }
 allow_duplicates: true
+...
