@@ -1,0 +1,134 @@
+######################################################
+################ Configure Runlevel ##################
+######################################################
+---
+- name: 'Render rock_start template'
+  template:
+    backup: yes
+    src: rock.target.j2
+    dest: /etc/systemd/system/rock.target
+    owner: root
+    group: root
+    mode: 0644
+
+- name: 'Create rock.target.wants'
+  file:
+    path: /etc/systemd/system/rock.target.wants
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: 'Add systemd target wants bro.service'
+  file:
+    src: /usr/lib/systemd/system/bro.service
+    dest: /etc/systemd/system/rock.target.wants/bro.service
+    state: link
+  when: with_bro
+
+- name: 'Add systemd target wants snort.service'
+  file:
+    src: /usr/lib/systemd/system/snort.service
+    dest: /etc/systemd/system/rock.target.wants/snort.service
+    state: link
+  when: with_snort
+
+- name: 'Add systemd target wants kafka.service'
+  file:
+    src: /usr/lib/systemd/system/kafka.service
+    dest: /etc/systemd/system/rock.target.wants/kafka.service
+    state: link
+  when: with_kafka
+
+- name: 'Add systemd target wants lighttpd.service'
+  file:
+    src: /usr/lib/systemd/system/lighttpd.service
+    dest: /etc/systemd/system/rock.target.wants/lighttpd.service
+    state: link
+  when: with_lighttpd
+
+- name: 'Add systemd target wants harbor.service'
+  file:
+    src: /usr/lib/systemd/system/harbor.service
+    dest: /etc/systemd/system/rock.target.wants/harbor.service
+    state: link
+  when: with_harbor
+
+- name: 'Add systemd target wants docker.service'
+  file:
+    src: /usr/lib/systemd/system/docker.service
+    dest: /etc/systemd/system/rock.target.wants/docker.service
+    state: link
+  when: with_docker
+
+- name: 'Add systemd target wants elasticsearch.service'
+  file:
+    src: /usr/lib/systemd/system/elasticsearch.service
+    dest: /etc/systemd/system/rock.target.wants/elasticsearch.service
+    state: link
+  when: with_elasticsearch
+
+- name: 'Add systemd target wants zookeeper.service'
+  file:
+    src: /usr/lib/systemd/system/zookeeper.service
+    dest: /etc/systemd/system/rock.target.wants/zookeeper.service
+    state: link
+  when: with_zookeeper
+
+- name: 'Add systemd target wants logstash.service'
+  file:
+    src: /usr/lib/systemd/system/logstash.service
+    dest: /etc/systemd/system/rock.target.wants/logstash.service
+    state: link
+  when: with_logstash
+
+- name: 'Add systemd target wants portainer.service'
+  file:
+    src: /usr/lib/systemd/system/portainer.service
+    dest: /etc/systemd/system/rock.target.wants/portainer.service
+    state: link
+  when: with_portainer
+
+- name: 'Add systemd target wants kibana.service'
+  file:
+    src: /usr/lib/systemd/system/kibana.service
+    dest: /etc/systemd/system/rock.target.wants/kibana.service
+    state: link
+  when: with_kibana
+
+- name: 'Add systemd target wants suricata.service'
+  file:
+    src: /usr/lib/systemd/system/suricata.service
+    dest: /etc/systemd/system/rock.target.wants/suricata.service
+    state: link
+  when: with_suricata
+
+- name: 'Add systemd target wants stenographer.service'
+  file:
+    src: /usr/lib/systemd/system/stenographer.service
+    dest: /etc/systemd/system/rock.target.wants/stenographer.service
+    state: link
+  when: with_stenographer
+
+- name: 'Add systemd target wants fsf.service'
+  file:
+    src: /usr/lib/systemd/system/fsf.service
+    dest: /etc/systemd/system/rock.target.wants/fsf.service
+    state: link
+  when: with_fsf
+
+- name: 'Check default runlevel'
+  command: systemctl get-default
+  register: runlevel
+
+- name: 'Change default runlevel'
+  command: systemctl set-default rock.target
+  when: runlevel.stdout != "rock.target"
+
+- name: 'Check current runlevel'
+  command: systemctl is-active rock.target
+  register: runlevel_active
+
+- name: 'Switch to rock.target'
+  command: systemctl isolate rock.target
+  when: runlevel_active.stdout != "active"
