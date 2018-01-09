@@ -192,10 +192,9 @@
   - name: 'Build list of enabled services'
     raw: find /etc/systemd/system/rock.target.wants -type l -name "*.service"
     register: services_dir
-  - debug: var=services_dir
 
   - name: 'Configure services to restart on failure'
-    lineinfile: dest={{item}} backup=yes state=present regexp="^[Install]" insertafter="^[Install]" line="\nRestart=on-failure"
+    lineinfile: dest={{item}} backup=yes state=present regexp="^[Install]" insertafter="^[Install]" line="Restart=on-failure"
     with_items:
       - "{{ services_dir.stdout_lines }}"
 
