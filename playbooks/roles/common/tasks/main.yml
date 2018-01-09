@@ -31,10 +31,12 @@
     mode: 0644
 
 - name: 'Create rock.target.wants'
-  file: path=/etc/systemd/system/rock.target.wants state=directory
-  owner: root
-  group: root
-  mode: 0755
+  file:
+    path: /etc/systemd/system/rock.target.wants
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
 
 - name: 'Add systemd target wants symlinks'
   file:
