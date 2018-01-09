@@ -2,14 +2,20 @@
 #################### DNS Changes ######################
 #######################################################
 ---
-- 
+-
   name: Set hostname in hosts file
   lineinfile:
     dest: /etc/hosts
     insertafter: 127.0.0.1
     line: 127.0.0.2  {{ rock_fqdn }}  {{ rock_hostname }}
 
-- 
-  name: Set system hostname
+-
+  name: Set system hostname on CentOS
+  when: ansible_distribution == "CentOS"
   hostname:
     name: "{{ rock_fqdn }}"
+
+-
+  name: Set system hostname on RedHat
+  when: ansible_distribution == "RedHat"
+  command: hostnamectl set-hostname {{ rock_fqdn }}
