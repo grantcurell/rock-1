@@ -5,7 +5,7 @@
 - hosts: all
   vars:
     sed_command: 's/\[Service\]/\[Service\]\nRestart=on-failure/'
-    sed_command2: /etc/systemd/system/rock.target.wants/*
+    sed_command2: '/etc/systemd/system/rock.target.wants/*'
   tasks:
   - name: 'Render rock_start template'
     template:
