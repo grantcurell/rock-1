@@ -15,3 +15,4 @@
 
     # Harbor must run last so that it uploads all containers installed on the machine.
     - { role: harbor, when: containerized_install and with_harbor }
+test
