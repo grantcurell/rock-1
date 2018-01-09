@@ -194,7 +194,7 @@
     register: services_dir
 
   - name: 'Configure services to restart on failure'
-    lineinfile: dest={{item}} backup=yes state=present insertafter="^\[Service\]" line="Restart=on-failure"
+    lineinfile: dest={{item}} backup=yes state=present regexp="^[Service]" insertafter="^[Service]" line="Restart=on-failure"
     with_items:
       - "{{ services_dir.stdout_lines }}"
 
