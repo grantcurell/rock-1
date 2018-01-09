@@ -244,8 +244,9 @@
 - name: Enable and start broctl
   service:
     name: bro
-    enabled: yes
-    enabled: "{{ enable_bro }}"
+    enabled: true
+    #This set of variables not yet implemented in this version
+    #enabled: "{{ enable_bro }}"
   when: with_bro
   notify: reload bro
 
