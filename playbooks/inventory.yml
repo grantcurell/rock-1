@@ -101,7 +101,6 @@ all:
       - tmux
       - nmap-ncat
       - logrotate
-      - perl-Crypt-SSLeay
       - perl-Sys-Syslog
       - perl-Crypt-SSLeay
       - perl-Archive-Tar
