@@ -1,0 +1,12 @@
+#############################################################
+############ Verify Sensor Hardware Requirements ############
+#############################################################
+---
+- assert:
+    that:
+      - ansible_memtotal_mb >= 4096
+    msg: "Not enough RAM"
+- assert:
+    that:
+      - ansible_processor_cores >= 10
+    msg: "Not enough CPU Cores"
