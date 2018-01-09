@@ -3,36 +3,35 @@
 [Unit]
 Description=Rock start script
 Requires=network.target
-
 {% if with_zookeeper %}
-Wants=zookeeper
+Wants=zookeeper.service
 {% endif %}
 {% if with_elasticsearch %}
-Wants=elasticsearch
+Wants=elasticsearch.service
 {% endif %}
 {% if with_kafka %}
-Wants=kafka
+Wants=kafka.service
 {% endif %}
 {% if with_logstash %}
-Wants=logstash
+Wants=logstash.service
 {% endif %}
 {% if with_kibana %}
-Wants=kibana
+Wants=kibana.service
 {% endif %}
 {% if with_suricata %}
-Wants=suricata
+Wants=suricata.service
 {% endif %}
 {% if with_snort %}
-Wants=snort
+Wants=snort.service
 {% endif %}
 {% if with_bro %}
-Wants=bro
+Wants=bro.service
 {% endif %}
 {% if with_stenographer %}
-Wants=stenographer
+Wants=stenographer.service
 {% endif %}
 {% if with_fsf %}
-Wants=fsf
+Wants=fsf.service
 {% endif %}
 
 [Service]
