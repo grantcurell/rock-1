@@ -190,7 +190,7 @@
     when: with_fsf and stat_result.stat.exists
 
   - name: 'Configure services to restart on failure'
-    command: sed 's/\[Service\]/\[Service\]\nRestart=on-failure/' /etc/systemd/system/rock.target.wants/*
+    command: sed "'s/\[Service\]/\[Service\]\nRestart=on-failure/' /etc/systemd/system/rock.target.wants/*"
 
   - name: 'Check default runlevel'
     command: systemctl get-default
