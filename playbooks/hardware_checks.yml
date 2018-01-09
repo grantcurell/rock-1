@@ -1,0 +1,10 @@
+######################################################
+############ Verify Hardware Requirements ############
+######################################################
+- hosts: servers
+  roles:
+    - hardware-checks
+
+- hosts: sensors
+  roles:
+    - hardware-checks

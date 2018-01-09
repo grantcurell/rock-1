@@ -4,7 +4,7 @@
 ---
 
 -  name: Elastic Hardware check
-    description: "Memory check"
+   description: "Memory check"
     assert:
       that:
         - ansible_memtotal_mb >= 2048
