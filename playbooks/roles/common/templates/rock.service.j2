@@ -35,7 +35,8 @@ Wants=fsf.service
 {% endif %}
 
 [Service]
-Type=simple
+Type=oneshot
+RemainAfterExit=true
 ExecStart=/usr/local/bin/rock_start
 ExecStop=/usr/local/bin/rock_stop
 ExecReload=/usr/local/bin/rock_stop && /usr/local/bin/rock_start
