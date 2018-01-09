@@ -34,3 +34,13 @@ Wants=stenographer
 {% if with_fsf %}
 Wants=fsf
 {% endif %}
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/rock_start
+ExecStop=/usr/local/bin/rock_stop
+ExecReload=/usr/local/bin/rock_stop && /usr/local/bin/rock_start
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
