@@ -38,26 +38,103 @@
     group: root
     mode: 0755
 
-- name: 'Add systemd target wants symlinks'
+- name: 'Add systemd target wants bro.service'
   file:
-    src: /usr/lib/systemd/system/{{ item }}
-    dest: /etc/systemd/system/rock.target.wants/{{ item }}
+    src: /usr/lib/systemd/system/bro.service
+    dest: /etc/systemd/system/rock.target.wants/bro.service
     state: link
-  with_items:
-    - "{{ 'bro.service' if with_bro else continue }}"
-    - "{{ 'snort.service' if with_snort else continue }}"
-    - "{{ 'kafka.service' if with_kafka else continue }}"
-    - "{{ 'lighttpd.service' if with_lighttpd else continue }}"
-    - "{{ 'harbor.service' if with_harbor else continue }}"
-    - "{{ 'docker.service' if with_docker else continue }}"
-    - "{{ 'elasticsearch.service' if with_elasticsearch else continue }}"
-    - "{{ 'zookeeper.service' if with_zookeeper else continue }}"
-    - "{{ 'logstash.service' if with_logstash else continue }}"
-    - "{{ 'portainer.service' if with_portainer else continue }}"
-    - "{{ 'kibana.service' if with_kibana else continue }}"
-    - "{{ 'suricata.service' if with_suricata else continue }}"
-    - "{{ 'stenographer.service' if with_stenographer else continue }}"
-    - "{{ 'fsf.service' if with_fsf else continue }}"
+  when: with_bro
+
+- name: 'Add systemd target wants snort.service'
+  file:
+    src: /usr/lib/systemd/system/snort.service
+    dest: /etc/systemd/system/rock.target.wants/snort.service
+    state: link
+  when: with_snort
+
+- name: 'Add systemd target wants kafka.service'
+  file:
+    src: /usr/lib/systemd/system/kafka.service
+    dest: /etc/systemd/system/rock.target.wants/kafka.service
+    state: link
+  when: with_kafka
+
+- name: 'Add systemd target wants lighttpd.service'
+  file:
+    src: /usr/lib/systemd/system/lighttpd.service
+    dest: /etc/systemd/system/rock.target.wants/lighttpd.service
+    state: link
+  when: with_lighttpd
+
+- name: 'Add systemd target wants harbor.service'
+  file:
+    src: /usr/lib/systemd/system/harbor.service
+    dest: /etc/systemd/system/rock.target.wants/harbor.service
+    state: link
+  when: with_harbor
+
+- name: 'Add systemd target wants docker.service'
+  file:
+    src: /usr/lib/systemd/system/docker.service
+    dest: /etc/systemd/system/rock.target.wants/docker.service
+    state: link
+  when: with_docker
+
+- name: 'Add systemd target wants elasticsearch.service'
+  file:
+    src: /usr/lib/systemd/system/elasticsearch.service
+    dest: /etc/systemd/system/rock.target.wants/elasticsearch.service
+    state: link
+  when: with_elasticsearch
+
+- name: 'Add systemd target wants zookeeper.service'
+  file:
+    src: /usr/lib/systemd/system/zookeeper.service
+    dest: /etc/systemd/system/rock.target.wants/zookeeper.service
+    state: link
+  when: with_zookeeper
+
+- name: 'Add systemd target wants logstash.service'
+  file:
+    src: /usr/lib/systemd/system/logstash.service
+    dest: /etc/systemd/system/rock.target.wants/logstash.service
+    state: link
+  when: with_logstash
+
+- name: 'Add systemd target wants portainer.service'
+  file:
+    src: /usr/lib/systemd/system/portainer.service
+    dest: /etc/systemd/system/rock.target.wants/portainer.service
+    state: link
+  when: with_portainer
+
+- name: 'Add systemd target wants kibana.service'
+  file:
+    src: /usr/lib/systemd/system/kibana.service
+    dest: /etc/systemd/system/rock.target.wants/kibana.service
+    state: link
+  when: with_kibana
+
+- name: 'Add systemd target wants suricata.service'
+  file:
+    src: /usr/lib/systemd/system/suricata.service
+    dest: /etc/systemd/system/rock.target.wants/suricata.service
+    state: link
+  when: with_suricata
+
+- name: 'Add systemd target wants stenographer.service'
+  file:
+    src: /usr/lib/systemd/system/stenographer.service
+    dest: /etc/systemd/system/rock.target.wants/stenographer.service
+    state: link
+  when: with_stenographer
+
+- name: 'Add systemd target wants fsf.service'
+  file:
+    src: /usr/lib/systemd/system/fsf.service
+    dest: /etc/systemd/system/rock.target.wants/fsf.service
+    state: link
+  when: with_fsf
 
 - name: 'Check default runlevel'
   command: systemctl get-default
