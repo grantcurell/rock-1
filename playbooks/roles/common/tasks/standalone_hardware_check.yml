@@ -5,12 +5,12 @@
 
 - assert:
     that:
-      - ansible_memtotal_mb >= 4096
+      - ansible_memtotal_mb >= {{ 4096 * 0.90 }}
     msg: "Not enough RAM (4GB+ required)! Aborting standalone install."
   when: standalone is defined and standalone
 
 - assert:
     that:
-      - ansible_processor_cores >= 4
+      - ({{ ansible_processor_cores }} * {{ ansible_processor_count }}) >= 4
     msg: "Not enough CPU Cores (4+ required)! Aborting standalone install."
   when: standalone is defined and standalone

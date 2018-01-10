@@ -5,12 +5,12 @@
 
 - assert:
     that:
-      - ansible_memtotal_mb >= 2048
+      - ansible_memtotal_mb >= {{ 2048 * 0.90 }}
     msg: "Not enough RAM (2GB+ required)! Aborting sensor install."
   when: sensorlocal is defined and sensorlocal
 
 - assert:
     that:
-      - ansible_processor_cores >= 2
+      - ({{ ansible_processor_cores }} * {{ ansible_processor_count }}) >= 2
     msg: "Not enough CPU Cores (2+ required)! Aborting sensor install."
   when: sensorlocal is defined and sensorlocal
