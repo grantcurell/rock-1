@@ -39,27 +39,13 @@
       group: root
       mode: 0755
 
-  - name: 'Checking for services'
-    find:
-      paths: "/usr/lib/systemd/system/{{ item }}.service"
-    register: stat_result_usr
-    find:
-      paths: "/etc/systemd/system/{{ item }}.service"
-    register: stat_result_etc
-    with_items: "{{ services }}"
-  - debug:
-      var: stat_result_etc
-      var: stat_result_usr
+  - name: 'Find services'
+    stat: {{ item }}
 
-  - name: 'Add systemd target wants'
-    file:
-      src: "{{ item.1 }}"
-      dest: /etc/systemd/system/rock.target.wants/{{ item.0 }}.service
-      state: link
-    when: with_"{{ item.0 }}" and stat_result.stat.exists
-    with_together:
-      - "{{ services }}"
-      - "{{ stat_result.path }}"
+  - name: 'Add systemd rock.target wants'
+    file: src={{ lookup('first_found', ('/etc/systemd/system/' + item + '.service', '/usr/lib/systemd/system/' + item + '.service')) }}.service dest=/etc/systemd/system/rock.target.wants/{{ item }}.service state=link
+    with_items: "{{ services }}"
+    when: with_"{{ item }}"
 
   - name: 'Check default runlevel'
     command: systemctl get-default
