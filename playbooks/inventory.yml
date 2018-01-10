@@ -55,7 +55,7 @@ all:
     with_harbor: false
     with_kafka: true
     with_kibana: true
-    with_lighttpd: false
+    with_lighttpd: true
     with_logstash: true
     with_nginx: false
     with_portainer: true
