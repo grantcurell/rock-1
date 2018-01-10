@@ -49,6 +49,7 @@
       dest: /etc/systemd/system/rock.target.wants/{{ item }}.service
       state: link
     with_items: "{{ services }}"
+    ignore_errors: yes
 
   - name: 'Check default runlevel'
     command: systemctl get-default
