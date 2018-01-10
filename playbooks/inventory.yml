@@ -52,12 +52,12 @@ all:
     with_elk: false
     with_filebeats: true
     with_fsf: true
-    with_harbor: true
+    with_harbor: false
     with_kafka: true
     with_kibana: true
     with_lighttpd: true
     with_logstash: true
-    with_nginx: true
+    with_nginx: false
     with_portainer: true
     with_pulledpork: true
     with_snort: false
