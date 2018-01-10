@@ -40,9 +40,8 @@
       mode: 0755
 
   - name: 'Checking for services'
-    stat:
-      path: /usr/lib/systemd/system/{{ item }}.service
-      path: /etc/systemd/system/{{ item }}.service
+    find:
+      paths: /usr/lib/systemd/system/{{ item }}.service /etc/systemd/system/{{ item }}.service
     register: stat_result
     with_items: "{{ services }}"
   - debug:
