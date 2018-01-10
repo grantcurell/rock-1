@@ -3,9 +3,10 @@
 ######################################################
 ---
 - hosts: all
-  vars:
-    services:
-    # {% if with_bro %}
+  -name: 'Set up services var'
+    set_fact:
+      services: []
+{% services += [ 'bro'] if with_bro %}
       - bro
     - {% if with_snort %}
       - "snort"
