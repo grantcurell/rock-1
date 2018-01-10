@@ -20,11 +20,11 @@
     - suricata
     - stenographer
     - fsf
-  - debug:
-      var: services
 
   tasks:
   - name: 'Render rock_start template'
+    debug:
+      var: services
     template:
       backup: yes
       src: rock.target.j2
