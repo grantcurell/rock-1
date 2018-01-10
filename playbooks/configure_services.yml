@@ -44,8 +44,8 @@
       src: "{{ lookup('first_found', dict(files=['/etc/systemd/system/' + item + '.service', '/usr/lib/systemd/system/' + item + '.service'], skip=true)) }}"
       dest: /etc/systemd/system/rock.target.wants/{{ item }}.service
       state: link
-    with_items: "{{ services }}"
     when: "'with_' + '{{ item }}'"
+    with_items: "{{ services }}"
 
   - name: 'Check default runlevel'
     command: systemctl get-default
