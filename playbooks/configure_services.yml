@@ -39,9 +39,6 @@
       group: root
       mode: 0755
 
-  - name: 'Find services'
-    stat: {{ item }}
-
   - name: 'Add systemd rock.target wants'
     file: src={{ lookup('first_found', ('/etc/systemd/system/' + item + '.service', '/usr/lib/systemd/system/' + item + '.service')) }}.service dest=/etc/systemd/system/rock.target.wants/{{ item }}.service state=link
     with_items: "{{ services }}"
