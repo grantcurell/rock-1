@@ -2,10 +2,9 @@
 
 version: '2'
 services:
-  lighttpd:
-    image: 'rocknsm/lighttpd'
-    container_name: 'lighttpd'
-    privileged: true # so far this is a requirment for lighttpd to work. Feel free to figure out a more secure soultion to get rid of this 
+  haproxy:
+    image: 'haproxy:latest'
+    container_name: 'haproxy'
     networks:
       rocknsm_outside:
         aliases: 
@@ -14,12 +13,13 @@ services:
         aliases: 
           - 'proxy'
     ports:
-      - "0.0.0.0:{{ lighttpd_firewall_port }}:{{ lighttpd_port }}"
+      - "0.0.0.0:80:80"
+      - "0.0.0.0:443:443"
+      - "0.0.0.0:{{ elastic_lb_port }}:{{ elastic_lb_port }}"
     restart: "always"
     volumes: 
-      # Lighttpd volumes 
-      - "{{ rocknsm_dir }}/lighttpd/var/www:/var/www/"
-      - "{{ rocknsm_dir }}/lighttpd/etc/lighttpd/:/etc/lighttpd/"
+      - "{{ rocknsm_dir }}/haproxy/haproxy.conf:/usr/local/etc/haproxy/haproxy.cfg"
+      - "{{ rocknsm_dir }}/haproxy/ssl.pem:/etc/ssl/private/haproxy.ssl.pem"
       # Systemd volumes
       - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
     environment:
