@@ -5,8 +5,8 @@
 - hosts: all
   vars:
     services:
-    - {% if with_bro %}
-      - "bro"
+    # {% if with_bro %}
+      - bro
     - {% if with_snort %}
       - "snort"
     - {% if with_kafka %}
