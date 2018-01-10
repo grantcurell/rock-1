@@ -1,0 +1,16 @@
+#############################################################
+############ Verify Sensor Hardware Requirements ############
+#############################################################
+---
+
+- assert:
+    that:
+      - ansible_memtotal_mb >= 2048
+    msg: "Not enough RAM (2GB+ required)! Aborting sensor install."
+  when: sensorlocal is defined and sensorlocal
+
+- assert:
+    that:
+      - ansible_processor_cores >= 2
+    msg: "Not enough CPU Cores (2+ required)! Aborting sensor install."
+  when: sensorlocal is defined and sensorlocal
