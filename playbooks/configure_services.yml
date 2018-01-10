@@ -3,58 +3,27 @@
 ######################################################
 ---
 - hosts: all
-  tasks:
-  - name: 'Set up services var'
-    set_fact:
-      services: []
-    set_fact:
-      services: "{{ services }} + [ 'bro' ]"
-    when: with_bro
-    set_fact:
-      services: "{{ services }} + [ 'snort' ]"
-    when: with_snort
-    set_fact:
-      services: "{{ services }} + [ 'kafka' ]"
-    when: with_kafka
-    set_fact:
-      services: "{{ services }} + [ 'lighttpd' ]"
-    when: with_lighttpd
-    set_fact:
-      services: "{{ services }} + [ 'harbor' ]"
-    when: with_harbor
-    set_fact:
-      services: "{{ services }} + [ 'docker' ]"
-    when: with_docker
-    set_fact:
-      services: "{{ services }} + [ 'docket' ]"
-    when: with_docket
-    set_fact:
-      services: "{{ services }} + [ 'elasticsearch' ]"
-    when: with_elasticsearch
-    set_fact:
-      services: "{{ services }} + [ 'zookeeper' ]"
-    when: with_zookeeper
-    set_fact:
-      services: "{{ services }} + [ 'logstash' ]"
-    when: with_logstash
-    set_fact:
-      services: "{{ services }} + [ 'portainer' ]"
-    when: with_portainer
-    set_fact:
-      services: "{{ services }} + [ 'kibana' ]"
-    when: with_kibana
-    set_fact:
-      services: "{{ services }} + [ 'suricata' ]"
-    when: with_suricata
-    set_fact:
-      services: "{{ services }} + [ 'stenographer' ]"
-    when: with_stenographer
-    set_fact:
-      services: "{{ services }} + [ 'fsf' ]"
-    when: with_fsf
+  vars:
+    services:
+      - {{ with_bro | ternary('bro') }}
+      - snort
+      - kafka
+      - lighttpd
+      - harbor
+      - docker
+      - docket
+      - elasticsearch
+      - zookeeper
+      - logstash
+      - portainer
+      - kibana
+      - suricata
+      - stenographer
+      - fsf
   - debug:
       var: services
 
+  tasks:
   - name: 'Render rock_start template'
     template:
       backup: yes
