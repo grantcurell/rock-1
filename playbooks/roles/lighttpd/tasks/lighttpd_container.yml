@@ -42,13 +42,13 @@
   when: rock_online_install
 
 - name: 'Install Lighttpd service file'
-  template: 
-    src: 'lighttpd.service.j2' 
-    dest: '/etc/systemd/system/lighttpd.service' 
-    mode: 0644 
-    owner: root 
+  template:
+    src: 'lighttpd.service.j2'
+    dest: '/etc/systemd/system/lighttpd.service'
+    mode: 0644
+    owner: root
     group: root
-  notify: reload systemd  
+  notify: reload systemd
 
 - name: 'Copy Lighttpd compose file'
   template:
@@ -82,15 +82,22 @@
     owner: root
     group: root
 
-- name: 'Run lighttpd-compose.yml' 
-  docker_service: 
-    project_src: "{{ rocknsm_dir }}/lighttpd/" 
-    files: 'lighttpd-compose.yml' 
-    state: present 
+- name: 'Run lighttpd-compose.yml'
+  docker_service:
+    project_src: "{{ rocknsm_dir }}/lighttpd/"
+    files: 'lighttpd-compose.yml'
+    state: present
 
 - name: 'Enable Lighttpd service'
-  service: 
+  service:
     name: 'lighttpd'
     enabled: yes
-...
 
+# Allows http to connect to the proxy (ie a another firewall was blocking us)
+- name: 'Set SELinux Booleans'
+  seboolean:
+    name: 'httpd_can_network_connect'
+    state: yes
+    persistent: yes
+
+...
