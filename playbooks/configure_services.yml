@@ -22,9 +22,10 @@
     - fsf
 
   tasks:
-  - name: 'Render rock_start template'
+  - name: 'stupid debug'
     debug:
       var: services
+  - name: 'Render rock_start template'
     template:
       backup: yes
       src: rock.target.j2
