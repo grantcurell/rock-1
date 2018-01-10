@@ -5,7 +5,7 @@
 - hosts: all
   vars:
     services:
-      - {{ with_bro | ternary('bro') }}
+      - "{{ with_bro | ternary('bro') }}"
       - snort
       - kafka
       - lighttpd
