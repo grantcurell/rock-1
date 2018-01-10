@@ -20,8 +20,8 @@
       - suricata
       - stenographer
       - fsf
-- debug:
-    var: services
+  - debug:
+      var: services
 
   tasks:
   - name: 'Render rock_start template'
