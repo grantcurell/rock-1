@@ -4,41 +4,41 @@
 ---
 - hosts: all
   tasks:
-    - name: 'Set up services var'
-      set_fact:
-        services: []
-        services: "{{ services }} + [ 'bro' ]"
-        when: with_bro
-        services: "{{ services }} + [ 'snort' ]"
-        when: with_snort
-        services: "{{ services }} + [ 'kafka' ]"
-        when: with_kafka
-        services: "{{ services }} + [ 'lighttpd' ]"
-        when: with_lighttpd
-        services: "{{ services }} + [ 'harbor' ]"
-        when: with_harbor
-        services: "{{ services }} + [ 'docker' ]"
-        when: with_docker
-        services: "{{ services }} + [ 'docket' ]"
-        when: with_docket
-        services: "{{ services }} + [ 'elasticsearch' ]"
-        when: with_elasticsearch
-        services: "{{ services }} + [ 'zookeeper' ]"
-        when: with_zookeeper
-        services: "{{ services }} + [ 'logstash' ]"
-        when: with_logstash
-        services: "{{ services }} + [ 'portainer' ]"
-        when: with_portainer
-        services: "{{ services }} + [ 'kibana' ]"
-        when: with_kibana
-        services: "{{ services }} + [ 'suricata' ]"
-        when: with_suricata
-        services: "{{ services }} + [ 'stenographer' ]"
-        when: with_stenographer
-        services: "{{ services }} + [ 'fsf' ]"
-        when: with_fsf
-    - debug:
-        var: services
+  - name: 'Set up services var'
+    set_fact:
+      services: []
+      services: "{{ services }} + [ 'bro' ]"
+      when: with_bro
+      services: "{{ services }} + [ 'snort' ]"
+      when: with_snort
+      services: "{{ services }} + [ 'kafka' ]"
+      when: with_kafka
+      services: "{{ services }} + [ 'lighttpd' ]"
+      when: with_lighttpd
+      services: "{{ services }} + [ 'harbor' ]"
+      when: with_harbor
+      services: "{{ services }} + [ 'docker' ]"
+      when: with_docker
+      services: "{{ services }} + [ 'docket' ]"
+      when: with_docket
+      services: "{{ services }} + [ 'elasticsearch' ]"
+      when: with_elasticsearch
+      services: "{{ services }} + [ 'zookeeper' ]"
+      when: with_zookeeper
+      services: "{{ services }} + [ 'logstash' ]"
+      when: with_logstash
+      services: "{{ services }} + [ 'portainer' ]"
+      when: with_portainer
+      services: "{{ services }} + [ 'kibana' ]"
+      when: with_kibana
+      services: "{{ services }} + [ 'suricata' ]"
+      when: with_suricata
+      services: "{{ services }} + [ 'stenographer' ]"
+      when: with_stenographer
+      services: "{{ services }} + [ 'fsf' ]"
+      when: with_fsf
+  - debug:
+      var: services
 
   - name: 'Render rock_start template'
     template:
