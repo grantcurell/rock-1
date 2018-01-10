@@ -7,35 +7,35 @@
     - name: 'Set up services var'
       set_fact:
         services: []
-        services: {{ services }} + [ 'bro' ]
+        services: "{{ services }} + [ 'bro' ]"
         when: with_bro
-        services: {{ services }} + [ 'snort' ]
+        services: "{{ services }} + [ 'snort' ]"
         when: with_snort
-        services: {{ services }} + [ 'kafka' ]
+        services: "{{ services }} + [ 'kafka' ]"
         when: with_kafka
-        services: {{ services }} + [ 'lighttpd' ]
+        services: "{{ services }} + [ 'lighttpd' ]"
         when: with_lighttpd
-        services: {{ services }} + [ 'harbor' ]
+        services: "{{ services }} + [ 'harbor' ]"
         when: with_harbor
-        services: {{ services }} + [ 'docker' ]
+        services: "{{ services }} + [ 'docker' ]"
         when: with_docker
-        services: {{ services }} + [ 'docket' ]
+        services: "{{ services }} + [ 'docket' ]"
         when: with_docket
-        services: {{ services }} + [ 'elasticsearch' ]
+        services: "{{ services }} + [ 'elasticsearch' ]"
         when: with_elasticsearch
-        services: {{ services }} + [ 'zookeeper' ]
+        services: "{{ services }} + [ 'zookeeper' ]"
         when: with_zookeeper
-        services: {{ services }} + [ 'logstash' ]
+        services: "{{ services }} + [ 'logstash' ]"
         when: with_logstash
-        services: {{ services }} + [ 'portainer' ]
+        services: "{{ services }} + [ 'portainer' ]"
         when: with_portainer
-        services: {{ services }} + [ 'kibana' ]
+        services: "{{ services }} + [ 'kibana' ]"
         when: with_kibana
-        services: {{ services }} + [ 'suricata' ]
+        services: "{{ services }} + [ 'suricata' ]"
         when: with_suricata
-        services: {{ services }} + [ 'stenographer' ]
+        services: "{{ services }} + [ 'stenographer' ]"
         when: with_stenographer
-        services: {{ services }} + [ 'fsf' ]
+        services: "{{ services }} + [ 'fsf' ]"
         when: with_fsf
     - debug:
         var: services
