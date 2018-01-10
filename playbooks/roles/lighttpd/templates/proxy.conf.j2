@@ -8,7 +8,7 @@ server.modules += ("mod_proxy")
 #  )))
 #}
 
-url.rewrite-once = ("^/kibana(.*)" => "/$1")
+#url.rewrite-once = ("^/kibana(.*)" => "/$1")
 #=======================
 # Kibana forward
 $HTTP["url"] =~ "^/kibana" {
@@ -19,7 +19,7 @@ $HTTP["url"] =~ "^/kibana" {
   )))
 }
 
-url.rewrite-once = ("^/portainer(.*)" => "/$1")
+#url.rewrite-once = ("^/portainer(.*)" => "/$1")
 #=======================
 # Portainer forward
 $HTTP["url"] =~ "^/portainer" {
