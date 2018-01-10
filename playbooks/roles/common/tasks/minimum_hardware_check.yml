@@ -1,0 +1,50 @@
+#############################################################
+########### Verify Minimum Hardware Requirements ############
+#############################################################
+---
+
+- hosts: all
+  pre_tasks:
+    - name: Verify minimum memory requirements for standalone install
+    - assert:
+        that:
+          - ansible_memtotal_mb >= {{ 4096 * 0.90 }}
+        msg: "Not enough RAM (4GB+ required)! Aborting standalone install."
+      when: standalone is defined and standalone
+
+    - name: Verify minimum CPU core requirements for standalone install
+    - assert:
+        that:
+          - ({{ ansible_processor_cores }} * {{ ansible_processor_count }}) >= 4
+        msg: "Not enough CPU Cores (4+ required)! Aborting standalone install."
+      when: standalone is defined and standalone
+
+  pre_tasks:
+    - name: Verify minimum memory requirements of server install
+    - assert:
+        that:
+          - ansible_memtotal_mb >= {{ 2048 * 0.90 }}
+        msg: "Not enough RAM (2GB+ required)! Aborting server install."
+      when: serverlocal is defined and serverlocal
+
+    - name: Verify minimum CPU core requirements for sensor install
+    - assert:
+        that:
+          - ({{ ansible_processor_cores }} * {{ ansible_processor_count }}) >= 2
+        msg: "Not enough CPU Cores (2+ required)! Aborting server install."
+      when: serverlocal is defined and serverlocal
+
+  pre_tasks:
+    - name: Verify minimum memory requirements for sensor install
+    - assert:
+        that:
+          - ansible_memtotal_mb >= {{ 2048 * 0.90 }}
+        msg: "Not enough RAM (2GB+ required)! Aborting sensor install."
+      when: sensorlocal is defined and sensorlocal
+
+    - name: Verify minimum CPU core requirements for sensor install
+    - assert:
+        that:
+          - ({{ ansible_processor_cores }} * {{ ansible_processor_count }}) >= 2
+        msg: "Not enough CPU Cores (2+ required)! Aborting sensor install."
+      when: sensorlocal is defined and sensorlocal
