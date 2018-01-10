@@ -30,7 +30,7 @@
   replace:
     path: "{{ rocknsm_dir }}/harbor/docker-compose.yml"
     regexp: '(\s+)80:80(.*)$'
-    replace: "\\1{{ harbor_firewall_port }}:{{ harbor_port }}\\2" #this doesn't work because the variable name is not being expanded. Double qoutes doesn't seem to work either. NEEDS TO BE FIXED!
+    replace: '\1{{ harbor_firewall_port }}:{{ harbor_port }}\2' #this doesn't work because the variable name is not being expanded. Double qoutes doesn't seem to work either. NEEDS TO BE FIXED!
 
 # Depending on the OS there may already be a httpd running
 - name: 'Check if pre-existing httpd service exists'
