@@ -6,35 +6,35 @@
   vars:
     services:
     {% if with_bro %}
-    - bro
+    - "bro"
     {% if with_snort %}
-    - snort
+    - "snort"
     {% if with_kafka %}
-    - kafka
+    - "kafka"
     {% if with_lighttpd %}
-    - lighttpd
+    - "lighttpd"
     {% if with_harbor %}
-    - harbor
+    - "harbor"
     {% if with_docker %}
-    - docker
+    - "docker"
     {% if with_docket %}
-    - docket
+    - "docket"
     {% if with_elasticsearch %}
-    - elasticsearch
+    - "elasticsearch"
     {% if with_zookeeper %}
-    - zookeeper
+    - "zookeeper"
     {% if with_logstash %}
-    - logstash
+    - "logstash"
     {% if with_portainer %}
-    - portainer
+    - "portainer"
     {% if with_kibana %}
-    - kibana
+    - "kibana"
     {% if with_suricata %}
-    - suricata
+    - "suricata"
     {% if with_stenographer %}
-    - stenographer
+    - "stenographer"
     {% if with_fsf %}
-    - fsf
+    - "fsf"
   - debug:
       var: services
 
