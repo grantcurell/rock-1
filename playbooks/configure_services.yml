@@ -3,7 +3,28 @@
 ######################################################
 ---
 - hosts: all
+  vars:
+    services:
+    - "{{ with_bro | ternary('bro', omit) }}"
+    - "{{ with_snort | ternary('snort', omit) }}"
+    - "{{ with_kafka | ternary('kafka', omit) }}"
+    - "{{ with_lighttpd | ternary('lighttpd', omit) }}"
+    - "{{ with_harbor| ternary('harbor', omit) }}"
+    - "{{ with_docker | ternary('docker', omit) }}"
+    - "{{ with_docket | ternary('docket', omit) }}"
+    - "{{ with_elasticsearch | ternary('elasticsearch', omit) }}"
+    - "{{ with_zookeeper | ternary('zookeeper', omit) }}"
+    - "{{ with_logstash | ternary('logstash', omit) }}"
+    - "{{ with_portainer | ternary('portainer', omit) }}"
+    - "{{ with_kibana | ternary('kibana', omit) }}"
+    - "{{ with_suricata | ternary('suricata', omit) }}"
+    - "{{ with_stenographer | ternary('stenographer', omit) }}"
+    - "{{ with_fsf | ternary('fsf', omit) }}"
+
   tasks:
+  - set_fact:
+      services: "{{ services | difference(omit) }}"
+
   - name: 'Render rock_start template'
     template:
       backup: yes
@@ -21,173 +42,13 @@
       group: root
       mode: 0755
 
-  - name: 'Checking for bro.service'
-    stat:
-      path: /usr/lib/systemd/system/bro.service
-    register: stat_result
-
-  - name: 'Add systemd target wants bro.service'
+  - name: 'Add systemd rock.target wants'
     file:
-      src: /usr/lib/systemd/system/bro.service
-      dest: /etc/systemd/system/rock.target.wants/bro.service
+      src: "{{ lookup('first_found', dict(files=['/etc/systemd/system/' + item + '.service', '/usr/lib/systemd/system/' + item + '.service'], skip=true)) }}"
+      dest: /etc/systemd/system/rock.target.wants/{{ item }}.service
       state: link
-    when: with_bro and stat_result.stat.exists
-
-  - name: 'Checking for snort.service'
-    stat:
-      path: /usr/lib/systemd/system/snort.service
-    register: stat_result
-
-  - name: 'Add systemd target wants snort.service'
-    file:
-      src: /usr/lib/systemd/system/snort.service
-      dest: /etc/systemd/system/rock.target.wants/snort.service
-      state: link
-    when: with_snort and stat_result.stat.exists
-
-  - name: 'Checking for kafka.service'
-    stat:
-      path: /usr/lib/systemd/system/kafka.service
-    register: stat_result
-
-  - name: 'Add systemd target wants kafka.service'
-    file:
-      src: /usr/lib/systemd/system/kafka.service
-      dest: /etc/systemd/system/rock.target.wants/kafka.service
-      state: link
-    when: with_kafka and stat_result.stat.exists
-
-  - name: 'Checking for lighttpd.service'
-    stat:
-      path: /usr/lib/systemd/system/lighttpd.service
-    register: stat_result
-
-  - name: 'Add systemd target wants lighttpd.service'
-    file:
-      src: /usr/lib/systemd/system/lighttpd.service
-      dest: /etc/systemd/system/rock.target.wants/lighttpd.service
-      state: link
-    when: with_lighttpd and stat_result.stat.exists
-
-  - name: 'Checking for harbor.service'
-    stat:
-      path: /usr/lib/systemd/system/harbor.service
-    register: stat_result
-
-  - name: 'Add systemd target wants harbor.service'
-    file:
-      src: /usr/lib/systemd/system/harbor.service
-      dest: /etc/systemd/system/rock.target.wants/harbor.service
-      state: link
-    when: with_harbor and stat_result.stat.exists
-
-  - name: 'Checking for docker.service'
-    stat:
-      path: /usr/lib/systemd/system/docker.service
-    register: stat_result
-
-  - name: 'Add systemd target wants docker.service'
-    file:
-      src: /usr/lib/systemd/system/docker.service
-      dest: /etc/systemd/system/rock.target.wants/docker.service
-      state: link
-    when: with_docker and stat_result.stat.exists
-
-  - name: 'Checking for elasticsearch.service'
-    stat:
-      path: /usr/lib/systemd/system/elasticsearch.service
-    register: stat_result
-
-  - name: 'Add systemd target wants elasticsearch.service'
-    file:
-      src: /usr/lib/systemd/system/elasticsearch.service
-      dest: /etc/systemd/system/rock.target.wants/elasticsearch.service
-      state: link
-    when: with_elasticsearch and stat_result.stat.exists
-
-  - name: 'Checking for zookeeper.service'
-    stat:
-      path: /usr/lib/systemd/system/zookeeper.service
-    register: stat_result
-
-  - name: 'Add systemd target wants zookeeper.service'
-    file:
-      src: /usr/lib/systemd/system/zookeeper.service
-      dest: /etc/systemd/system/rock.target.wants/zookeeper.service
-      state: link
-    when: with_zookeeper and stat_result.stat.exists
-
-  - name: 'Checking for logstash.service'
-    stat:
-      path: /usr/lib/systemd/system/logstash.service
-    register: stat_result
-
-  - name: 'Add systemd target wants logstash.service'
-    file:
-      src: /usr/lib/systemd/system/logstash.service
-      dest: /etc/systemd/system/rock.target.wants/logstash.service
-      state: link
-    when: with_logstash and stat_result.stat.exists
-
-  - name: 'Checking for portainer.service'
-    stat:
-      path: /usr/lib/systemd/system/portainer.service
-    register: stat_result
-
-  - name: 'Add systemd target wants portainer.service'
-    file:
-      src: /usr/lib/systemd/system/portainer.service
-      dest: /etc/systemd/system/rock.target.wants/portainer.service
-      state: link
-    when: with_portainer and stat_result.stat.exists
-
-  - name: 'Checking for kibana.service'
-    stat:
-      path: /usr/lib/systemd/system/kibana.service
-    register: stat_result
-
-  - name: 'Add systemd target wants kibana.service'
-    file:
-      src: /usr/lib/systemd/system/kibana.service
-      dest: /etc/systemd/system/rock.target.wants/kibana.service
-      state: link
-    when: with_kibana and stat_result.stat.exists
-
-  - name: 'Checking for suricata.service'
-    stat:
-      path: /usr/lib/systemd/system/suricata.service
-    register: stat_result
-
-  - name: 'Add systemd target wants suricata.service'
-    file:
-      src: /usr/lib/systemd/system/suricata.service
-      dest: /etc/systemd/system/rock.target.wants/suricata.service
-      state: link
-    when: with_suricata and stat_result.stat.exists
-
-  - name: 'Checking for stenographer.service'
-    stat:
-      path: /usr/lib/systemd/system/stenographer.service
-    register: stat_result
-
-  - name: 'Add systemd target wants stenographer.service'
-    file:
-      src: /usr/lib/systemd/system/stenographer.service
-      dest: /etc/systemd/system/rock.target.wants/stenographer.service
-      state: link
-    when: with_stenographer and stat_result.stat.exists
-
-  - name: 'Checking for fsf.service'
-    stat:
-      path: /usr/lib/systemd/system/fsf.service
-    register: stat_result
-
-  - name: 'Add systemd target wants fsf.service'
-    file:
-      src: /usr/lib/systemd/system/fsf.service
-      dest: /etc/systemd/system/rock.target.wants/fsf.service
-      state: link
-    when: with_fsf and stat_result.stat.exists
+    with_items: "{{ services }}"
+    ignore_errors: yes
 
   - name: 'Check default runlevel'
     command: systemctl get-default
