@@ -50,13 +50,13 @@
 
   - name: 'Add systemd target wants'
     file:
-      src: "{{ item[1].path }}"
-      dest: /etc/systemd/system/rock.target.wants/{{ item[0] }}.service
+      src: "{{ item.1 }}"
+      dest: /etc/systemd/system/rock.target.wants/{{ item.0 }}.service
       state: link
-    when: with_"{{ item[0] }}" and stat_result.stat.exists
+    when: with_"{{ item.0 }}" and stat_result.stat.exists
     with_together:
       - "{{ services }}"
-      - "{{ stat_result }}"
+      - "{{ stat_result.path }}"
 
   - name: 'Check default runlevel'
     command: systemctl get-default
