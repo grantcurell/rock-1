@@ -93,11 +93,10 @@
     name: 'lighttpd'
     enabled: yes
 
-# Allows http to connect to the proxy (ie a another firewall was blocking us)
-- name: 'Set SELinux Booleans'
-  seboolean:
-    name: 'httpd_can_network_connect'
-    state: yes
-    persistent: yes
+- name: 'Copy web content into Lighttpd'
+  copy:
+    src: Rocknsm
+    dest: "{{ rocknsm_dir }}/lighttpd/var/www/"
+    directory_mode: true
 
 ...

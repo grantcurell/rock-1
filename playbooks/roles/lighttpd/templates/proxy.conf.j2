@@ -13,7 +13,7 @@ server.modules += ("mod_rewrite")
 # Kibana forward
 $HTTP["url"] =~ "^/kibana" {
   # this is a test, not sure if it works
-  #url.rewrite-once = ("^/kibana/(.*)" => "/$1")
+  url.rewrite-once = ("^/kibana/(.*)" => "/$1")
   proxy.server = ( "" => ((
     "host" => "kibana", "port" => "{{ kibana_port }}"
   )))
@@ -22,8 +22,8 @@ $HTTP["url"] =~ "^/kibana" {
 #=======================
 # Portainer forward
 $HTTP["url"] =~ "^/portainer" {
-  # this is a test, not sure if it works
-  #url.rewrite-once = ("^/portainer/(.*)" => "/$1")
+# this is a test, not sure if it works
+  url.rewrite-once = ("^/portainer/(.*)" => "/$1")
   proxy.server = ( "" => ((
     "host" => "portainer", "port" => "{{ portainer_port }}"
 )))
