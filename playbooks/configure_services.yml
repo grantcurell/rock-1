@@ -5,21 +5,21 @@
 - hosts: all
   vars:
     services:
-      - "{{ with_bro | ternary('bro') }}"
-      - snort
-      - kafka
-      - lighttpd
-      - harbor
-      - docker
-      - docket
-      - elasticsearch
-      - zookeeper
-      - logstash
-      - portainer
-      - kibana
-      - suricata
-      - stenographer
-      - fsf
+    - "{{ with_bro | ternary('bro') }}"
+    - snort
+    - kafka
+    - lighttpd
+    - harbor
+    - docker
+    - docket
+    - elasticsearch
+    - zookeeper
+    - logstash
+    - portainer
+    - kibana
+    - suricata
+    - stenographer
+    - fsf
   - debug:
       var: services
 
