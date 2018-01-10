@@ -41,7 +41,7 @@
 
   - name: 'Checking for services'
     find:
-      paths: /usr/lib/systemd/system/{{ item }}.service /etc/systemd/system/{{ item }}.service
+      paths: "/usr/lib/systemd/system/{{ item }}.service", "/etc/systemd/system/{{ item }}.service"
     register: stat_result
     with_items: "{{ services }}"
   - debug:
