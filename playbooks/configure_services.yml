@@ -5,7 +5,7 @@
 - hosts: all
   vars:
     services:
-    - "{{ with_bro | ternary('bro') }}"
+    - "{{ with_bro | ternary('bro', omit) }}"
     - snort
     - kafka
     - lighttpd
@@ -47,10 +47,7 @@
       src: "{{ lookup('first_found', dict(files=['/etc/systemd/system/' + item + '.service', '/usr/lib/systemd/system/' + item + '.service'], skip=true)) }}"
       dest: /etc/systemd/system/rock.target.wants/{{ item }}.service
       state: link
-    dothing: "'with_' + {{ item }}"
-    when: dothing
     with_items: "{{ services }}"
-    ignore_errors: yes
 
   - name: 'Check default runlevel'
     command: systemctl get-default
