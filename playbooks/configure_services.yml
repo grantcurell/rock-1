@@ -41,11 +41,15 @@
 
   - name: 'Checking for services'
     find:
-      paths: "/usr/lib/systemd/system/{{ item }}.service", "/etc/systemd/system/{{ item }}.service"
-    register: stat_result
+      paths: "/usr/lib/systemd/system/{{ item }}.service"
+    register: stat_result_usr
+    find:
+      paths: "/etc/systemd/system/{{ item }}.service"
+    register: stat_result_etc
     with_items: "{{ services }}"
   - debug:
-      var: stat_result
+      var: stat_result_etc
+      var: stat_result_usr
 
   - name: 'Add systemd target wants'
     file:
