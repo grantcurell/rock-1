@@ -2,11 +2,15 @@
 ############ Verify Server Hardware Requirements ############
 #############################################################
 ---
+
 - assert:
     that:
-      - ansible_memtotal_mb >= 4096
-    msg: "Not enough RAM"
+      - ansible_memtotal_mb >= 2048
+    msg: "Not enough RAM (2GB+ required)! Aborting server install."
+  when: serverlocal is defined and serverlocal
+
 - assert:
     that:
-      - ansible_processor_cores >= 10
-    msg: "Not enough CPU Cores"
+      - ansible_processor_cores >= 2
+    msg: "Not enough CPU Cores (2+ required)! Aborting server install."
+  when: serverlocal is defined and serverlocal
