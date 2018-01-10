@@ -13,7 +13,41 @@ server.modules += ("mod_proxy")
 # Kibana forward
 $HTTP["url"] =~ "^/kibana" {
   # this is a test, not sure if it works
-
+  proxy.header = (
+          #"map-host-request" => (
+              #"-" => "...",#replace provided given Host request authority
+              #"..." => "-",#preserve existing authority (no further matching)
+              #"..." => "", #preserve existing authority (no further matching)
+              #             #(equivalent to "xxx" => "xxx")
+              #"xxx" => "yyy", #map one string ("xxx") to another ("yyy")
+          #),
+          #"map-host-response" => (
+              #"-" => "...",#replace authority used in backend request
+              #"..." => "-",#replace with original authority
+              #"..." => "", #preserve existing authority (no further matching)
+              #             #(equivalent to "xxx" => "xxx")
+              #"xxx" => "yyy", #map one string ("xxx") to another ("yyy")
+          #),
+          "map-urlpath" => (
+              #/xxx"  => "/yyy",#map one urlpath prefix to another
+              "/kibana" => "/",   #map one urlpath prefix to another
+              #"/xxx"  => "",    #map one urlpath prefix to another
+              #"/key"  => "/value",
+              # Note: request headers have matching "key" prefix replaced with
+              # "value", and response headers have matching "value" prefix
+              # replaced with "key", with a pre-test of the "value" from the
+              # first-matched "key" in request headers (if there was a match)
+          )
+          #"https-remap" => "enable",
+              # For https requests from client, map https:// to http://
+              # when map-host-request matches URI in request, and map http://
+              # to https:// when map-host-response matches URI in response.
+              # (mod_proxy currently sends all backend requests as http)
+          #"upgrade" => "enable",
+              # enable experimental support for Upgrade: websocket
+          #"connect" => "enable",
+              # permit HTTP CONNECT method to target backend (since 1.4.49)
+  )
   proxy.server = ( "" => ((
     "host" => "kibana", "port" => "{{ kibana_port }}"
   )))
