@@ -24,8 +24,7 @@
   tasks:
   - set_fact:
       services: "{{ services | difference(omit) }}"
-  - debug:
-      var: services
+
   - name: 'Render rock_start template'
     template:
       backup: yes
