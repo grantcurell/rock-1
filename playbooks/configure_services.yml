@@ -22,8 +22,9 @@
     - "{{ with_fsf | ternary('fsf', omit) }}"
 
   tasks:
-  - name: 'stupid debug'
-    debug:
+  - set_fact:
+      services: "{{ services | difference(omit) }}"
+  - debug:
       var: services
   - name: 'Render rock_start template'
     template:
