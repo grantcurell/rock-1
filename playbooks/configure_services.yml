@@ -6,20 +6,20 @@
   vars:
     services:
     - "{{ with_bro | ternary('bro', omit) }}"
-    - snort
-    - kafka
-    - lighttpd
-    - harbor
-    - docker
-    - docket
-    - elasticsearch
-    - zookeeper
-    - logstash
-    - portainer
-    - kibana
-    - suricata
-    - stenographer
-    - fsf
+    - "{{ with_snort | ternary('snort', omit) }}"
+    - "{{ with_kafka | ternary('kafka', omit) }}"
+    - "{{ with_lighttpd | ternary('lighttpd', omit) }}"
+    - "{{ with_harbor| ternary('harbor', omit) }}"
+    - "{{ with_docker | ternary('docker', omit) }}"
+    - "{{ with_docket | ternary('docket', omit) }}"
+    - "{{ with_elasticsearch | ternary('elasticsearch', omit) }}"
+    - "{{ with_zookeeper | ternary('zookeeper', omit) }}"
+    - "{{ with_logstash | ternary('logstash', omit) }}"
+    - "{{ with_portainer | ternary('portainer', omit) }}"
+    - "{{ with_kibana | ternary('kibana', omit) }}"
+    - "{{ with_suricata | ternary('suricata', omit) }}"
+    - "{{ with_stenographer | ternary('stenographer', omit) }}"
+    - "{{ with_fsf | ternary('fsf', omit) }}"
 
   tasks:
   - name: 'stupid debug'
