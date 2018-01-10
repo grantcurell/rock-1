@@ -46,6 +46,7 @@
       state: link
     when: "'with_' + '{{ item }}'"
     with_items: "{{ services }}"
+    ignore_errors: yes
 
   - name: 'Check default runlevel'
     command: systemctl get-default
