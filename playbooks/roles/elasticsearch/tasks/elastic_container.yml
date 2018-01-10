@@ -87,8 +87,8 @@
     state: started
     daemon-reload: yes
   # TODO: This needs to be updated
-  notify:
-    - "es maintenance"
+  #notify:
+  #  - "es maintenance"
 
 # TODO: This needs to be fixed.
 #- name: "Wait for Elasticsearch to become ready"
