@@ -5,36 +5,36 @@
 - hosts: all
   vars:
     services:
-    {% if with_bro %}
-    - "bro"
-    {% if with_snort %}
-    - "snort"
-    {% if with_kafka %}
-    - "kafka"
-    {% if with_lighttpd %}
-    - "lighttpd"
-    {% if with_harbor %}
-    - "harbor"
-    {% if with_docker %}
-    - "docker"
-    {% if with_docket %}
-    - "docket"
-    {% if with_elasticsearch %}
-    - "elasticsearch"
-    {% if with_zookeeper %}
-    - "zookeeper"
-    {% if with_logstash %}
-    - "logstash"
-    {% if with_portainer %}
-    - "portainer"
-    {% if with_kibana %}
-    - "kibana"
-    {% if with_suricata %}
-    - "suricata"
-    {% if with_stenographer %}
-    - "stenographer"
-    {% if with_fsf %}
-    - "fsf"
+    - {% if with_bro %}
+      - "bro"
+    - {% if with_snort %}
+      - "snort"
+    - {% if with_kafka %}
+      - "kafka"
+    - {% if with_lighttpd %}
+      - "lighttpd"
+    - {% if with_harbor %}
+      - "harbor"
+    - {% if with_docker %}
+      - "docker"
+    - {% if with_docket %}
+      - "docket"
+    - {% if with_elasticsearch %}
+      - "elasticsearch"
+    - {% if with_zookeeper %}
+      - "zookeeper"
+    - {% if with_logstash %}
+      - "logstash"
+    - {% if with_portainer %}
+      - "portainer"
+    - {% if with_kibana %}
+      - "kibana"
+    - {% if with_suricata %}
+      - "suricata"
+    - {% if with_stenographer %}
+      - "stenographer"
+    - {% if with_fsf %}
+      - "fsf"
   - debug:
       var: services
 
