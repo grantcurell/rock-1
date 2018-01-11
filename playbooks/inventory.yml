@@ -17,7 +17,7 @@ all:
     #Common role variables
     common_mgnt_nets: "{{ rock_mgmt_nets }}"
 
-    default_host_name: simplerockbuild.simplerock.lan
+    local_host_name: simplerockbuild.simplerock.lan
     rock_version: 3.0
     rock_online_install: true
     rock_sysctl_file: /etc/sysctl.d/10-ROCK.conf
