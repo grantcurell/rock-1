@@ -50,7 +50,7 @@ all:
     with_docket: true
     with_elasticsearch: true
     with_elk: false
-    with_filebeats: true
+    with_filebeats: false
     with_fsf: true
     with_haproxy: true
     with_harbor: false
