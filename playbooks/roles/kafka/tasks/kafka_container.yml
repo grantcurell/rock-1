@@ -29,7 +29,7 @@
     path: '{{ item }}'
     state: directory
   with_items:
-    - "{{ rocknsm_dir }}/Kafka/data"
+    - "{{ rocknsm_dir }}/kafka/data"
 
 - name: 'Copy Kafka compose file'
   template:
