@@ -23,8 +23,8 @@
 #    - "{{ with_fsf | ternary('fsf', omit) }}"
 
   tasks:
-   - debug: msg="{{ included_components.keys()|map('extract', included_components, 'value')|list}}"
-  #- debug: msg="{{ included_components.item.value|map('extract', true)|list}}" #msg="{{ item.key }}"
+  - debug: msg="{{ included_components.keys()|map('extract', included_components, 'value')|list}}"
+#- debug: msg="{{ included_components.item.value|map('extract', true)|list}}" #msg="{{ item.key }}"
     #with_items: "{{ included_components.keys()|list}}"
 
 #    with_dict: "{{ included_components|default({}) }}"
