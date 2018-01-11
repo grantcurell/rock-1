@@ -38,7 +38,12 @@
       ansible_connection: local
     when: sensorlocal is defined and sensorlocal
   - name: 'print components'
-    debug: var=included_components msg={% 'test' if included_components.elasticsearch.value %}
+    debug:
+      var: included_components
+      msg:
+        - {% if included_components.elasticsearch.value %}
+        - "test"
+        - {% endif %}
 - import_playbook: servers.yml
 - import_playbook: sensors.yml
 - import_playbook: configure_services.yml
