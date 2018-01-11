@@ -33,7 +33,7 @@
     owner: root
     group: root
 
-- name: 'Run Zookeeper-compose.yml'
+- name: 'Run zookeeper-compose.yml.j2'
   docker_service:
     project_src: "{{ rocknsm_dir }}/zookeeper/"
     files: 'zookeeper-compose.yml.j2'
