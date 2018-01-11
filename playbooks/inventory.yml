@@ -45,11 +45,11 @@ all:
     # Feature options - Don't flip these unless you know what you're doing
     # These control if the service is installed
     included_components:
-      - { name: "bro", value: true }
-      - { name: "docker", value: true }
-      - { name: "docket", value: true }
-      - { name: "elasticsearch", value: true }
-      - { name: "elk", value: false }
+      - { bro: "bro", value: true }
+      - { docker: "docker", value: true }
+      - { docket: "docket", value: true }
+      - { elasticsearch: "elasticsearch", value: true }
+      - { elk: "elk", value: false }
       - { name: "filebeats", value: true }
       - { name: "fsf", value: true }
       - { name: "haproxy", value: true }
