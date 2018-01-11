@@ -2,11 +2,14 @@
 
 export ZOOKEEPER_HOST=127.0.0.1
 export ZOOKEEPER_PORT=2181
-export MON_IFS=$(cat /opt/bro/etc/node.cfg | grep interface | \
-	sed 's/interface=//; s/.*:://' | sort | uniq | paste -sd " " -)
-
+if [ -e /etc/systemd/system/rock.target.wants/bro.service ]; then
+        export MON_IFS=$(cat /opt/bro/etc/node.cfg | grep interface | \
+                sed 's/interface=//; s/.*:://' | sort | uniq | paste -sd " " -)
+else
+        export MON_IFS=
+fi
 function feature_enabled() {
-  if grep -qiE "^with_$1: (true|yes)" /etc/rocknsm/config.yml; then
+	  if ( grep -qiE "^with_$1: (true|yes)" /etc/rocknsm/config.yml && [ -e /etc/systemd/system/rock.target.wants/$1.service ]); then
     grep -qiE "^enable_$1: (true|yes)" /etc/rocknsm/config.yml;
     return $?
   else
@@ -56,30 +59,30 @@ function feature_enabled() {
 #----------------------------------------------------------------------------
 if feature_enabled bro; then
 
-@test "Check that broctl is running" {
-  # This will fail if a worker is crashed as well
-  sudo /opt/bro/bin/broctl status
-}
+  @test "Check that broctl is running" {
+    # This will fail if a worker is crashed as well
+    sudo /opt/bro/bin/broctl status
+  }
 
-@test "Check for bro-detected packet loss" {
-  local notice_log='/data/bro/logs/current/notice.log'
-  if [ ! -f "${notice_log}"]; then
-    skip "No notice.log to check for packet loss errors."
-  fi
-
-  capture_cnt=$(cat ${notice_log} | grep 'CaptureLoss::Too_Much_Loss'|wc -l)
-  drop_cnt=$(cat ${notice_log} | grep 'PacketFilter::Dropped_Packets'|wc -l)
-
-  if [ $capture_cnt > 0 ]; then
-    if [ $drop_cnt > 0 ]; then
-      echo "Sensor is dropping packets before Bro can process them."
-      [ $drop_cnt -eq 0 ]
-    else
-      echo "Packets are being dropped prior to sensor receiving them."
-      [ $capture_cnt -eq 0 ]
+  @test "Check for bro-detected packet loss" {
+    local notice_log='/data/bro/logs/current/notice.log'
+    if [ ! -f "${notice_log}"]; then
+      skip "No notice.log to check for packet loss errors."
     fi
-  fi
-}
+
+    capture_cnt=$(cat ${notice_log} | grep 'CaptureLoss::Too_Much_Loss'|wc -l)
+    drop_cnt=$(cat ${notice_log} | grep 'PacketFilter::Dropped_Packets'|wc -l)
+
+    if [ $capture_cnt > 0 ]; then
+      if [ $drop_cnt > 0 ]; then
+        echo "Sensor is dropping packets before Bro can process them."
+        [ $drop_cnt -eq 0 ]
+      else
+        echo "Packets are being dropped prior to sensor receiving them."
+        [ $capture_cnt -eq 0 ]
+      fi
+    fi
+  }
 
 fi
 #----------------------------------------------------------------------------
