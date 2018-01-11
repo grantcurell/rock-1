@@ -5,21 +5,22 @@
 - hosts: all
   vars:
     services:
-    - "{{ with_bro | ternary('bro', omit) }}"
-    - "{{ with_snort | ternary('snort', omit) }}"
-    - "{{ with_kafka | ternary('kafka', omit) }}"
-    - "{{ with_haproxy | ternary('haproxy', omit) }}"
-    - "{{ with_harbor| ternary('harbor', omit) }}"
-    - "{{ with_docker | ternary('docker', omit) }}"
-    - "{{ with_docket | ternary('docket', omit) }}"
-    - "{{ with_elasticsearch | ternary('elasticsearch', omit) }}"
-    - "{{ with_zookeeper | ternary('zookeeper', omit) }}"
-    - "{{ with_logstash | ternary('logstash', omit) }}"
-    - "{{ with_portainer | ternary('portainer', omit) }}"
-    - "{{ with_kibana | ternary('kibana', omit) }}"
-    - "{{ with_suricata | ternary('suricata', omit) }}"
-    - "{{ with_stenographer | ternary('stenographer', omit) }}"
-    - "{{ with_fsf | ternary('fsf', omit) }}"
+      {{ included_components | map(attribute='value') | ternary(name, omit) }}
+#    - "{{ with_bro | ternary('bro', omit) }}"
+#    - "{{ with_snort | ternary('snort', omit) }}"
+#    - "{{ with_kafka | ternary('kafka', omit) }}"
+#    - "{{ with_haproxy | ternary('haproxy', omit) }}"
+#    - "{{ with_harbor| ternary('harbor', omit) }}"
+#    - "{{ with_docker | ternary('docker', omit) }}"
+#    - "{{ with_docket | ternary('docket', omit) }}"
+#    - "{{ with_elasticsearch | ternary('elasticsearch', omit) }}"
+#    - "{{ with_zookeeper | ternary('zookeeper', omit) }}"
+#    - "{{ with_logstash | ternary('logstash', omit) }}"
+#    - "{{ with_portainer | ternary('portainer', omit) }}"
+#    - "{{ with_kibana | ternary('kibana', omit) }}"
+#    - "{{ with_suricata | ternary('suricata', omit) }}"
+#    - "{{ with_stenographer | ternary('stenographer', omit) }}"
+#    - "{{ with_fsf | ternary('fsf', omit) }}"
 
   tasks:
   - set_fact:
@@ -72,7 +73,7 @@
     shell: echo 'alias rock_start="systemctl isolate rock.target"' | tee -a /home/*/.bashrc /root/.bashrc >> /etc/skel/.bashrc
     args:
       executable: /bin/bash
-      
+
   - name: 'Add rock_stop alias'
     shell: echo 'alias rock_stop="systemctl stop -- $(systemctl show -p Wants rock.target | cut -d= -f2)"' | tee -a /home/*/.bashrc /root/.bashrc >> /etc/skel/.bashrc
     args:
