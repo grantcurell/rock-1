@@ -5,7 +5,7 @@
 - hosts: all
   vars:
     services:
-      "{{ lookup('list', included_components) | map(attribute='value') | ternary(name, omit) }}"
+      {% for item in included_components %}{{ item.name if item.value }},{% endif %} {% endfor %}
 #    - "{{ with_bro | ternary('bro', omit) }}"
 #    - "{{ with_snort | ternary('snort', omit) }}"
 #    - "{{ with_kafka | ternary('kafka', omit) }}"
@@ -23,8 +23,7 @@
 #    - "{{ with_fsf | ternary('fsf', omit) }}"
 
   tasks:
-  - set_fact:
-      services: "{{ services | difference(omit) }}"
+  - debug: var=services
 
   - name: 'Render rock_start template'
     template:
