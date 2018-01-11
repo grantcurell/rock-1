@@ -1,0 +1,38 @@
+---
+- name: Install Signing Key
+  command: rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch
+
+- name: Configure Repository
+  command: echo '[curator-5]
+  name=CentOS/RHEL 7 repository for Elasticsearch Curator 5.x packages
+  baseurl=https://packages.elastic.co/curator/5/centos/7
+  gpgkey=https://packages.elastic.co/GPG-KEY-elasticsearch
+  enabled=1' >> /etc/yum.repos.d/curator.repo
+
+- name: Install Elasticsearch Curator
+  command: yum install -y elasticsearch-curator
+
+- name: Create Elasticsearch Curator configuration file
+  command: mkdir ~/.curator
+  command: echo '---
+# Remember, leave a key empty if there is no value.  None will be a string,
+# not a Python "NoneType"
+client:
+  hosts:
+    - 127.0.0.1
+  port: 9200
+  url_prefix:
+  use_ssl: False
+  certificate:
+  client_cert:
+  client_key:
+  ssl_no_validate: False
+  http_auth:
+  timeout: 30
+  master_only: False
+
+logging:
+  loglevel: INFO
+  logfile:
+  logformat: default
+  blacklist: ['elasticsearch', 'urllib3']' >> ~/.curator/curator.yml
