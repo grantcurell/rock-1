@@ -1,0 +1,13 @@
+---
+version: '2'
+services:
+  zookeeper:
+    image: dockerzookeeper/zookeeper
+    container_name: 'zookeeper'
+    ports:
+      - "9092:9092"
+    links:
+      - zookeeper:zookeeper
+    environment:
+      - container=docker
+...

@@ -1,15 +1,10 @@
 ######################################################
-################### Setup Zookeeper ##################
+################# Setup Zookeeper ################
 ######################################################
 ---
--
-  name: Install Zookeeper package
-  yum:
-    name: zookeeper
-    state: installed
 
-- name: Enable and start zookeeper
-  service:
-    name: zookeeper
-    enabled: yes
-    state: started
+#- include_tasks: 'zookeeper_bare-metal.yml'
+#  when: not containerized_install
+
+- include_tasks: 'zookeeper_container.yml'
+  when: containerized_install

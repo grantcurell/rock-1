@@ -1,0 +1,76 @@
+---
+######################################################
+############### Setup Zookeeper container ###############
+######################################################
+
+- name: 'Pull official Zookeeper container from docker hub'
+  docker_image:
+    name: "{{ zookeeper_container }}:{{ zookeeper_ver }}"
+    state: present
+  when: rock_online_install
+
+- name: 'Install Zookeeper service file'
+  template:
+    src: 'zookeeper.service.j2'
+    dest: '/etc/systemd/system/zookeeper.service'
+    mode: 0644
+    owner: root
+    group: root
+  notify: reload systemd
+
+- name: 'Create new directories'
+  file:
+    path: '{{ item }}'
+    state: directory
+  with_items:
+    - "{{ rocknsm_dir }}/zookeeper/data"
+
+- name: 'Copy Zookeeper compose file'
+  template:
+    src: 'zookeeper-compose.yml.j2'
+    dest: "{{ rocknsm_dir }}/zookeeper/zookeeper-compose.yml.j2"
+    mode: 0644
+    owner: root
+    group: root
+
+- name: 'Run Zookeeper-compose.yml'
+  docker_service:
+    project_src: "{{ rocknsm_dir }}/zookeeper/"
+    files: 'zookeeper-compose.yml.j2'
+    state: present
+
+- name: 'Enable Zookeeper service'
+  service:
+    name: 'zookeeper'
+    enabled: yes
+
+#name: Create Zookeeper data dir
+#file:
+#  path: "{{ zookeeper_data_dir }}"
+#  mode: 0755
+#  owner: "{{ zookeeper_user }}"
+#  group: "{{ zookeeper_group }}"
+#  state: directory
+#
+#-
+#name: Set zookeeper retention
+#lineinfile:
+#  dest: "{{ zookeeper_config_path }}"
+#  regexp: "log.retention.hours="
+#  line:  "log.retention.hours={{ zookeeper_retention }}"
+#  state: present
+#
+#-
+#name: Set zookeeper data dir
+#lineinfile:
+#  dest: "{{ zookeeper_config_path }}"
+#  regexp: "log.dirs="
+#  line: "log.dirs={{ zookeeper_data_dir }}"
+#
+#-
+#name: Enable and start zookeeper
+#service:
+#  name: zookeeper
+#  enabled: yes
+#  state: started
+#
