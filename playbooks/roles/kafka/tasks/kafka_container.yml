@@ -42,7 +42,7 @@
 - name: 'Run Kafka-compose.yml'
   docker_service:
     project_src: "{{ rocknsm_dir }}/kafka/"
-    files: 'kafka-compose.yml'
+    files: 'kafka-compose.yml.j2'
     state: present
 
 - name: 'Enable Kafka service'
