@@ -23,10 +23,12 @@
 #    - "{{ with_fsf | ternary('fsf', omit) }}"
 
   tasks:
-  - debug: msg="{% for item in included_components %}{% if item.value.value %}{{ item.value.name }}{% endif %}{% endfor %}"
-  - name: 'Set services'
-    set_fact: services={% for item in included_components %}{% if item.value.value %}{{ item.value.name }}{% endif %}{% endfor %}
-  - debug: var=services
+  - debug: msg="{{ item.name }}"
+    with_dict: "{{ included_components }}"
+    when: item.value
+#  - name: 'Set services'
+#    set_fact: services={% for item in included_components %}{% if item.value.value %}{{ item.value.name }}{% endif %}{% endfor %}
+#  - debug: var=services
 
   - name: 'Render rock_start template'
     template:
