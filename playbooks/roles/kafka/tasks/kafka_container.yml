@@ -39,10 +39,29 @@
     owner: root
     group: root
 
+#NOT SURE IF THIS IS NEEDED, TESTING
 - name: 'Copy server.properties file'
   template:
     src: 'templates/server.properties'
     dest: "{{ rocknsm_dir }}/kafka/server.properties"
+    mode: 0644
+    owner: root
+    group: root
+
+#NOT SURE IF THIS IS NEEDED, TESTING
+- name: 'Copy consumer.properties file'
+  template:
+    src: 'templates/consumer.properties'
+    dest: "{{ rocknsm_dir }}/kafka/consumer.properties"
+    mode: 0644
+    owner: root
+    group: root
+
+#NOT SURE IF THIS IS NEEDED, TESTING
+- name: 'Copy log4j.properties file'
+  template:
+    src: 'templates/log4j.properties'
+    dest: "{{ rocknsm_dir }}/kafka/log4j.properties"
     mode: 0644
     owner: root
     group: root
