@@ -1,5 +1,5 @@
 #!/usr/bin/bats
-{% if sensorlocal is defined and sensorlocal %}
+{% if (sensorlocal is defined and sensorlocal) or (standalone is defined and standalone) %}
 export ZOOKEEPER_HOST={{ ansible_hostname }}
 export ZOOKEEPER_PORT=2181
 export MON_IFS=$(cat /opt/bro/etc/node.cfg | grep interface | \
@@ -14,7 +14,7 @@ function feature_enabled() {
     return 1
   fi
 }
-{% if sensorlocal is defined and sensorlocal %}
+{% if (sensorlocal is defined and sensorlocal) or (standalone is defined and standalone) %}
 #----------------------------------------------------------------------------
 #                               INTERFACE
 #----------------------------------------------------------------------------
@@ -159,7 +159,7 @@ if feature_enabled kafka; then
 
 fi
 {% endif %}
-{% if serverlocal is defined and serverlocal %}
+{% if (serverlocal is defined and serverlocal) or (standalone is defined and standalone) %}
 #----------------------------------------------------------------------------
 #                               LOGSTASH
 #----------------------------------------------------------------------------
