@@ -56,7 +56,7 @@ all:
     with_harbor: false
     with_kafka: true
     with_kibana: true
-    with_logstash: true
+    with_logstash: false
     with_portainer: true
     with_pulledpork: true
     with_snort: false
