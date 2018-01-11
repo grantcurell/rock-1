@@ -23,7 +23,9 @@
 #    - "{{ with_fsf | ternary('fsf', omit) }}"
 
   tasks:
-  - debug: msg="{{ included_components.keys()|map('extract', included_components, 'name')|list}}"
+  - debug: msg="{{ item }}"
+    with_items: "{{ included_components.keys()|map('extract', included_components, 'name')|list}}"
+    when: included_components.{{ item }}.value
 #- debug: msg="{{ included_components.item.value|map('extract', true)|list}}" #msg="{{ item.key }}"
     #with_items: "{{ included_components.keys()|list}}"
 
