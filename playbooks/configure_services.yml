@@ -23,7 +23,7 @@
 #    - "{{ with_fsf | ternary('fsf', omit) }}"
 
   tasks:
-  - debug: "{{ included_components|map('extract', value)|selectattr('value')|list}}" #msg="{{ item.key }}"
+  - debug: "{{ included_components|json_query('*.name')|list}}" #msg="{{ item.key }}"
 #    with_dict: "{{ included_components|default({}) }}"
 #    when: item.value.value
 #  - name: 'Set services'
