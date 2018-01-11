@@ -33,7 +33,7 @@
 
 - name: 'Copy Kafka compose file'
   template:
-    src: 'Kafka-compose.yml.j2'
+    src: 'kafka-compose.yml.j2'
     dest: "{{ rocknsm_dir }}/Kafka/kafka-compose.yml.j2"
     mode: 0644
     owner: root
