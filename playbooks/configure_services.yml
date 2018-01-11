@@ -8,7 +8,7 @@
     - "{{ with_bro | ternary('bro', omit) }}"
     - "{{ with_snort | ternary('snort', omit) }}"
     - "{{ with_kafka | ternary('kafka', omit) }}"
-    - "{{ with_lighttpd | ternary('lighttpd', omit) }}"
+    - "{{ with_haproxy | ternary('haproxy', omit) }}"
     - "{{ with_harbor| ternary('harbor', omit) }}"
     - "{{ with_docker | ternary('docker', omit) }}"
     - "{{ with_docket | ternary('docket', omit) }}"
@@ -67,3 +67,13 @@
   - name: 'Switch to rock.target'
     command: systemctl isolate rock.target
     when: runlevel_active.stdout != "active"
+
+  - name: 'Add rock_start alias'
+    shell: echo 'alias rock_start="systemctl isolate rock.target"' | tee -a /home/*/.bashrc /root/.bashrc >> /etc/skel/.bashrc
+    args:
+      executable: /bin/bash
+      
+  - name: 'Add rock_stop alias'
+    shell: echo 'alias rock_stop="systemctl stop -- $(systemctl show -p Wants rock.target | cut -d= -f2)"' | tee -a /home/*/.bashrc /root/.bashrc >> /etc/skel/.bashrc
+    args:
+      executable: /bin/bash

@@ -50,13 +50,13 @@ all:
     with_docket: true
     with_elasticsearch: true
     with_elk: false
-    with_filebeats: true
+    with_filebeats: false
     with_fsf: true
     with_haproxy: true
     with_harbor: false
     with_kafka: true
     with_kibana: true
-    with_logstash: true
+    with_logstash: false
     with_portainer: true
     with_pulledpork: true
     with_snort: false
@@ -92,10 +92,10 @@ all:
 
     sensors:
       # TODO: We will need these for the multinode install
-      hosts:
-        rocksensor1.lan:
-          ansible_hostname: rocksensor1.lan
-          ansible_connection: ssh
+      #hosts:
+      #  rocksensor1.lan:
+      #    ansible_hostname: rocksensor1.lan
+      #    ansible_connection: ssh
 
       vars:
         bro_cpu: "{{ (ansible_processor_vcpus // 2) if (ansible_processor_vcpus <= 16) else 8 }}"
@@ -111,10 +111,10 @@ all:
 
     servers:
       # TODO: We will need these for the multinode install
-      hosts:
-        rockserver1.lan:
-          ansible_hostname: rockserver1.lan
-          ansible_connection: ssh
+      #hosts:
+      #  rockserver1.lan:
+      #    ansible_hostname: rockserver1.lan
+      #    ansible_connection: ssh
 
       vars:
         es_cluster_name: rocknsm
