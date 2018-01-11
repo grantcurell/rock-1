@@ -1,2 +1,4 @@
 ---
-# handlers file for kafka
+
+- name: 'reload systemd'
+  command: 'systemctl daemon-reload'

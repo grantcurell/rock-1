@@ -1,0 +1,17 @@
+---
+version: '2'
+services:
+  kafka:
+    image: dockerkafka/kafka
+    container_name: 'kafka'
+    ports:
+      - "9092:9092"
+    links:
+      - zookeeper:zookeeper
+    environment:
+      - container=docker
+    networks:
+      rocknsm_inside:
+        external:
+          name: 'rocknsm_inside'
+...
