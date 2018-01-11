@@ -24,7 +24,7 @@
 
   tasks:
   - debug: msg="{{ item.key.name }}"
-    with_dict: "{{ included_components }}"
+    with_dict: "{{ included_components|default({}) }}"
     when: item.key.value
 #  - name: 'Set services'
 #    set_fact: services={% for item in included_components %}{% if item.value.value %}{{ item.value.name }}{% endif %}{% endfor %}
