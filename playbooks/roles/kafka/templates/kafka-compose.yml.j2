@@ -6,8 +6,8 @@ services:
     container_name: 'kafka'
     ports:
       - "9092:9092"
-    links:
-      - zookeeper:zookeeper
+    #links:
+    #  - dockerkafka/zookeeper
     environment:
       - container=docker
 ...
