@@ -39,6 +39,14 @@
     owner: root
     group: root
 
+- name: 'Copy server.properties file'
+  template:
+    src: 'templates/server.properties'
+    dest: "{{ rocknsm_dir }}/kafka/server.properties"
+    mode: 0644
+    owner: root
+    group: root
+
 - name: 'Run kafka-compose.yml.j2'
   docker_service:
     project_src: "{{ rocknsm_dir }}/kafka/"
