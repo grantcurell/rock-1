@@ -17,6 +17,14 @@
     owner: root
     group: root
 
+- name: Install rock_status script
+  template:
+    src: rock_status.j2
+    dest: /usr/local/bin/rock_status
+    mode: 0755
+    owner: root
+    group: root
+
 # main.yml - Common tasks for ROCK
 - include_tasks: minimum_hardware_check.yml
 - include_tasks: configure_yum_repos.yml
