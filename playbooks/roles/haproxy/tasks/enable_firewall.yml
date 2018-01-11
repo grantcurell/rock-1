@@ -7,7 +7,8 @@
     state: enabled
     immediate: yes
   with_nested:
-    - "{{ lighttpd_mgnt_nets }}"
+    - "{{ haproxy_mgnt_nets }}"
     -
-      - { port: "{{ lighttpd_firewall_port }}/tcp" }
+      - { port: "{{ haproxy_stats_port }}/tcp" }
+      - { port: "{{ elastic_lb_port }}/tcp" }
 ...
