@@ -10,4 +10,4 @@
 
 - name: Create Elasticsearch Curator configuration file
   command: mkdir ~/.curator
-  command: echo -e '---\nclient: \n hosts: \n  - 127.0.0.1\n port: 9200\n url_prefix:\n use_ssl: False\n certificate: \n client_cert: \n client_key: \n ssl_no_validate: False\n http_auth: \n timeout: 30\n master_only: False\n\nlogging: \n loglevel: INFO\n logfile: \n logformat: default\n blacklist: ['elasticsearch', 'urllib3']' >> ~/.curator/curator.yml >> ~/.curator/curator.yml
+  command: echo -e "---\nclient: \n hosts: \n  - 127.0.0.1\n port: 9200\n url_prefix:\n use_ssl: False\n certificate: \n client_cert: \n client_key: \n ssl_no_validate: False\n http_auth: \n timeout: 30\n master_only: False\n\nlogging: \n loglevel: INFO\n logfile: \n logformat: default\n blacklist: ['elasticsearch', 'urllib3']" >> ~/.curator/curator.yml >> ~/.curator/curator.yml
