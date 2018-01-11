@@ -23,7 +23,7 @@
 #    - "{{ with_fsf | ternary('fsf', omit) }}"
 
   tasks:
-  - set_fact: services="{{ included_components|map(attribute='value')|selectattr('value')|list}}" #msg="{{ item.key }}"
+  - debug: "{{ included_components|selectattr('value')|list}}" #msg="{{ item.key }}"
 #    with_dict: "{{ included_components|default({}) }}"
 #    when: item.value.value
 #  - name: 'Set services'
