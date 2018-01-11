@@ -25,7 +25,9 @@
   tasks:
   - name: 'Set services'
     set_fact: services={% for item in included_components %}{% if item.value %}{{ item.name }}{% endif %}{% endfor %}
-    with_subelements: included_components
+    with_subelements:
+      - "{{ included_components }}"
+      - key
   - debug: var=services
 
   - name: 'Render rock_start template'
