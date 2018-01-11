@@ -64,7 +64,7 @@ backend elastic
   option redispatch
   balance roundrobin
 {% for host in groups['servers'] %}
-{% if hostvars[host].elasticsearch.value %}
+{% if hostvars[host].included_components.elasticsearch.value %}
   server {{ hostvars[host].rock_hostname }} {{ hostvars[host].rock_hostname }}:9200 check
 {% endif%}
 {% endfor %}
