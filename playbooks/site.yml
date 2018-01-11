@@ -40,10 +40,7 @@
   - name: 'print components'
     debug:
       var: included_components
-      msg:
-        - {% if included_components.elasticsearch.value %}
-        - "test"
-        - {% endif %}
+  - assert: { that: included_components.elasticsearch.value }
 - import_playbook: servers.yml
 - import_playbook: sensors.yml
 - import_playbook: configure_services.yml
