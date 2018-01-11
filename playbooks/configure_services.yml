@@ -68,6 +68,12 @@
     command: systemctl isolate rock.target
     when: runlevel_active.stdout != "active"
 
-  - name: 'Add rock_start and rock_stop aliases'
-    shell: echo 'alias rock_stop="systemctl stop -- $(systemctl show -p Wants rock.target | cut -d= -f2)"' | tee -a /home/*/.bashrc /root/.bashrc >> /etc/skel/.bashrc
+  - name: 'Add rock_start alias'
     shell: echo 'alias rock_start="systemctl isolate rock.target"' | tee -a /home/*/.bashrc /root/.bashrc >> /etc/skel/.bashrc
+    args:
+      executable: /bin/bash
+      
+  - name: 'Add rock_stop alias'
+    shell: echo 'alias rock_stop="systemctl stop -- $(systemctl show -p Wants rock.target | cut -d= -f2)"' | tee -a /home/*/.bashrc /root/.bashrc >> /etc/skel/.bashrc
+    args:
+      executable: /bin/bash
