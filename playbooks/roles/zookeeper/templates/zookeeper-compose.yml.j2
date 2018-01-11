@@ -2,12 +2,10 @@
 version: '2'
 services:
   zookeeper:
-    image: dockerzookeeper/zookeeper
-    container_name: 'zookeeper'
-    ports:
-      - "9092:9092"
-    links:
-      - zookeeper:zookeeper
-    environment:
-      - container=docker
+  image: dockerkafka/zookeeper
+  ports:
+   - "2181:2181"
+   - "2888:2888"
+   - "3888:3888"
+   - "5000:5000"
 ...
