@@ -7,12 +7,12 @@
     # Containerized_install: if true, all services are docker containers. Otherwise, services installed bare metal
     - { role: docker, when: containerized_install }
 
-    - { role: elasticsearch, when: included_components['elasticsearch'].value }
-    - { role: logstash, when: included_components['logstash'].value }
-    - { role: kibana, when: included_components['kibana'].value }
+    - { role: elasticsearch, when: included_components.elasticsearch.value }
+    - { role: logstash, when: included_components.logstash.value }
+    - { role: kibana, when: included_components.kibana.val']u']e }
     #- { role: lighttpd, when: included_components['lighttpd'].value } #disabled for now, haproxy looks like a great replacement
-    - { role: haproxy, when: included_components['haproxy'].value }
-    - { role: portainer, when: containerized_install and included_components['portainer'].value }
+    - { role: haproxy, when: included_components.haproxy.value }
+    - { role: portainer, when: containerized_install and included_components.portainer.value }
 
     # Harbor must run last so that it uploads all containers installed on the machine.
-    - { role: harbor, when: containerized_install and included_components['harbor'].value }
+    - { role: harbor, when: containerized_install and included_components.harbor.value }

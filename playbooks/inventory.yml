@@ -45,42 +45,24 @@ all:
     # Feature options - Don't flip these unless you know what you're doing
     # These control if the service is installed
     included_components:
-      - name: bro
-        value: true
-      - name: docker
-        value: true
-      - name: docket
-        value: true
-      - name: elasticsearch
-        value: true
-      - name: elk
-        value: false
-      - name: filebeats
-        value: false
-      - name: fsf
-        value: true
-      - name: haproxy
-        value: true
-      - name: harbor
-        value: false
-      - name: kafka
-        value: true
-      - name: kibana
-        value: true
-      - name: logstash
-        value: false
-      - name: portainer
-        value: true
-      - name: pulledpork
-        value: true
-      - name: snort
-        value: false
-      - name: stenographer
-        value: true
-      - name: suricata
-        value: true
-      - name: zookeeper
-        value: true
+      - { name: "bro", value: true }
+      - { name: "docker", value: true }
+      - { name: "docket", value: true }
+      - { name: "elasticsearch", value: true }
+      - { name: "elk", value: false }
+      - { name: "filebeats", value: true }
+      - { name: "fsf", value: true }
+      - { name: "haproxy", value: true }
+      - { name: "harbor", value: false }
+      - { name: "kafka", value: true }
+      - { name: "kibana", value: true }
+      - { name: "logstash", value: false }
+      - { name: "portainer", value: true }
+      - { name: "pulledpork", value: true }
+      - { name: "snort", value: false }
+      - { name: "stenographer", value: true }
+      - { name: "suricata", value: true }
+      - { name: "zookeeper", value: true }
 
     rocknsm_package_list:
       - java-1.8.0-openjdk-headless
