@@ -1,5 +1,5 @@
 ---
-- hosts: localhost
+- hosts: all
 - tasks:
   - name: Install Signing Key
     command: rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch
