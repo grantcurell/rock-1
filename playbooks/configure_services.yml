@@ -23,9 +23,9 @@
 #    - "{{ with_fsf | ternary('fsf', omit) }}"
 
   tasks:
-  - debug: msg="{{ item.name }}"
+  - debug: msg="{{ item.key.name }}"
     with_dict: "{{ included_components }}"
-    when: item.value
+    when: item.key.value
 #  - name: 'Set services'
 #    set_fact: services={% for item in included_components %}{% if item.value.value %}{{ item.value.name }}{% endif %}{% endfor %}
 #  - debug: var=services
