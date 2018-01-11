@@ -6,37 +6,7 @@
   vars:
     services:
 
-#    - "{{ with_bro | ternary('bro', omit) }}"
-#    - "{{ with_snort | ternary('snort', omit) }}"
-#    - "{{ with_kafka | ternary('kafka', omit) }}"
-#    - "{{ with_haproxy | ternary('haproxy', omit) }}"
-#    - "{{ with_harbor| ternary('harbor', omit) }}"
-#    - "{{ with_docker | ternary('docker', omit) }}"
-#    - "{{ with_docket | ternary('docket', omit) }}"
-#    - "{{ with_elasticsearch | ternary('elasticsearch', omit) }}"
-#    - "{{ with_zookeeper | ternary('zookeeper', omit) }}"
-#    - "{{ with_logstash | ternary('logstash', omit) }}"
-#    - "{{ with_portainer | ternary('portainer', omit) }}"
-#    - "{{ with_kibana | ternary('kibana', omit) }}"
-#    - "{{ with_suricata | ternary('suricata', omit) }}"
-#    - "{{ with_stenographer | ternary('stenographer', omit) }}"
-#    - "{{ with_fsf | ternary('fsf', omit) }}"
-
   tasks:
-#  - debug: msg="{{ item }}"
-#    with_items: "{{ included_components.keys()|map('extract', included_components, 'name')|list}}"
-#    when: included_components.{{ item }}.value
-#- debug: msg="{{ included_components.item.value|map('extract', true)|list}}" #msg="{{ item.key }}"
-    #with_items: "{{ included_components.keys()|list}}"
-
-#    with_dict: "{{ included_components|default({}) }}"
-#    when: item.value.value
-#  - name: 'Set services'
-#    set_fact: services="{{ item.key }}"
-#    with_items: "{{ included_components.keys()|list }}"
-#    when: included_components.{{ item }}.value
-#  - debug: var=services
-
   - name: 'Render rock_start template'
     template:
       backup: yes
