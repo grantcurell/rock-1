@@ -45,24 +45,60 @@ all:
     # Feature options - Don't flip these unless you know what you're doing
     # These control if the service is installed
     included_components:
-      - { bro: "bro", value: true }
-      - { docker: "docker", value: true }
-      - { docket: "docket", value: true }
-      - { elasticsearch: "elasticsearch", value: true }
-      - { elk: "elk", value: false }
-      - { name: "filebeats", value: true }
-      - { name: "fsf", value: true }
-      - { name: "haproxy", value: true }
-      - { name: "harbor", value: false }
-      - { name: "kafka", value: true }
-      - { name: "kibana", value: true }
-      - { name: "logstash", value: false }
-      - { name: "portainer", value: true }
-      - { name: "pulledpork", value: true }
-      - { name: "snort", value: false }
-      - { name: "stenographer", value: true }
-      - { name: "suricata", value: true }
-      - { name: "zookeeper", value: true }
+      bro:
+        name: bro
+        value: true
+      docker:
+        name: docker
+        value: true
+      docket:
+        name: docket
+        value: true
+      elasticsearch:
+        name: elasticsearch
+        value: true
+      elk:
+        name: elk
+        value: false
+      filebeats:
+        name: filebeats
+        value: false
+      fsf:
+        name: fsf
+        value: true
+      haproxy:
+        name: haproxy
+        value: true
+      harbor:
+        name: harbor
+        value: false
+      kafka:
+        name: kafka
+        value: true
+      kibana:
+        name: kibana
+        value: true
+      logstash:
+        name: logstash
+        value: false
+      portainer:
+        name: portainer
+        value: true
+      pulledpork:
+        name: pulledpork
+        value: true
+      snort:
+        name: snort
+        value: false
+      stenographer:
+        name: stenographer
+        value: true
+      suricata:
+        name: suricata
+        value: true
+      zookeeper:
+        name: zookeeper
+        value: true
 
     rocknsm_package_list:
       - java-1.8.0-openjdk-headless
