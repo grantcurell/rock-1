@@ -5,10 +5,11 @@
 - hosts: all
   vars:
     services:
-      {% for item in included_components %}
-      {{ item.name if item.value }}
-      {% endif %}
-      {% endfor %}
+      - {% for item in included_components %}
+        {% if item.value %}
+        {{ item.name }}
+        {% endif %}
+        {% endfor %}
 #    - "{{ with_bro | ternary('bro', omit) }}"
 #    - "{{ with_snort | ternary('snort', omit) }}"
 #    - "{{ with_kafka | ternary('kafka', omit) }}"
