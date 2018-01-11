@@ -26,11 +26,11 @@
   - debug: msg="{{ included_components.keys()|list}}" #msg="{{ item.key }}"
 #    with_dict: "{{ included_components|default({}) }}"
 #    when: item.value.value
-#  - name: 'Set services'
-#    set_fact: services="{{ item.key }}"
-#    with_dict: "{{ included_components|default({}) }}"
-#    when: item.value.value
-#  - debug: var=services
+  - name: 'Set services'
+    set_fact: services="{{ item.key }}"
+    with_items: "{{ included_components.keys()|list }}"
+    when: included_components.{{ item }}.value
+  - debug: var=services
 
   - name: 'Render rock_start template'
     template:
