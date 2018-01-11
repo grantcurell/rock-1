@@ -18,7 +18,7 @@
 - name: 'Install Kafka service file'
   template:
     src: 'kafka.service.j2'
-    dest: '/etc/systemd/system/Kafka.service'
+    dest: '/etc/systemd/system/kafka.service'
     mode: 0644
     owner: root
     group: root
@@ -34,20 +34,20 @@
 - name: 'Copy Kafka compose file'
   template:
     src: 'kafka-compose.yml.j2'
-    dest: "{{ rocknsm_dir }}/Kafka/kafka-compose.yml.j2"
+    dest: "{{ rocknsm_dir }}/kafka/kafka-compose.yml.j2"
     mode: 0644
     owner: root
     group: root
 
 - name: 'Run Kafka-compose.yml'
   docker_service:
-    project_src: "{{ rocknsm_dir }}/Kafka/"
-    files: 'Kafka-compose.yml'
+    project_src: "{{ rocknsm_dir }}/kafka/"
+    files: 'kafka-compose.yml'
     state: present
 
 - name: 'Enable Kafka service'
   service:
-    name: 'Kafka'
+    name: 'kafka'
     enabled: yes
 
 #name: Create Kafka data dir
