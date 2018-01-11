@@ -7,8 +7,8 @@
  [Service]
  Type = simple
 
- ExecStart = /usr/bin/docker-compose -f {{ rocknsm_dir }}/zookeeper/zookeeper-compose.yml up
- ExecStop  = /usr/bin/docker-compose -f {{ rocknsm_dir }}/zookeeper/zookeeper-compose.yml down -v
+ ExecStart = /usr/bin/docker-compose -f {{ rocknsm_dir }}/zookeeper/zookeeper-compose.yml.j2 up
+ ExecStop  = /usr/bin/docker-compose -f {{ rocknsm_dir }}/zookeeper/zookeeper-compose.yml.j2 down -v
 
  [Install]
  WantedBy = multi-user.target
