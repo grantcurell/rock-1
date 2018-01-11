@@ -27,7 +27,7 @@
 #    with_dict: "{{ included_components|default({}) }}"
 #    when: item.value.value
   - name: 'Set services'
-    set_fact: services="{{ item.key }}"
+    set_fact: services+="{{ item.key }}"
     with_dict: "{{ included_components|default({}) }}"
     when: item.value.value
   - debug: var=services
