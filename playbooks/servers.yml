@@ -9,7 +9,7 @@
 
     - { role: elasticsearch, when: included_components.elasticsearch.value }
     - { role: logstash, when: included_components.logstash.value }
-    - { role: kibana, when: included_components.kibana.val']u']e }
+    - { role: kibana, when: included_components.kibana.value }
     #- { role: lighttpd, when: included_components['lighttpd'].value } #disabled for now, haproxy looks like a great replacement
     - { role: haproxy, when: included_components.haproxy.value }
     - { role: portainer, when: containerized_install and included_components.portainer.value }
