@@ -5,6 +5,7 @@
 - hosts: all
   vars:
     services:
+    activeservices: "{{ included_components.keys()|list}}"
 
   tasks:
   - name: 'Render rock_start template'
@@ -27,7 +28,8 @@
   - name: 'Build service list'
     set_fact:
       services: "{{ lookup('first_found', dict(files=['/etc/systemd/system/' + item + '.service', '/usr/lib/systemd/system/' + item + '.service'], skip=true)) }}"
-      with_items: "{{ included_components.keys()|list}}"
+      with_items:
+        - "{{activeservices}}"
       register: service_result
 
   - name: 'Make clean'
