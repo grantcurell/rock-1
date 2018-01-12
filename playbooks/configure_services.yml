@@ -23,7 +23,7 @@
       owner: root
       group: root
       mode: 0755
-  - debug: msg="{{ included_components.keys()|map('extract', included_components, 'name')|list}}"
+  - debug: msg="{{ included_components.keys()|map('extract', included_components, 'value')|list}}"
   - name: 'Add systemd rock.target wants'
     file:
       src: "{{ lookup('first_found', dict(files=['/etc/systemd/system/' + item + '.service', '/usr/lib/systemd/system/' + item + '.service'], skip=true)) }}"
