@@ -18,6 +18,13 @@
     group: root
   notify: reload systemd
 
+
+- name: 'Add RockNSM Yum Corp Repo File'
+  yum_repository:
+    name: rocknsm_corp
+    description: rocknsm corp repo
+    baseurl: https://copr-be.cloud.fedoraproject.org/results/@rocknsm/rocknsm-2.1/epel-7-$basearch/
+
 - name: 'Create new directories'
   file:
     path: '{{ item }}'
