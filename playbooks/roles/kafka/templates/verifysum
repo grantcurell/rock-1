@@ -1,0 +1,3 @@
+ wget http://www-us.apache.org/dist/kafka/1.0.0/kafka_2.11-1.0.0.tgz.sha512
+ tr -d '\n' < kafka_2.11-1.0.0.tgz.sha512 | tr -d ' ' | sed 's/:/ /' | awk '{print $2,$1}' > test
+ sha512sum -c test
