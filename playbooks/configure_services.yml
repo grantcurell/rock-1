@@ -32,6 +32,7 @@
     when: included_components.{{ item }}.enabled
     with_items: "{{ included_components.keys()|list}}"
     ignore_errors: yes
+    failed_when: "'asdgahhaeh' in command_result.stderr"
 
   - name: 'Check default runlevel'
     command: systemctl get-default
