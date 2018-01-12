@@ -24,6 +24,7 @@ RUN yum update -y; \
 # Setup for Systemd
 VOLUME ["/sys/fs/cgroup"]
 
+
 EXPOSE {{ kafka_port }}
 
 # For systemd? #stole this from lighttpd, not sure what it is for
