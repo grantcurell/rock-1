@@ -3,9 +3,9 @@
 FROM centos/systemd
 
 # Add rocknsm repo to the CentOS\Systemd base image (the is the best way I could find to get this to work so far)
-RUN echo "[rocknsm_corp]" > /etc/yum.repos.d/rocknsm.repo; /
-  echo "baseurl = https://copr-be.cloud.fedoraproject.org/results/@rocknsm/rocknsm-2.1/epel-7-x86_64/" >> /etc/yum.repos.d/rocknsm.repo; /
-  echo "name = rocknsm corp repo" >> /etc/yum.repos.d/rocknsm.repo; /
+RUN echo "[rocknsm_corp]" > /etc/yum.repos.d/rocknsm.repo; \
+  echo "baseurl = https://copr-be.cloud.fedoraproject.org/results/@rocknsm/rocknsm-2.1/epel-7-x86_64/" >> /etc/yum.repos.d/rocknsm.repo; \
+  echo "name = rocknsm corp repo" >> /etc/yum.repos.d/rocknsm.repo; \
   echo "gpgcheck=0" >> /etc/yum.repos.d/rocknsm.repo;
 
 # Prepare the environment and get things up to date
