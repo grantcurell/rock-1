@@ -24,15 +24,6 @@
       group: root
       mode: 0755
 
-  - name: 'find files'
-    find:
-      paths: /etc/systemd/system /usr/lib/systemd/systemd
-      patterns: "{{ item }}.service"
-      when: included_components.{{ item }}.enabled
-      with_items: "{{ included_components.keys()|list}}"
-      register: files_found
-  - debug:
-      var: files_found
   - name: 'Add systemd rock.target wants'
     file:
       src: "{{ lookup('first_found', dict(files=['/etc/systemd/system/' + item + '.service', '/usr/lib/systemd/system/' + item + '.service'], skip=true)) }}"
