@@ -5,7 +5,6 @@
 - hosts: all
   vars:
     services:
-    activeservices: "{{ included_components.keys()|list}}"
 
   tasks:
   - name: 'Render rock_start template'
@@ -25,20 +24,9 @@
       group: root
       mode: 0755
 
-  - name: 'Build service list'
-    set_fact:
-      services: "{{ lookup('first_found', dict(files=['/etc/systemd/system/' + item + '.service', '/usr/lib/systemd/system/' + item + '.service'], skip=true)) }}"
-      with_items:
-        - "{{activeservices}}"
-      register: service_result
-
-  - name: 'Make clean'
-    set_fact: services="{{service_result.results | map(attribute='ansible_facts.service_item')list}}"
-  - debug:
-      var: services
   - name: 'Add systemd rock.target wants'
     file:
-      src: "{{ lookup('first_found', dict(files=['/etc/systemd/system/' + item + '.service', '/usr/lib/systemd/system/' + item + '.service'], skip=true)) }}"
+      src: "{{ lookup('first_found', dict(files=['/etc/systemd/system/' + item + '.service', '/usr/lib/systemd/system/' + item + '.service'], skip=true)) | select_attr('ansible_facts', 'defined') }}"
       dest: /etc/systemd/system/rock.target.wants/{{ item }}.service
       state: link
     when: included_components.{{ item }}.enabled
