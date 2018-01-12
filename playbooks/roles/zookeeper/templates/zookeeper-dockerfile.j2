@@ -4,7 +4,7 @@ FROM centos/systemd
 
 # Prepare the environment and get things up to date
 RUN yum update -y; \
-  yum install -y wget java-headless; \
+  yum install -y zookeeper; \
   rm -rf /var/cache/yum/*; \
   rm -f /lib/systemd/system/multi-user.target.wants/*;\
   rm -f /etc/systemd/system/*.wants/*;\
@@ -12,20 +12,13 @@ RUN yum update -y; \
   rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
   rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
   rm -f /lib/systemd/system/basic.target.wants/*;\
-  rm -f /lib/systemd/system/anaconda.target.wants/*; #\
-  #systemctl enable zookeeper;
-
-# Download Zookeeper, verify hash, and decompress it
-RUN wget {{ zookeeper_url }} && \
-    wget {{ zookeeper_sha1sum_url }} && \
-    sha512sum --check zookeeper-{{ zookeeper_ver }}.tar.gz.sha1 && \
-    tar -xfz zookeeper-{{ zookeeper_ver }}.tar.gz -C {{ zookeeper_data_dir }} && \
-    rm -f zookeeper-{{ zookeeper_ver }}.tar.gz
+  rm -f /lib/systemd/system/anaconda.target.wants/*; \
+  systemctl enable zookeeper;
 
 # Setup for Systemd
 VOLUME ["/sys/fs/cgroup"]
 
-EXPOSE {{ zookeeper_port }
+EXPOSE {{ zookeeper_port }}
 
-# For systemd?
+# For systemd? #stole this from lighttpd, not sure what it is for
 CMD ["/usr/sbin/init"]

@@ -4,7 +4,7 @@ FROM centos/systemd
 
 # Prepare the environment and get things up to date
 RUN yum update -y; \
-  yum install -y wget java-headless; \
+  yum install -y kafka; \
   rm -rf /var/cache/yum/*; \
   rm -f /lib/systemd/system/multi-user.target.wants/*;\
   rm -f /etc/systemd/system/*.wants/*;\
@@ -12,22 +12,13 @@ RUN yum update -y; \
   rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
   rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
   rm -f /lib/systemd/system/basic.target.wants/*;\
-  rm -f /lib/systemd/system/anaconda.target.wants/*; #\
-  #systemctl enable kafka;
-
-# Download Kafka, verify hash, and decompress it
-RUN wget {{ kafka_url }} && \
-    wget {{ kafka_sha512sum_url }} && \
-    tr -d '\n' < kafka_{{ scala_ver }}-{{ kafka_ver }}.tgz | tr -d ' ' | sed 's/:/ /' | awk '{print $2,$1}' > temp_hash && \
-    sha512sum --check temp_hash && \
-    rm -f temp_hash && \
-    tar -xfz kafka_{{ scala_ver }}-{{ kafka_ver }}.tgz -C {{ kafka_data_dir }} && \
-    rm -f kafka_{{ scala_ver }}-{{ kafka_ver }}.tgz
+  rm -f /lib/systemd/system/anaconda.target.wants/*; \
+  systemctl enable kafka;
 
 # Setup for Systemd
 VOLUME ["/sys/fs/cgroup"]
 
 EXPOSE {{ kafka_port }}
 
-# For systemd?
+# For systemd? #stole this from lighttpd, not sure what it is for
 CMD ["/usr/sbin/init"]

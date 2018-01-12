@@ -12,11 +12,3 @@ kafka_ver: 1.0.0
 kafka_url: https://www.apache.org/dist/kafka/{{ kafka_ver }}/kafka_{{ scala_ver }}-{{ kafka_ver }}.tgz
 kafka_sha512sum_url: https://www.apache.org/dist/kafka/{{ kafka_ver }}/kafka_{{ scala_ver }}-{{ kafka_ver }}.tgz.sha512
 kafka_port: 9092
-
-zookeeper_user: zookeeper
-zookeeper_group: zookeeper
-zookeeper_data_dir: "{{ rock_data_dir }}/zookeeper"
-zookeeper_ver: 3.4.11
-zookeeper_url: http://www.apache.org/dist/zookeeper/zookeeper-{{ zookeeper_ver }}/zookeeper-{{ zookeeper_ver }}.tar.gz
-zookeeper_sha1sum_url: http://www.apache.org/dist/zookeeper/zookeeper-{{ zookeeper_ver }}/zookeeper-{{ zookeeper_ver }}.tar.gz.sha1
-zookeeper_port: 2181
