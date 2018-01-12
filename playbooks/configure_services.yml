@@ -24,6 +24,14 @@
       group: root
       mode: 0755
 
+  - name: 'Build service list'
+    set_fact:
+      services: "{{ lookup('first_found', dict(files=['/etc/systemd/system/' + item + '.service', '/usr/lib/systemd/system/' + item + '.service'], skip=true)) }}"
+  - name: 'Make clean'
+    set_fact:
+      services: {{services|difference([])}
+  - debug:
+      var: services
   - name: 'Add systemd rock.target wants'
     file:
       src: "{{ lookup('first_found', dict(files=['/etc/systemd/system/' + item + '.service', '/usr/lib/systemd/system/' + item + '.service'], skip=true)) }}"
@@ -32,7 +40,6 @@
     when: included_components.{{ item }}.enabled
     with_items: "{{ included_components.keys()|list}}"
     ignore_errors: yes
-    failed_when: "'asdgahhaeh' in command_result.stderr"
 
   - name: 'Check default runlevel'
     command: systemctl get-default
