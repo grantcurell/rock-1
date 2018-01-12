@@ -29,7 +29,7 @@
       services: "{{ lookup('first_found', dict(files=['/etc/systemd/system/' + item + '.service', '/usr/lib/systemd/system/' + item + '.service'], skip=true)) }}"
   - name: 'Make clean'
     set_fact:
-      services: {{services|difference([])}
+      services: {{services|default([])}
   - debug:
       var: services
   - name: 'Add systemd rock.target wants'
