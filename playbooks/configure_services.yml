@@ -30,7 +30,7 @@
       dest: /etc/systemd/system/rock.target.wants/{{ item }}.service
       state: link
     with_items: "{{ included_components.keys()|map('extract', included_components, 'name')|list}}"
-    when: included_components.{{ item }}.value
+    when: included_components.{{ item }}.enabled
     ignore_errors: yes
 
   - name: 'Check default runlevel'
