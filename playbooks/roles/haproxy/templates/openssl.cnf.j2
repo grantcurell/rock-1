@@ -4,7 +4,7 @@ default_ca = CA_default
 
 [ CA_default ]
 # Directory and file locations.
-dir               = /root/ca
+dir               = {{ rocknsm_dir }}
 certs             = $dir/certs
 crl_dir           = $dir/crl
 new_certs_dir     = $dir/newcerts
@@ -14,7 +14,7 @@ RANDFILE          = $dir/private/.rand
 
 # The root key and root certificate.
 private_key       = $dir/private/ca.key
-certificate       = $dir/certs/ca.cert
+certificate       = $dir/certs/ca.crt
 
 # For certificate revocation lists.
 crlnumber         = $dir/crlnumber
