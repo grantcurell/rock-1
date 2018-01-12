@@ -24,7 +24,8 @@
       group: root
       mode: 0755
 
-  - debug: msg="{{ included_components.keys()|list }}"
+  - debug:
+      msg: "{{ included_components.keys()|list }}"
       when: included_components.{{ included_components.keys()|list }}.enabled
   - name: 'Add systemd rock.target wants'
     file:
