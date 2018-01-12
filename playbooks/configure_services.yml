@@ -27,7 +27,7 @@
   - name: 'find files'
     find:
       paths: /etc/systemd/system /usr/lib/systemd/systemd
-      patterns: {{ item }}.service
+      patterns: "{{ item }}.service"
       when: included_components.{{ item }}.enabled
       with_items: "{{ included_components.keys()|list}}"
       register: files_found
