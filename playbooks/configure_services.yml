@@ -25,7 +25,7 @@
       mode: 0755
 
   - name: 'set services'
-    set_fact: services="{{ lookup('first_found', dict(files=['/etc/systemd/system/' + item + '.service', '/usr/lib/systemd/system/' + item + '.service'], skip=true)) | map(attribute='name') | list }}"
+    set_fact: services="{{ lookup('first_found', dict(files=['/etc/systemd/system/' + item + '.service', '/usr/lib/systemd/system/' + item + '.service'], skip=true)) | list }}"
     with_items: "{{ included_components.keys()|list}}"
   - debug:
       var: services
