@@ -7,9 +7,9 @@
    currently break otherwise. We could address this usecase fairly
    easily if there is a need
 #}
-{% if included_components.suricata.value %}
+{% if included_components.suricata.enabled %}
 {% set engine_basepath = "/etc/suricata" %}
-{% elif included_components.snort.value %}
+{% elif included_components.snort.enabled %}
 {% set engine_basepath = "/etc/snort" %}
 {% endif %}
 
@@ -123,11 +123,11 @@ sid_changelog=/var/log/sid_changes.log
 #sorule_path=''
 
 # Path to the snort binary, we need this to generate the stub files
-snort_path={{ "/sbin/suricata" if included_components.suricata.value else "/usr/sbin/snort" }}
+snort_path={{ "/sbin/suricata" if included_components.suricata.enabled else "/usr/sbin/snort" }}
 
 # We need to know where your snort.conf file lives so that we can
 # generate the stub files
-#config_path={{ engine_basepath }}/{{ "suricata.yaml" if included_components.suricata.value else "snort.conf" }}
+#config_path={{ engine_basepath }}/{{ "suricata.yaml" if included_components.suricata.enabled else "snort.conf" }}
 
 ##### Deprecated - The stubs are now  categorically written to the  single rule file!
 # sostub_path=/usr/local/etc/snort/rules/so_rules.rules
@@ -161,7 +161,7 @@ black_list={{ engine_basepath }}/rules/iplists/default.blacklist
 IPRVersion={{ engine_basepath }}/rules/iplists
 
 # The following option tells snort where the snort_control tool is located.
-snort_control={{ "/usr/bin/snort_control" if included_components.snort.value else "" }}
+snort_control={{ "/usr/bin/snort_control" if included_components.snort.enabled else "" }}
 
 # What do you want to backup and archive?  This is a comma separated list
 # of file or directory values.  If a directory is specified, PP will recurse
@@ -203,7 +203,7 @@ snort_control={{ "/usr/bin/snort_control" if included_components.snort.value els
 #
 # Suricata users - set this to 'suricata-3.x.x' to process rule files
 # for suricata, this mimics the -S flag on the command line.
-{% if included_components.suricata.value %}
+{% if included_components.suricata.enabled %}
 snort_version=suricata
 {% else %}
 snort_version=2.9.0.0

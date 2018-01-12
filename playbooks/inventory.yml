@@ -49,60 +49,42 @@ all:
     # These control if the service is installed
     included_components:
       bro:
-        name: bro
-        value: true
+        enabled: true
       docker:
-        name: docker
-        value: true
+        enabled: true
       docket:
-        name: docket
-        value: true
+        enabled: true
       elasticsearch:
-        name: elasticsearch
-        value: true
+        enabled: true
       elk:
-        name: elk
-        value: false
+        enabled: false
       filebeats:
-        name: filebeats
-        value: false
+        enabled: false
       fsf:
-        name: fsf
-        value: true
+        enabled: true
       haproxy:
-        name: haproxy
-        value: true
+        enabled: true
       harbor:
-        name: harbor
-        value: false
+        enabled: false
       kafka:
-        name: kafka
-        value: true
+        enabled: true
       kibana:
-        name: kibana
-        value: true
+        enabled: true
       logstash:
-        name: logstash
-        value: false
+        enabled: false
       portainer:
-        name: portainer
-        value: true
+        enabled: true
       pulledpork:
-        name: pulledpork
-        value: true
+        enabled: true
       snort:
-        name: snort
-        value: false
+        enabled: false
       stenographer:
-        name: stenographer
-        value: true
+        enabled: true
       suricata:
-        name: suricata
-        value: true
+        enabled: true
       zookeeper:
-        name: zookeeper
-        value: true
-
+        enabled: true
+        
     rocknsm_package_list:
       - java-1.8.0-openjdk-headless
       - jq
