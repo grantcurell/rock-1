@@ -8,7 +8,7 @@
 3. After getting a network connection run these commands to install updates and software then reboot:
 ```bash
 yum update -y -q
-yum install -y -q vim ansible open-vm-tools unzip git wget
+yum install -y -q vim ansible open-vm-tools git
 reboot now
 ```
 4. After the reboot and you log in, run these commands:
@@ -17,7 +17,7 @@ rm -rf /opt/rock
 git clone -b <github_branch> <github_url> /opt/rock
 /opt/rock/bin/generate_defaults.sh
 ```
-5. Open /etc/rocknsm/config.yml and verify that the rock_monifs only has the monitoring interface listed
+5. If necessary, change the software being included in the /opt/rock/playbooks/inventory.yml
 6. Run the deploy script and choose the appropriate option
 ```bash
 /opt/rock/bin/deploy_rock.sh
