@@ -23,9 +23,10 @@
       owner: root
       group: root
       mode: 0755
-
+  - debug:
+      msg: "{{ lookup('first_found', dict(files=['/etc/systemd/system/' + item + '.service', '/usr/lib/systemd/system/' + item + '.service'], skip=true)) }}"
   - name: 'set services'
-    set_fact: services=["{{ lookup('first_found', dict(files=['/etc/systemd/system/' + item + '.service', '/usr/lib/systemd/system/' + item + '.service'], skip=true)) }}"]
+    set_fact: services="{{ lookup('first_found', dict(files=['/etc/systemd/system/' + item + '.service', '/usr/lib/systemd/system/' + item + '.service'], skip=true)) }}"
     with_items: "{{ included_components.keys()|list}}"
   - debug:
       var: services
