@@ -25,8 +25,7 @@
       mode: 0755
 
   - debug:
-      msg: "{{ included_components.keys()|list }}"
-      when: included_components.{{ included_components.keys()|list }}.enabled
+      var: included_components.{{ included_components.keys()|list }}.enabled
   - name: 'Add systemd rock.target wants'
     file:
       src: "{{ lookup('first_found', dict(files=['/etc/systemd/system/' + item + '.service', '/usr/lib/systemd/system/' + item + '.service'], skip=true)) }}"
