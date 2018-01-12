@@ -29,7 +29,7 @@
       src: "{{ lookup('first_found', dict(files=['/etc/systemd/system/' + item + '.service', '/usr/lib/systemd/system/' + item + '.service'], skip=true)) }}"
       dest: /etc/systemd/system/rock.target.wants/{{ item }}.service
       state: link
-    when: included_components.{{ item }}.enabled && {{ item }} is defined
+    when: included_components.{{ item }}.enabled && {{ item }} != '[]'
     with_items: "{{ included_components.keys()|list}}"
     ignore_errors: yes
 
