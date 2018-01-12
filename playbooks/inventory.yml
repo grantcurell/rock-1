@@ -9,7 +9,7 @@ all:
 
   hosts:
     simplerockbuild.simplerock.lan:
-      ansible_hostname: 127.0.0.1
+      ansible_hostname: simplerockbuild.simplerock.lan
       ansible_connection: local
 
   vars:
@@ -17,6 +17,7 @@ all:
     #Common role variables
     common_mgnt_nets: "{{ rock_mgmt_nets }}"
 
+    local_host_name: simplerockbuild.simplerock.lan
     rock_version: 3.0
     rock_online_install: true
     rock_sysctl_file: /etc/sysctl.d/10-ROCK.conf
@@ -29,8 +30,10 @@ all:
     rock_fqdn: '{{ inventory_hostname }}'
     rock_mgmt_nets: [ "0.0.0.0/0" ]
     rock_cache_dir: /srv/rocknsm/support
-    rocknsm_baseurl: https://packagecloud.io/rocknsm/2/el/7/$basearch
-    rocknsm_gpgurl: https://packagecloud.io/rocknsm/2/gpgkey
+    #rocknsm_baseurl: https://packagecloud.io/rocknsm/2/el/7/$basearch
+    #rocknsm_gpgurl: https://packagecloud.io/rocknsm/2/gpgkey
+    rocknsm_baseurl: 'https://copr-be.cloud.fedoraproject.org/results/@rocknsm/rocknsm-2.1/epel-7-$basearch/'
+    rocknsm_gpgurl: 'https://copr-be.cloud.fedoraproject.org/results/@rocknsm/rocknsm-2.1/pubkey.gpg'
     rocknsm_local_baseurl: file:///srv/rocknsm
     rock_compose_files: "{{ rocknsm_dir + '/compose_files' }}"
 
@@ -40,66 +43,48 @@ all:
 
     #### Elasticstack x-pack options ####
     # If you have licensing for x-pack set variable to true.
-    xpack_license: false
+    xpack_license: 'false'
 
     # Feature options - Don't flip these unless you know what you're doing
     # These control if the service is installed
     included_components:
       bro:
-        name: bro
-        value: true
+        enabled: true
       docker:
-        name: docker
-        value: true
+        enabled: true
       docket:
-        name: docket
-        value: true
+        enabled: true
       elasticsearch:
-        name: elasticsearch
-        value: true
+        enabled: true
       elk:
-        name: elk
-        value: false
+        enabled: false
       filebeats:
-        name: filebeats
-        value: false
+        enabled: false
       fsf:
-        name: fsf
-        value: true
+        enabled: true
       haproxy:
-        name: haproxy
-        value: true
+        enabled: true
       harbor:
-        name: harbor
-        value: false
+        enabled: false
       kafka:
-        name: kafka
-        value: true
+        enabled: true
       kibana:
-        name: kibana
-        value: true
+        enabled: true
       logstash:
-        name: logstash
-        value: false
+        enabled: false
       portainer:
-        name: portainer
-        value: true
+        enabled: true
       pulledpork:
-        name: pulledpork
-        value: true
+        enabled: true
       snort:
-        name: snort
-        value: false
+        enabled: false
       stenographer:
-        name: stenographer
-        value: true
+        enabled: true
       suricata:
-        name: suricata
-        value: true
+        enabled: true
       zookeeper:
-        name: zookeeper
-        value: true
-
+        enabled: true
+        
     rocknsm_package_list:
       - java-1.8.0-openjdk-headless
       - jq
