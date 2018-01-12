@@ -47,25 +47,61 @@ all:
 
     # Feature options - Don't flip these unless you know what you're doing
     # These control if the service is installed
-
-    with_bro: true
-    with_docker: true
-    with_docket: true
-    with_elasticsearch: true
-    with_elk: false
-    with_filebeats: true
-    with_fsf: true
-    with_haproxy: true
-    with_harbor: false
-    with_kafka: true
-    with_kibana: true
-    with_logstash: true
-    with_portainer: true
-    with_pulledpork: true
-    with_snort: false
-    with_stenographer: true
-    with_suricata: true
-    with_zookeeper: true
+    included_components:
+      bro:
+        name: bro
+        value: true
+      docker:
+        name: docker
+        value: true
+      docket:
+        name: docket
+        value: true
+      elasticsearch:
+        name: elasticsearch
+        value: true
+      elk:
+        name: elk
+        value: false
+      filebeats:
+        name: filebeats
+        value: false
+      fsf:
+        name: fsf
+        value: true
+      haproxy:
+        name: haproxy
+        value: true
+      harbor:
+        name: harbor
+        value: false
+      kafka:
+        name: kafka
+        value: true
+      kibana:
+        name: kibana
+        value: true
+      logstash:
+        name: logstash
+        value: false
+      portainer:
+        name: portainer
+        value: true
+      pulledpork:
+        name: pulledpork
+        value: true
+      snort:
+        name: snort
+        value: false
+      stenographer:
+        name: stenographer
+        value: true
+      suricata:
+        name: suricata
+        value: true
+      zookeeper:
+        name: zookeeper
+        value: true
 
     rocknsm_package_list:
       - java-1.8.0-openjdk-headless
