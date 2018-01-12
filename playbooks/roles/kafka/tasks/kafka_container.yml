@@ -18,7 +18,6 @@
     group: root
   notify: reload systemd
 
-
 - name: 'Add RockNSM Yum Corp Repo File'
   yum_repository:
     name: rocknsm_corp
