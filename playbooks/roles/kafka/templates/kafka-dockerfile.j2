@@ -1,0 +1,31 @@
+# Dockerfile for Kafka
+
+FROM centos/systemd
+
+# Add rocknsm repo to the CentOS\Systemd base image (the is the best way I could find to get this to work so far)
+RUN echo "[rocknsm_corp]" > /etc/yum.repos.d/rocknsm.repo; \
+  echo "baseurl = https://copr-be.cloud.fedoraproject.org/results/@rocknsm/rocknsm-2.1/epel-7-x86_64/" >> /etc/yum.repos.d/rocknsm.repo; \
+  echo "name = rocknsm corp repo" >> /etc/yum.repos.d/rocknsm.repo; \
+  echo "gpgcheck=0" >> /etc/yum.repos.d/rocknsm.repo;
+
+# Prepare the environment and get things up to date
+RUN yum update -y; \
+  yum install -y kafka; \
+  rm -rf /var/cache/yum/*; \
+  rm -f /lib/systemd/system/multi-user.target.wants/*;\
+  rm -f /etc/systemd/system/*.wants/*;\
+  rm -f /lib/systemd/system/local-fs.target.wants/*; \
+  rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
+  rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
+  rm -f /lib/systemd/system/basic.target.wants/*;\
+  rm -f /lib/systemd/system/anaconda.target.wants/*; \
+  systemctl enable kafka;
+
+# Setup for Systemd
+VOLUME ["/sys/fs/cgroup"]
+
+
+EXPOSE {{ kafka_port }}
+
+# For systemd? #stole this from lighttpd, not sure what it is for
+CMD ["/usr/sbin/init"]

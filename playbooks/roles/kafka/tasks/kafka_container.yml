@@ -1,0 +1,69 @@
+---
+######################################################
+############### Setup Kafka container ###############
+######################################################
+
+# Install Kafkacat for the dockervm
+- name: Install Kafkacat package
+  yum:
+    name: kafkacat
+    state: installed
+
+- name: 'Install Kafka service file'
+  template:
+    src: 'kafka.service.j2'
+    dest: '/etc/systemd/system/kafka.service'
+    mode: 0644
+    owner: root
+    group: root
+  notify: reload systemd
+
+- name: 'Add RockNSM Yum Corp Repo File'
+  yum_repository:
+    name: rocknsm_corp
+    description: rocknsm corp repo
+    baseurl: https://copr-be.cloud.fedoraproject.org/results/@rocknsm/rocknsm-2.1/epel-7-$basearch/
+    gpgcheck: false
+
+- name: 'Create new directories'
+  file:
+    path: '{{ item }}'
+    state: directory
+  with_items:
+    - "{{ rocknsm_dir }}/kafka/data"
+
+- name: 'Copy Kafka dockerfile'
+  template:
+    src: 'kafka-dockerfile.j2'
+    dest: "{{ rocknsm_dir }}/kafka/kafka-dockerfile.j2"
+    mode: 0644
+    owner: root
+    group: root
+
+- name: 'Build Kafka container'
+  docker_image:
+    name: 'rocknsm/kafka'
+    pull: yes
+    state: present
+    path: "{{ rocknsm_dir }}/kafka/"
+    dockerfile: 'kafka-dockerfile.j2'
+  when: rock_online_install
+
+- name: 'Copy Kafka compose file'
+  template:
+    src: 'kafka-compose.yml.j2'
+    dest: "{{ rocknsm_dir }}/kafka/kafka-compose.yml.j2"
+    mode: 0644
+    owner: root
+    group: root
+
+- name: 'Run Kafka compose file'
+  docker_service:
+    project_src: "{{ rocknsm_dir }}/kafka/"
+    files: 'kafka-compose.yml.j2'
+    state: present
+
+- name: 'Enable Kafka service'
+  service:
+    name: 'kafka'
+    enabled: yes
