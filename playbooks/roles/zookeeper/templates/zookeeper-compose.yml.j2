@@ -6,6 +6,7 @@ services:
     container_name: 'zookeeper'
     ports:
       - {{ zookeeper_port }}:{{ zookeeper_port }}
-    environment: container=docker
+    environment:
+      - container=docker
 
 ...
