@@ -4,6 +4,7 @@ services:
   kafka:
     image: rocknsm/kafka
     container_name: 'kafka'
-    ports: {{ kafka_port }}:{{ kafka_port }}
+    ports:
+      - {{ kafka_port }}:{{ kafka_port }}
     environment: container=docker
 ...
