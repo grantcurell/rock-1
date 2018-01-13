@@ -12,5 +12,6 @@
     - { role: zookeeper, when: included_components.zookeeper.enabled } # Note: This must run before Kafka (Kafak connects to it on startup)
     - { role: kafka, when: included_components.kafka.enabled }
     - { role: filebeats, when: included_components.filebeats.enabled }
-    - { role: stenographer, when: included_components.stenographer.enabled }
+    #- { role: stenographer, when: included_components.stenographer.enabled }
+    #- { role: docket, when: included_components.docket.enabled }
     - { role: bro, when: included_components.bro.enabled }
