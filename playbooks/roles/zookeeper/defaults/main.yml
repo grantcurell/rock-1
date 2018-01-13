@@ -6,7 +6,4 @@
 zookeeper_user: zookeeper
 zookeeper_group: zookeeper
 zookeeper_data_dir: "{{ rock_data_dir }}/zookeeper"
-zookeeper_ver: 3.4.11
-zookeeper_url: http://www.apache.org/dist/zookeeper/zookeeper-{{ zookeeper_ver }}/zookeeper-{{ zookeeper_ver }}.tar.gz
-zookeeper_sha1sum_url: http://www.apache.org/dist/zookeeper/zookeeper-{{ zookeeper_ver }}/zookeeper-{{ zookeeper_ver }}.tar.gz.sha1
 zookeeper_port: 2181

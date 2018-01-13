@@ -3,12 +3,7 @@
 
 #### Main Role Configuration ####
 
-scala_ver: 2.11 # per https://kafka.apache.org/downloads they recommend Scala version 2.11
 kafka_user: kafka
 kafka_group: kafka
 kafka_data_dir: "{{ rock_data_dir }}/kafka"
-#kafka_config_path: /etc/kafka/server.properties
-kafka_ver: 1.0.0
-kafka_url: https://www.apache.org/dist/kafka/{{ kafka_ver }}/kafka_{{ scala_ver }}-{{ kafka_ver }}.tgz
-kafka_sha512sum_url: https://www.apache.org/dist/kafka/{{ kafka_ver }}/kafka_{{ scala_ver }}-{{ kafka_ver }}.tgz.sha512
 kafka_port: 9092

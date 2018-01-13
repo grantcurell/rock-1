@@ -17,6 +17,7 @@
     name: rocknsm_corp
     description: rocknsm corp repo
     baseurl: https://copr-be.cloud.fedoraproject.org/results/@rocknsm/rocknsm-2.1/epel-7-$basearch/
+    gpgcheck: false
 
 - name: 'Create new directories'
   file:

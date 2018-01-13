@@ -1,5 +1,0 @@
-wget {{ kafka_sha512sum_url }}
-tr -d '\n' < kafka_{{ scala_ver }}-{{ kafka_ver }}.tgz | tr -d ' ' | sed 's/:/ /' | awk '{print $2,$1}' > temp_hash
-sha512sum -c temp_hash
-rm -f temp_hash
-tar -xzf kafka_{{ scala_ver }}-{{ kafka_ver }}.tgz

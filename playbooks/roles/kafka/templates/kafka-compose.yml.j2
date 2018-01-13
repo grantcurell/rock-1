@@ -2,12 +2,8 @@
 version: '2'
 services:
   kafka:
-    image: dockerkafka/kafka
+    image: rocknsm/kafka
     container_name: 'kafka'
-    ports:
-      - "9092:9092"
-    #links:
-    #  - dockerkafka/zookeeper
-    environment:
-      - container=docker
+    ports: {{ kafka_port }}:{{ kafka_port }}
+    environment: container=docker
 ...
