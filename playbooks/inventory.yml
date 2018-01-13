@@ -106,6 +106,26 @@ all:
       - perl-Archive-Tar
       - easy-rsa
 
+    redhat_package_list:
+      - java-1.8.0-openjdk-headless
+      - jq
+      - GeoIP
+      - GeoIP-update
+      - tcpreplay
+      - tcpdump
+      - bats
+      - policycoreutils-python
+      - htop
+      - vim
+      - git
+      - tmux
+      - nmap-ncat
+      - logrotate
+      - perl-Sys-Syslog
+      - perl-Crypt-SSLeay
+      - perl-Archive-Tar
+      - easy-rsa
+
     epel_baseurl: http://download.fedoraproject.org/pub/epel/$releasever/$basearch/
     epel_gpgurl:  https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7
 
