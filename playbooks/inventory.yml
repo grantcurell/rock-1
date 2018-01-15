@@ -113,12 +113,21 @@ all:
   children:
 
     sensors:
-      # TODO: We will need these for the multinode install
       hosts:
-        rocksensor1.lan:
-          ansible_hostname: rocksensor1.lan
+        # ===== Locol host install (All on one node.) =====
+        simplerock.lan:
+          ansible_hostname: simplerock.lan
           ansible_user: root
-          ansible_connection: ssh
+          ansible_connection: local
+
+        # ===== Remote nodes: =====
+        # Enter a new group for each sensor required in your build.
+        # "ansible_hostname" will use the DNS name of any network node.
+        # "ansible_host" will use the IP address.
+#        rocksensor1.lan:
+#          ansible_hostname: rocksensor1.lan
+#          ansible_user: root
+#          ansible_connection: ssh
 
       vars:
         bro_cpu: "{{ (ansible_processor_vcpus // 2) if (ansible_processor_vcpus <= 16) else 8 }}"
@@ -133,12 +142,6 @@ all:
         bro_stats_retention: 0
 
     servers:
-      # TODO: We will need these for the multinode install
-      hosts:
-        rockserver1.lan:
-          ansible_hostname: rockserver1.lan
-          ansible_connection: ssh
-
       vars:
         es_cluster_name: rocknsm
         es_node_name: "{{ rock_hostname }}"
@@ -149,3 +152,35 @@ all:
         #### Retention Configuration ####
         elastic_close_interval: 15
         elastic_delete_interval: 60
+
+    # Primary servers are used as the main hub of the system.
+    servers.primary:
+      hosts:
+        # ===== Locol host install (All on one node.) =====
+        simplerock.lan:
+          ansible_hostname: simplerock.lan
+          ansible_user: root
+          ansible_connection: local
+
+        # ===== Remote nodes: =====
+        # Enter a new group for each server required in your build.
+        # "ansible_hostname" will use the DNS name of any network node.
+        # "ansible_host" will use the IP address.
+
+#        rockserver1.lan:
+#          ansible_hostname: rockserver1.lan
+#          ansible_user: root
+#          ansible_connection: ssh
+
+    # Secondray servers are used as additional resources for Elasticstack.
+    servers.secondary:
+      hosts:
+        # ===== Remote nodes: =====
+        # Enter a new group for each server required in your build.
+        # "ansible_hostname" will use the DNS name of any network node.
+        # "ansible_host" will use the IP address.
+
+#        rockserver2.lan:
+#          ansible_hostname: rockserver2.lan
+#          ansible_user: root
+#          ansible_connection: ssh
