@@ -123,6 +123,7 @@ all:
         pulled_pork_oinkcode: 796f26a2188c4c953ced38ff3ec899d8ae543350
         bro_rockscripts_repo: https://github.com/rocknsm/rock-scripts.git
         pulled_pork_repo: https://github.com/shirkdog/pulledpork.git
+        zookeeper_container_name: rock-zookeeper
 
         #### Retention Configuration ####
         kafka_retention: 168
