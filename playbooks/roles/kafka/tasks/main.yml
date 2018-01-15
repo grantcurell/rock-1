@@ -11,14 +11,13 @@
     baseurl: https://copr-be.cloud.fedoraproject.org/results/@rocknsm/rocknsm-2.1/epel-7-$basearch/
     gpgcheck: false
 
-# TODO: Need to figure out the permissions here
-- name: 'Create new directories'
+- name: 'Create Kafka data directory'
   file:
     path: "{{ rock_data_dir }}/kafka"
     state: directory
     mode: 0644
 
-- name: 'Create new directories'
+- name: 'Create Kafka directory'
   file:
     path: "{{ rocknsm_dir }}/kafka"
     state: directory
@@ -58,7 +57,7 @@
 - name: 'Copy Kafka compose file'
   template:
     src: 'kafka-compose.yml.j2'
-    dest: "{{ rock_compose_files }}/kafka/kafka-compose.yml.j2"
+    dest: "{{ rock_compose_files }}/kafka-compose.yml.j2"
     mode: 0644
     owner: root
     group: root

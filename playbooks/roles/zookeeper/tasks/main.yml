@@ -12,16 +12,17 @@
     owner: root
     group: root
 
-# TODO: We need to set permissions here and below
 - name: 'Create Zookeeper data directory'
   file:
     path: "{{ rock_data_dir }}/zookeeper"
     state: directory
+    mode: 0644
 
 - name: 'Create Zookeeper directories'
   file:
     path: "{{ rocknsm_dir }}/zookeeper"
     state: directory
+    mode: 0644
 
 - name: 'Copy Zookeeper dockerfile'
   template:
