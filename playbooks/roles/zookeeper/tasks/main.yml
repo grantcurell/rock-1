@@ -20,7 +20,7 @@
 
 - name: 'Create Zookeeper directories'
   file:
-    path: "{{ rock_dir }}/zookeeper"
+    path: "{{ rocknsm_dir }}/zookeeper"
     state: directory
 
 - name: 'Copy Zookeeper dockerfile'
