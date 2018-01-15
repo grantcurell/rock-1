@@ -15,6 +15,6 @@
   #- name: Dump all vars
   #  action: template src=templates/dumpall.j2 dest=/tmp/ansible-site.all
 
-- import_playbook: servers.yml
+- import_playbook: primary-servers.yml
 - import_playbook: sensors.yml
 - import_playbook: configure_services.yml

@@ -131,11 +131,18 @@ all:
         bro_stats_retention: 0
 
     servers:
-      hosts:
-        rockserver1.lan:
-          ansible_hostname: rockserver1.lan
-          ansible_user: root
-          ansible_connection: ssh
+
+      children:
+
+        primary-servers:
+          hosts:
+            rockserver1.lan:
+              ansible_hostname: rockserver1.lan
+              ansible_user: root
+              ansible_connection: ssh
+
+        secondary-servers:
+          # currently nothing here
 
       vars:
         es_cluster_name: rocknsm
