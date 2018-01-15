@@ -12,10 +12,15 @@
     owner: root
     group: root
 
-# TODO: We need to set permissions here
-- name: 'Create new directories'
+# TODO: We need to set permissions here and below
+- name: 'Create Zookeeper data directory'
   file:
     path: "{{ rock_data_dir }}/zookeeper"
+    state: directory
+
+- name: 'Create Zookeeper directories'
+  file:
+    path: "{{ rock_dir }}/zookeeper"
     state: directory
 
 - name: 'Copy Zookeeper dockerfile'
