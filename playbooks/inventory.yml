@@ -38,6 +38,10 @@ all:
     rocknsm_local_baseurl: file:///srv/rocknsm
     rock_compose_files: "{{ rocknsm_dir + '/compose_files' }}"
 
+    # This is now a global variable because it is drawn on by the sensor and
+    # the servers
+    elastic_ver: '6.1.1'
+
     #### Docker configuration variables ####
     # Install services with Docker whenever possible vs installing on bare metal.
     containerized_install: true
