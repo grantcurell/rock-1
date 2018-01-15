@@ -7,8 +7,9 @@ services:
     container_name: {{ zookeeper_container_name }}
     ports:
       - {{ zookeeper_port }}:{{ zookeeper_port }}
-    environment:
-      - container=docker
+    volumes:
+      - {{ zookeeper_data_dir }}:/data
+      - {{ zookeeper_dir }}/zoo.cfg:/conf/zoo.cfg
 
 networks:
   default:
