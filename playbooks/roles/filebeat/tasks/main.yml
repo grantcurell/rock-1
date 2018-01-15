@@ -10,13 +10,13 @@
 
 - name: 'Create filebeat directory'
   file:
-    path: /etc/filebeat
+    path: "{{ filebeat_config_location }}"
     state: directory
     mode: 0644
 
 - name: "Add Filebeat configuration file"
   template:
-    dest: /etc/filebeat/filebeat.yml
+    dest: "{{ filebeat_config_location }}/filebeat.yml"
     src: filebeat.yml.j2
   notify: "Restart Filebeat"
 

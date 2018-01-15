@@ -7,7 +7,7 @@
     - sensor-common
 
     # Containerized_install: if true, all services are docker containers. Otherwise, services installed bare metal
-    - { role: docker, when: containerized_install }
+    - { role: docker }
     - { role: suricata, when: included_components.suricata.enabled }
     - { role: zookeeper, when: included_components.zookeeper.enabled } # Note: This must run before Kafka (Kafak connects to it on startup)
     - { role: kafka, when: included_components.kafka.enabled }
