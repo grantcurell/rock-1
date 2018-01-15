@@ -1,21 +1,56 @@
 ######################################################
 ################### Setup Filebeat ###################
 ######################################################
---- 
--
-  name: Install Filebeat package
-  yum:
-    name: filebeat
-    state: installed
-- 
-  name: "Add Filebeat configuration file"
-  template: 
+
+---
+
+- name: 'Download Filebeat container'
+  docker_image:
+    name: "{{ filebeat_image }}:{{ filebeat_ver }}"
+
+- name: "Add Filebeat configuration file"
+  template:
     dest: /etc/filebeat/filebeat.yml
     src: filebeat.yml.j2
   notify: "Restart Filebeat"
-- 
-  name: "Enable and start Filebeat"
-  service: 
+
+
+
+
+
+- name: 'Install Kibana service file'
+  template:
+    src: 'kibana.service.j2'
+    dest: '/etc/systemd/system/kibana.service'
+    mode: 0644
+    owner: root
+    group: root
+  notify: reload systemd
+
+- name: 'Create new directories'
+  file:
+    path: '{{ item }}'
+    state: directory
+  with_items:
+    - "{{ rocknsm_dir }}/kibana/data"
+
+- name: 'Copy Kibana compose file'
+  template:
+    src: 'kibana-compose.yml.j2'
+    dest: "{{ rocknsm_dir }}/kibana/kibana-compose.yml"
+    mode: 0644
+    owner: root
+    group: root
+
+- name: 'Run kibana-compose.yml'
+  docker_service:
+    project_src: "{{ rocknsm_dir }}/kibana/"
+    files: 'kibana-compose.yml'
+    state: present
+
+- name: 'Enable Kibana service'
+  service:
+    name: 'kibana'
     enabled: yes
-    name: filebeat
-    state: started
+
+...

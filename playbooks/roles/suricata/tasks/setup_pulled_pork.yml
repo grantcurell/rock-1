@@ -62,6 +62,7 @@
     state: touch
   when: not rules_file.stat.exists
 
+# This will install to /etc/cron.d/
 - name: Schedule pulledpork to run daily
   cron:
     name: "pulledpork update"
