@@ -14,7 +14,12 @@ all:
 
     local_host_name: simplerockbuild.simplerock.lan
     rock_version: 3.0
+
+    # This is used to maintain compatibility with Rock proper. We currently do
+    # not use this variable for anything. It should always be set to true.
+    # Setting it to false will break a few tasks.
     rock_online_install: true
+
     rock_sysctl_file: /etc/sysctl.d/10-ROCK.conf
     rock_data_dir: /data
     rocknsm_dir: /opt/rocknsm
@@ -107,7 +112,6 @@ all:
   children:
 
     sensors:
-      # TODO: We will need these for the multinode install
       hosts:
         rocksensor1.lan:
           ansible_hostname: rocksensor1.lan
@@ -127,7 +131,6 @@ all:
         bro_stats_retention: 0
 
     servers:
-      # TODO: We will need these for the multinode install
       hosts:
         rockserver1.lan:
           ansible_hostname: rockserver1.lan
