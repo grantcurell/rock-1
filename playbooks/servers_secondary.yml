@@ -1,0 +1,12 @@
+---
+
+- hosts: servers_secondary
+  # Common secondrary server roles are Elasticsearch, logstash, etc.
+  roles:
+    - common
+    # Containerized_install: if true, all services are docker containers. Otherwise, services installed bare metal
+    - { role: docker }
+    - { role: elasticsearch, when: included_components.elasticsearch.enabled }
+    - { role: logstash, when: included_components.logstash.enabled }
+
+...
