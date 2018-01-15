@@ -63,8 +63,8 @@ all:
         enabled: true
       elk:
         enabled: false
-      filebeats:
-        enabled: false
+      filebeat:
+        enabled: true
       fsf:
         enabled: true
       haproxy:

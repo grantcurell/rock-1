@@ -28,7 +28,7 @@
     owner: root
     group: root
 
-- name: 'Enable Kibana service'
+- name: 'Enable Filebeat service'
   service:
     name: 'filebeat'
     enabled: yes
