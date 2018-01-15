@@ -5,5 +5,6 @@
 
 kafka_user: kafka
 kafka_group: kafka
+kafka_container_name: 'rock-kafka'
 kafka_data_dir: "{{ rock_data_dir }}/kafka"
 kafka_port: 9092
