@@ -110,7 +110,6 @@ all:
       hosts:
         # ===== Locol host install =====
         localhost:
-          ansible_hostname: simplerock.lan
           ansible_connection: local
 
         # ===== Remote nodes: =====
