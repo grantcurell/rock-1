@@ -1,0 +1,13 @@
+---
+  
+version: '2'
+services:
+  zookeeper:
+    image: rocknsm/zookeeper
+    container_name: 'zookeeper'
+    ports:
+      - {{ zookeeper_port }}:{{ zookeeper_port }}
+    environment:
+      - container=docker
+
+...
