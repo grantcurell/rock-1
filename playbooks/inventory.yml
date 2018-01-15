@@ -109,9 +109,8 @@ all:
     sensors:
       hosts:
         # ===== Locol host install =====
-        simplerock.lan:
+        localhost:
           ansible_hostname: simplerock.lan
-          ansible_user: root
           ansible_connection: local
 
         # ===== Remote nodes: =====
@@ -142,9 +141,8 @@ all:
         servers.primary:
           hosts:
             # ===== Locol host install (All on one node.) =====
-            simplerock.lan:
+            localhost:
               ansible_hostname: simplerock.lan
-              ansible_user: root
               ansible_connection: local
 
             # ===== Remote nodes: =====
@@ -167,7 +165,7 @@ all:
   #                ansible_hostname: rockserver2.lan
   #                ansible_user: root
   #                ansible_connection: ssh
-  
+
       # Server install variables
       vars:
         es_cluster_name: rocknsm
