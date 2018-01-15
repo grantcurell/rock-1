@@ -6,7 +6,6 @@
 # file, sensor.yml will only apply itself to the servers listed in the sensors group in this inventory file.
 
 all:
-
   hosts:
     children:
       sensors:
@@ -49,38 +48,36 @@ all:
           #### Retention Configuration ####
           elastic_close_interval: 15
           elastic_delete_interval: 60
-      children:
-        # Primary servers are used as the main hub of the system.
-        servers.primary:
-          hosts:
-            # ===== Locol host install (All on one node.) =====
-            simplerock.lan:
-              ansible_hostname: simplerock.lan
-              ansible_user: root
-              ansible_connection: local
-
-            # ===== Remote nodes: =====
-            # Enter a new group for each server required in your build.
-            # "ansible_hostname" will use the DNS name of any network node.
-            # "ansible_host" will use the IP address.
-
-#            rockserver1.lan:
-#              ansible_hostname: rockserver1.lan
-#              ansible_user: root
-#              ansible_connection: ssh
-
-        # Secondray servers are used as additional resources for Elasticstack.
-        servers.secondary:
-          hosts:
-            # ===== Remote nodes: =====
-            # Enter a new group for each server required in your build.
-            # "ansible_hostname" will use the DNS name of any network node.
-            # "ansible_host" will use the IP address.
-
-#            rockserver2.lan:
-#              ansible_hostname: rockserver2.lan
-#              ansible_user: root
-#              ansible_connection: ssh
+        children:
+          # Primary servers are used as the main hub of the system.
+          servers.primary:
+            hosts:
+              # ===== Locol host install (All on one node.) =====
+              simplerock.lan:
+                ansible_hostname: simplerock.lan
+                ansible_user: root
+                ansible_connection: local
+  
+              # ===== Remote nodes: =====
+              # Enter a new group for each server required in your build.
+              # "ansible_hostname" will use the DNS name of any network node.
+              # "ansible_host" will use the IP address.
+#              rockserver1.lan:
+#                ansible_hostname: rockserver1.lan
+#                ansible_user: root
+#                ansible_connection: ssh
+  
+          # Secondray servers are used as additional resources for Elasticstack.
+          servers.secondary:
+            hosts:
+              # ===== Remote nodes: =====
+              # Enter a new group for each server required in your build.
+              # "ansible_hostname" will use the DNS name of any network node.
+              # "ansible_host" will use the IP address.
+#              rockserver2.lan:
+#                ansible_hostname: rockserver2.lan
+#                ansible_user: root
+#                ansible_connection: ssh
 
 
   vars:
