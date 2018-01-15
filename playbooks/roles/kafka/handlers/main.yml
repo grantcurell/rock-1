@@ -1,0 +1,31 @@
+
+---
+
+- name: create kafka bro topic
+  command: >
+    /opt/kafka/bin/kafka-topics.sh
+       --zookeeper 127.0.0.1:2181
+       --create
+       --replication-factor 1
+       --topic bro-raw
+       --partitions 1
+
+- name: create kafka suricata topic
+  command: >
+    /opt/kafka/bin/kafka-topics.sh
+       --zookeeper 127.0.0.1:2181
+       --create
+       --replication-factor 1
+       --topic suricata-raw
+       --partitions 1
+       
+- name: create kafka fsf topic
+  command: >
+    /opt/kafka/bin/kafka-topics.sh
+       --zookeeper 127.0.0.1:2181
+       --create
+       --replication-factor 1
+       --topic fsf-raw
+       --partitions 1
+
+...

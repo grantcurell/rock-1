@@ -11,21 +11,12 @@
     mode: 0644
     owner: root
     group: root
-  notify: reload systemd
 
-- name: 'Add RockNSM Yum Corp Repo File'
-  yum_repository:
-    name: rocknsm_corp
-    description: rocknsm corp repo
-    baseurl: https://copr-be.cloud.fedoraproject.org/results/@rocknsm/rocknsm-2.1/epel-7-$basearch/
-    gpgcheck: false
-
+# TODO: We need to set permissions here
 - name: 'Create new directories'
   file:
-    path: '{{ item }}'
+    path: "{{ rock_data_dir }}/zookeeper"
     state: directory
-  with_items:
-    - "{{ rocknsm_dir }}/zookeeper/data"
 
 - name: 'Copy Zookeeper dockerfile'
   template:
@@ -59,8 +50,10 @@
     state: present
 
 - name: 'Enable Zookeeper service'
-  service:
+  systemd:
     name: 'zookeeper'
     enabled: yes
+    state: started
+    daemon-reload: yes
 
 ...

@@ -7,12 +7,6 @@
 
 all:
 
-  hosts:
-    simplerockbuild.simplerock.lan:
-      ansible_hostname: simplerockbuild.simplerock.lan
-      ansible_user: root
-      ansible_connection: local
-
   vars:
 
     #Common role variables
@@ -137,6 +131,7 @@ all:
       hosts:
         rockserver1.lan:
           ansible_hostname: rockserver1.lan
+          ansible_user: root
           ansible_connection: ssh
 
       vars:

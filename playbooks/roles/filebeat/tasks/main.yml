@@ -29,7 +29,7 @@
     group: root
 
 - name: 'Enable Filebeat service'
-  service:
+  systemd:
     name: 'filebeat'
     enabled: yes
     state: started
