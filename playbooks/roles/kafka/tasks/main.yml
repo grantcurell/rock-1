@@ -18,6 +18,12 @@
     state: directory
     mode: 0644
 
+- name: 'Create new directories'
+  file:
+    path: "{{ rocknsm_dir }}/kafka"
+    state: directory
+    mode: 0644
+
 # Install Kafkacat for the dockervm
 - name: Install Kafkacat package
   yum:

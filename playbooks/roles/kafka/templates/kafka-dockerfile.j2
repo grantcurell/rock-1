@@ -8,7 +8,8 @@ RUN echo "[rocknsm_corp]" > /etc/yum.repos.d/rocknsm.repo; \
   echo "name = rocknsm corp repo" >> /etc/yum.repos.d/rocknsm.repo; \
   echo "gpgcheck=0" >> /etc/yum.repos.d/rocknsm.repo;
 
-# Prepare the environment and get things up to date
+# Prepare the environment and get things up to date. The code below removes
+# a lot of extra bloat that doesn't need to be there.
 RUN yum update -y; \
   yum install -y kafka; \
   rm -rf /var/cache/yum/*; \
