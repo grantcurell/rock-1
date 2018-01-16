@@ -95,6 +95,7 @@
        --replication-factor 1
        --topic bro-raw
        --partitions 1
+  ignore_errors: yes
 
 - name: create kafka suricata topic
   command: >
@@ -104,6 +105,7 @@
        --replication-factor 1
        --topic suricata-raw
        --partitions 1
+  ignore_errors: yes
 
 - name: create kafka fsf topic
   command: >
@@ -113,3 +115,4 @@
        --replication-factor 1
        --topic fsf-raw
        --partitions 1
+  ignore_errors: yes
