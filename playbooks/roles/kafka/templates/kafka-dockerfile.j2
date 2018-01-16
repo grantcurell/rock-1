@@ -2,11 +2,9 @@
 
 FROM java:openjdk-8-jre
 
-wget -q http://apache.mirrors.spacedump.net/kafka/{{ kafka_maj_vsn }}/kafka_{{ kafka_vsn }}.tgz -O /tmp/kafka-{{ kafka_vsn }}.tgz && \
-mkdir -p {{ kafka_install_dir }} \
-
-# The option strip-components removes the top level folder. Normally this would be something like kafka_vsnXXXXX
-# This makes it so the top level is just kafka
-tar xzf /tmp/kafka-{{ kafka_vsn }}.tgz -C {{ kafka__install_dir }} --strip-components 1 \
-
-rm -f /tmp/kafka-{{ kafka_vsn }}.tgz
+RUN wget -q http://apache.mirrors.spacedump.net/kafka/1.0.0/kafka_2.12-1.0.0.tgz -O /tmp/kafka-2.12-1.0.0.tgz && \
+    mkdir -p /opt/kafka && \
+    # The option strip-components removes the top level folder. Normally this would
+    # be something like kafka_vsnXXXXX. This makes it so the top level is just kafka
+    tar xzf /tmp/kafka-2.12-1.0.0.tgz -C /opt/kafka --strip-components 1 && \
+    rm -f /tmp/kafka-2.12-1.0.0.tgz

@@ -9,7 +9,7 @@ services:
       - {{ kafka_port }}:{{ kafka_port }}
     volumes:
       - {{ kafka_data_dir }}:/tmp/kafka-logs
-      - {{ kafka_dir }}/server.properties:{{ kafka__install_dir }}/config/server.properties
+      - {{ kafka_dir }}/server.properties:{{ kafka_install_dir }}/config/server.properties
 
 networks:
   default:

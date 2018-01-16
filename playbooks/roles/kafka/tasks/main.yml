@@ -15,7 +15,7 @@
   file:
     path: "{{ kafka_data_dir }}"
     state: directory
-    mode: 0644
+    mode: 0744
 
 - name: 'Create Kafka directory'
   file:
@@ -56,7 +56,7 @@
   when: rock_online_install
 
 - name: 'Copy Kafka server.properties file'
-  template:
+  copy:
     src: 'server.properties'
     dest: "{{ kafka_dir }}/server.properties"
     mode: 0644
