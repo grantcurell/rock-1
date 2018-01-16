@@ -104,7 +104,6 @@ all:
     epel_baseurl: http://download.fedoraproject.org/pub/epel/$releasever/$basearch/
     epel_gpgurl:  https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7
 
-  hosts:
   children:
     #Sensor host configuration
     sensors:
@@ -136,48 +135,46 @@ all:
         bro_log_retention: 0
         bro_stats_retention: 0
     #Server host configuration
-    servers:
-      children:
-        # Primary servers are used as the main hub of the system.
-        servers_primary:
-          hosts:
-            # ===== Local host install (All on one node.) =====
-            local:
-              localhost
-              ansible_connection: local
+    # Primary servers are used as the main hub of the system.
+    servers_primary:
+      hosts:
+        # ===== Local host install (All on one node.) =====
+        local:
+          localhost
+          ansible_connection: local
 
-            # ===== Remote nodes: =====
-            # Enter a new group for each server required in your build.
-            # "ansible_hostname" will use the DNS name of any network node.
-            # "ansible_host" will use the IP address.
-            remote_primary_servers:
-    #          ansible_hostname: rockserver1.lan
-    #            ansible_user: root
-    #            ansible_connection: ssh
+        # ===== Remote nodes: =====
+        # Enter a new group for each server required in your build.
+        # "ansible_hostname" will use the DNS name of any network node.
+        # "ansible_host" will use the IP address.
+        remote_primary_servers:
+#          ansible_hostname: rockserver1.lan
+#            ansible_user: root
+#            ansible_connection: ssh
 
-        # Secondray servers are used as additional resources for Elasticstack.
-        servers_secondary:
-          hosts:
-            # ===== Remote nodes: =====
-            # Enter a new group for each server required in your build.
-            # "ansible_hostname" will use the DNS name of any network node.
-            # "ansible_host" will use the IP address.
-            remote_secondary_servers:
-    #          ansible_hostname: rockserver2.lan
-    #          ansible_hostname: rockserver3.lan
-    #            ansible_user: root
-    #            ansible_connection: ssh
+    # Secondray servers are used as additional resources for Elasticstack.
+    servers_secondary:
+      hosts:
+        # ===== Remote nodes: =====
+        # Enter a new group for each server required in your build.
+        # "ansible_hostname" will use the DNS name of any network node.
+        # "ansible_host" will use the IP address.
+        remote_secondary_servers:
+#          ansible_hostname: rockserver2.lan
+#          ansible_hostname: rockserver3.lan
+#            ansible_user: root
+#            ansible_connection: ssh
 
-      # Server install variables
-      vars:
-        es_cluster_name: rocknsm
-        es_node_name: "{{ rock_hostname }}"
-        es_mem: "{{ (ansible_memtotal_mb // 1024 // 2) if (ansible_memtotal_mb // 1024) < 64 else 31 }}"
-        elastic_baseurl: https://artifacts.elastic.co/packages/5.x/yum
-        elastic_gpgurl: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+  # Server install variables
+  vars:
+    es_cluster_name: rocknsm
+    es_node_name: "{{ rock_hostname }}"
+    es_mem: "{{ (ansible_memtotal_mb // 1024 // 2) if (ansible_memtotal_mb // 1024) < 64 else 31 }}"
+    elastic_baseurl: https://artifacts.elastic.co/packages/5.x/yum
+    elastic_gpgurl: https://artifacts.elastic.co/GPG-KEY-elasticsearch
 
-        #### Retention Configuration ####
-        elastic_close_interval: 15
-        elastic_delete_interval: 60
+    #### Retention Configuration ####
+    elastic_close_interval: 15
+    elastic_delete_interval: 60
 
 ...
