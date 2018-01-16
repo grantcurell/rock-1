@@ -18,6 +18,7 @@ all:
         # Enter a new group for each sensor required in your build.
         # "ansible_hostname" will use the DNS name of any network node.
         # "ansible_host" will use the IP address.
+
         remote_sensors:
           ansible_hostname: rocksensor1.lan
     #        ansible_user: root
@@ -36,18 +37,20 @@ all:
         # Enter a new group for each server required in your build.
         # "ansible_hostname" will use the DNS name of any network node.
         # "ansible_host" will use the IP address.
+
 #        remote_primary_servers:
 #          ansible_hostname: rockserver1.lan
 #            ansible_user: root
 #            ansible_connection: ssh
 
     # Secondray servers are used as additional resources for Elasticstack.
-    servers_secondary:
-      hosts:
-        # ===== Remote nodes: =====
-        # Enter a new group for each server required in your build.
-        # "ansible_hostname" will use the DNS name of any network node.
-        # "ansible_host" will use the IP address.
+            # ===== Remote nodes: =====
+            # Enter a new group for each server required in your build.
+            # "ansible_hostname" will use the DNS name of any network node.
+            # "ansible_host" will use the IP address.
+            
+#    servers_secondary:
+#      hosts:
 #        remote_secondary_servers:
 #          ansible_hostname: rockserver2.lan
 #          ansible_hostname: rockserver3.lan
