@@ -6,6 +6,57 @@
 # file, sensor.yml will only apply itself to the servers listed in the sensors group in this inventory file.
 
 all:
+  children:
+    #Sensor host configuration
+    sensors:
+      hosts:
+        # ===== Local host install =====
+        127.0.0.1:
+          ansible_connection: local
+        localhost
+
+
+        # ===== Remote nodes: =====
+        # Enter a new group for each sensor required in your build.
+        # "ansible_hostname" will use the DNS name of any network node.
+        # "ansible_host" will use the IP address.
+        remote_sensors:
+          ansible_hostname: rocksensor1.lan
+    #        ansible_user: root
+    #        ansible_connection: ssh
+
+
+    #Server host configuration
+    # Primary servers are used as the main hub of the system.
+    servers_primary:
+      hosts:
+        # ===== Local host install (All on one node.) =====
+        local:
+          localhost
+          ansible_connection: local
+
+        # ===== Remote nodes: =====
+        # Enter a new group for each server required in your build.
+        # "ansible_hostname" will use the DNS name of any network node.
+        # "ansible_host" will use the IP address.
+        remote_primary_servers:
+#          ansible_hostname: rockserver1.lan
+#            ansible_user: root
+#            ansible_connection: ssh
+
+    # Secondray servers are used as additional resources for Elasticstack.
+    servers_secondary:
+      hosts:
+        # ===== Remote nodes: =====
+        # Enter a new group for each server required in your build.
+        # "ansible_hostname" will use the DNS name of any network node.
+        # "ansible_host" will use the IP address.
+        remote_secondary_servers:
+#          ansible_hostname: rockserver2.lan
+#          ansible_hostname: rockserver3.lan
+#            ansible_user: root
+#            ansible_connection: ssh
+
   # Global install variables
   vars:
 
@@ -103,77 +154,5 @@ all:
 
     epel_baseurl: http://download.fedoraproject.org/pub/epel/$releasever/$basearch/
     epel_gpgurl:  https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7
-
-  children:
-    #Sensor host configuration
-    sensors:
-      hosts:
-        # ===== Local host install =====
-        127.0.0.1:
-          ansible_connection: local
-
-        # ===== Remote nodes: =====
-        # Enter a new group for each sensor required in your build.
-        # "ansible_hostname" will use the DNS name of any network node.
-        # "ansible_host" will use the IP address.
-        remote_sensors:
-    #      ansible_hostname: rocksensor1.lan
-    #        ansible_user: root
-    #        ansible_connection: ssh
-
-      # Sensor install variables
-      vars:
-        bro_cpu: "{{ (ansible_processor_vcpus // 2) if (ansible_processor_vcpus <= 16) else 8 }}"
-        pulled_pork_oinkcode: 796f26a2188c4c953ced38ff3ec899d8ae543350
-        bro_rockscripts_repo: https://github.com/rocknsm/rock-scripts.git
-        pulled_pork_repo: https://github.com/shirkdog/pulledpork.git
-
-        #### Retention Configuration ####
-        kafka_retention: 168
-        suricata_retention: 3
-        bro_log_retention: 0
-        bro_stats_retention: 0
-    #Server host configuration
-    # Primary servers are used as the main hub of the system.
-    servers_primary:
-      hosts:
-        # ===== Local host install (All on one node.) =====
-        local:
-          localhost
-          ansible_connection: local
-
-        # ===== Remote nodes: =====
-        # Enter a new group for each server required in your build.
-        # "ansible_hostname" will use the DNS name of any network node.
-        # "ansible_host" will use the IP address.
-        remote_primary_servers:
-#          ansible_hostname: rockserver1.lan
-#            ansible_user: root
-#            ansible_connection: ssh
-
-    # Secondray servers are used as additional resources for Elasticstack.
-    servers_secondary:
-      hosts:
-        # ===== Remote nodes: =====
-        # Enter a new group for each server required in your build.
-        # "ansible_hostname" will use the DNS name of any network node.
-        # "ansible_host" will use the IP address.
-        remote_secondary_servers:
-#          ansible_hostname: rockserver2.lan
-#          ansible_hostname: rockserver3.lan
-#            ansible_user: root
-#            ansible_connection: ssh
-
-  # Server install variables
-  vars:
-    es_cluster_name: rocknsm
-    es_node_name: "{{ rock_hostname }}"
-    es_mem: "{{ (ansible_memtotal_mb // 1024 // 2) if (ansible_memtotal_mb // 1024) < 64 else 31 }}"
-    elastic_baseurl: https://artifacts.elastic.co/packages/5.x/yum
-    elastic_gpgurl: https://artifacts.elastic.co/GPG-KEY-elasticsearch
-
-    #### Retention Configuration ####
-    elastic_close_interval: 15
-    elastic_delete_interval: 60
 
 ...
