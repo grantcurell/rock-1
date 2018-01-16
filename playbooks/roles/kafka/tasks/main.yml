@@ -89,7 +89,7 @@
 # TODO: Need to add a dependency on zookeeper
 - name: create kafka bro topic
   command: >
-    docker exec -it {{ kafka_container_name }} /opt/kafka/bin/kafka-topics.sh
+    docker exec {{ kafka_container_name }} /opt/kafka/bin/kafka-topics.sh
        --zookeeper {{ zookeeper_container_name }}:2181
        --create
        --replication-factor 1
@@ -98,7 +98,7 @@
 
 - name: create kafka suricata topic
   command: >
-    docker exec -it {{ kafka_container_name }} /opt/kafka/bin/kafka-topics.sh
+    docker exec {{ kafka_container_name }} /opt/kafka/bin/kafka-topics.sh
        --zookeeper {{ zookeeper_container_name }}:2181
        --create
        --replication-factor 1
@@ -107,7 +107,7 @@
 
 - name: create kafka fsf topic
   command: >
-    docker exec -it {{ kafka_container_name }} /opt/kafka/bin/kafka-topics.sh
+    docker exec {{ kafka_container_name }} /opt/kafka/bin/kafka-topics.sh
        --zookeeper {{ zookeeper_container_name }}:2181
        --create
        --replication-factor 1
