@@ -1,31 +1,12 @@
 # Dockerfile for Kafka
 
-FROM centos/systemd
+FROM java:openjdk-8-jre
 
-# Add rocknsm repo to the CentOS\Systemd base image (the is the best way I could find to get this to work so far)
-RUN echo "[rocknsm_corp]" > /etc/yum.repos.d/rocknsm.repo; \
-  echo "baseurl = https://copr-be.cloud.fedoraproject.org/results/@rocknsm/rocknsm-2.1/epel-7-x86_64/" >> /etc/yum.repos.d/rocknsm.repo; \
-  echo "name = rocknsm corp repo" >> /etc/yum.repos.d/rocknsm.repo; \
-  echo "gpgcheck=0" >> /etc/yum.repos.d/rocknsm.repo;
+wget -q http://apache.mirrors.spacedump.net/kafka/{{ kafka_maj_vsn }}/kafka_{{ kafka_vsn }}.tgz -O /tmp/kafka-{{ kafka_vsn }}.tgz && \
+mkdir -p {{ kafka_install_dir }} \
 
-# Prepare the environment and get things up to date. The code below removes
-# a lot of extra bloat that doesn't need to be there.
-RUN yum update -y; \
-  yum install -y kafka; \
-  rm -rf /var/cache/yum/*; \
-  rm -f /lib/systemd/system/multi-user.target.wants/*;\
-  rm -f /etc/systemd/system/*.wants/*;\
-  rm -f /lib/systemd/system/local-fs.target.wants/*; \
-  rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
-  rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
-  rm -f /lib/systemd/system/basic.target.wants/*;\
-  rm -f /lib/systemd/system/anaconda.target.wants/*; \
-  systemctl enable kafka;
+# The option strip-components removes the top level folder. Normally this would be something like kafka_vsnXXXXX
+# This makes it so the top level is just kafka
+tar xzf /tmp/kafka-{{ kafka_vsn }}.tgz -C {{ kafka__install_dir }} --strip-components 1 \
 
-# Setup for Systemd
-VOLUME ["/sys/fs/cgroup"]
-
-EXPOSE {{ kafka_port }}
-
-# For systemd? #stole this from lighttpd, not sure what it is for
-CMD ["/usr/sbin/init"]
+rm -f /tmp/kafka-{{ kafka_vsn }}.tgz

@@ -7,8 +7,9 @@ services:
     container_name: {{ kafka_container_name }}
     ports:
       - {{ kafka_port }}:{{ kafka_port }}
-    environment:
-      - container=docker
+    volumes:
+      - {{ kafka_data_dir }}:/tmp/kafka-logs
+      - {{ kafka_dir }}/server.properties:{{ kafka__install_dir }}/config/server.properties
 
 networks:
   default:

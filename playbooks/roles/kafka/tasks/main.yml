@@ -13,21 +13,22 @@
 
 - name: 'Create Kafka data directory'
   file:
-    path: "{{ rock_data_dir }}/kafka"
+    path: "{{ kafka_data_dir }}"
     state: directory
     mode: 0644
 
 - name: 'Create Kafka directory'
   file:
-    path: "{{ rocknsm_dir }}/kafka"
+    path: "{{ kafka_dir }}"
     state: directory
     mode: 0644
 
 # Install Kafkacat for the dockervm
-- name: Install Kafkacat package
-  yum:
-    name: kafkacat
-    state: installed
+# TODO: Is this needed?
+#- name: Install Kafkacat package
+#  yum:
+#    name: kafkacat
+#    state: installed
 
 - name: 'Install Kafka service file'
   template:
@@ -40,7 +41,7 @@
 - name: 'Copy Kafka dockerfile'
   template:
     src: 'kafka-dockerfile.j2'
-    dest: "{{ rocknsm_dir }}/kafka/kafka-dockerfile.j2"
+    dest: "{{ kafka_dir }}/kafka-dockerfile.j2"
     mode: 0644
     owner: root
     group: root
@@ -50,9 +51,17 @@
     name: 'rocknsm/kafka'
     pull: yes
     state: present
-    path: "{{ rocknsm_dir }}/kafka/"
+    path: "{{ kafka_dir }}/"
     dockerfile: 'kafka-dockerfile.j2'
   when: rock_online_install
+
+- name: 'Copy Kafka server.properties file'
+  template:
+    src: 'server.properties'
+    dest: "{{ kafka_dir }}/server.properties"
+    mode: 0644
+    owner: root
+    group: root
 
 - name: 'Copy Kafka compose file'
   template:
