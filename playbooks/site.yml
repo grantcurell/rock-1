@@ -38,6 +38,7 @@
       ansible_connection: local
     when: sensorlocal is defined and sensorlocal
 
-- import_playbook: servers.yml
+- import_playbook: servers_primary.yml
+- import_playbook: servers_secondary.yml 
 - import_playbook: sensors.yml
 - import_playbook: configure_services.yml
