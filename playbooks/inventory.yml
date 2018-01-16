@@ -11,10 +11,8 @@ all:
     sensors:
       hosts:
         # ===== Local host install =====
-        127.0.0.1:
+        localhost:
           ansible_connection: local
-        localhost
-
 
         # ===== Remote nodes: =====
         # Enter a new group for each sensor required in your build.
@@ -31,8 +29,7 @@ all:
     servers_primary:
       hosts:
         # ===== Local host install (All on one node.) =====
-        local:
-          localhost
+        localhost:
           ansible_connection: local
 
         # ===== Remote nodes: =====
