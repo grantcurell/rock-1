@@ -107,15 +107,16 @@ all:
 #Sensor host configuration
 sensors:
   hosts:
-    # ===== Locol host install =====
-    localhost:
+    # ===== Local host install =====
+    local:
+      localhost
       ansible_connection: local
 
     # ===== Remote nodes: =====
     # Enter a new group for each sensor required in your build.
     # "ansible_hostname" will use the DNS name of any network node.
     # "ansible_host" will use the IP address.
-#        rocksensor1.lan:
+#        remote_sensors:
 #          ansible_hostname: rocksensor1.lan
 #          ansible_user: root
 #          ansible_connection: ssh
@@ -138,18 +139,19 @@ servers:
     # Primary servers are used as the main hub of the system.
     servers_primary:
       hosts:
-        # ===== Locol host install (All on one node.) =====
-        localhost:
+        # ===== Local host install (All on one node.) =====
+        local:
+          localhost
           ansible_connection: local
 
         # ===== Remote nodes: =====
         # Enter a new group for each server required in your build.
         # "ansible_hostname" will use the DNS name of any network node.
         # "ansible_host" will use the IP address.
-#              rockserver1.lan:
-#                ansible_hostname: rockserver1.lan
-#                ansible_user: root
-#                ansible_connection: ssh
+        remote_primary_servers:
+#          ansible_hostname: rockserver1.lan
+#          ansible_user: root
+#          ansible_connection: ssh
 
     # Secondray servers are used as additional resources for Elasticstack.
     servers_secondary:
@@ -158,10 +160,11 @@ servers:
         # Enter a new group for each server required in your build.
         # "ansible_hostname" will use the DNS name of any network node.
         # "ansible_host" will use the IP address.
-#              rockserver2.lan:
-#                ansible_hostname: rockserver2.lan
-#                ansible_user: root
-#                ansible_connection: ssh
+        remote_secondary_servers:
+#          ansible_hostname: rockserver2.lan
+#          ansible_hostname: rockserver3.lan
+#          ansible_user: root
+#          ansible_connection: ssh
 
   # Server install variables
   vars:
