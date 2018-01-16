@@ -109,7 +109,7 @@ all:
     sensors:
       hosts:
         # ===== Local host install =====
-        localhost:
+        localhost
           ansible_connection: local
 
         # ===== Remote nodes: =====
