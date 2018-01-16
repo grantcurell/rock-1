@@ -1,6 +1,8 @@
 ---
 
 - hosts: servers_primary
+# All variables are stored by group.  For example look in group_vars/servers/servers.yml
+
   # Additional roles only installed onto primary servers.
   roles:
     - common

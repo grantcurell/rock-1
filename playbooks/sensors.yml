@@ -1,7 +1,7 @@
 ---
 
 - hosts: sensors
-
+# All variables are stored by group.  For example look in group_vars/sensors/sensors.yml
   roles:
     - common
     - sensor-common
