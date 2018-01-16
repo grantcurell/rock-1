@@ -1,0 +1,17 @@
+---
+
+version: '2'
+services:
+  kafka:
+    image: {{ filebeat_image }}:{{ filebeat_ver }}
+    container_name: rock-filebeat
+    volumes:
+      - {{ filebeat_config_location }}/filebeat.yml:/usr/share/filebeat/filebeat.yml
+    networks:
+      - rocknsm_inside
+
+networks:
+  rocknsm_inside:
+    external: true
+
+...
