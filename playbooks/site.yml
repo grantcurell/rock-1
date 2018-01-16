@@ -17,4 +17,5 @@
 
 - import_playbook: primary-servers.yml
 - import_playbook: sensors.yml
+- import_playbook: secondary_servers.yml
 - import_playbook: configure_services.yml
