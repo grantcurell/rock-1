@@ -36,7 +36,10 @@ all:
         # Enter a new group for each server required in your build.
         # "ansible_hostname" will use the DNS name of any network node.
         # "ansible_host" will use the IP address.
-        remote_primary_servers:
+#        remote_primary_servers:
+#          ansible_hostname: rockserver1.lan
+#            ansible_user: root
+#            ansible_connection: ssh
 
     # Secondray servers are used as additional resources for Elasticstack.
     servers_secondary:
@@ -45,7 +48,7 @@ all:
         # Enter a new group for each server required in your build.
         # "ansible_hostname" will use the DNS name of any network node.
         # "ansible_host" will use the IP address.
-        remote_secondary_servers:
+#        remote_secondary_servers:
 #          ansible_hostname: rockserver2.lan
 #          ansible_hostname: rockserver3.lan
 #            ansible_user: root
