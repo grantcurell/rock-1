@@ -2,7 +2,7 @@
 
 version: '2'
 services:
-  kafka:
+  filebeat:
     image: {{ filebeat_image }}:{{ filebeat_ver }}
     container_name: rock-filebeat
     volumes:
