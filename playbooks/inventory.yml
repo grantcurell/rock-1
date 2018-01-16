@@ -109,17 +109,17 @@ sensors:
   hosts:
     # ===== Local host install =====
     local:
-      localhost
+      ansible_host: localhost
       ansible_connection: local
 
     # ===== Remote nodes: =====
     # Enter a new group for each sensor required in your build.
     # "ansible_hostname" will use the DNS name of any network node.
     # "ansible_host" will use the IP address.
-#        remote_sensors:
-#          ansible_hostname: rocksensor1.lan
-#            ansible_user: root
-#            ansible_connection: ssh
+    remote_sensors:
+#      ansible_hostname: rocksensor1.lan
+#        ansible_user: root
+#        ansible_connection: ssh
 
   # Sensor install variables
   vars:
