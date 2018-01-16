@@ -1,12 +1,13 @@
 ---
 
-- hosts: servers
+- hosts: servers_primary
+# All variables are stored by group.  For example look in group_vars/servers/servers.yml
+
+  # Additional roles only installed onto primary servers.
   roles:
     - common
-
     # Containerized_install: if true, all services are docker containers. Otherwise, services installed bare metal
     - { role: docker }
-
     - { role: elasticsearch, when: included_components.elasticsearch.enabled }
     - { role: logstash, when: included_components.logstash.enabled }
     - { role: kibana, when: included_components.kibana.enabled }
@@ -16,3 +17,5 @@
 
     # Harbor must run last so that it uploads all containers installed on the machine.
     - { role: harbor, when: included_components.harbor.enabled }
+
+...

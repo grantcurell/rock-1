@@ -1,7 +1,7 @@
 ---
 
 - hosts: sensors
-
+# All variables are stored by group.  For example look in group_vars/sensors/sensors.yml
   roles:
     - common
     - sensor-common
@@ -15,3 +15,5 @@
     #- { role: stenographer, when: included_components.stenographer.enabled }
     #- { role: docket, when: included_components.docket.enabled }
     - { role: bro, when: included_components.bro.enabled }
+
+...
