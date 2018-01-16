@@ -118,8 +118,8 @@ sensors:
     # "ansible_host" will use the IP address.
 #        remote_sensors:
 #          ansible_hostname: rocksensor1.lan
-#          ansible_user: root
-#          ansible_connection: ssh
+#            ansible_user: root
+#            ansible_connection: ssh
 
   # Sensor install variables
   vars:
@@ -150,8 +150,8 @@ servers:
         # "ansible_host" will use the IP address.
         remote_primary_servers:
 #          ansible_hostname: rockserver1.lan
-#          ansible_user: root
-#          ansible_connection: ssh
+#            ansible_user: root
+#            ansible_connection: ssh
 
     # Secondray servers are used as additional resources for Elasticstack.
     servers_secondary:
@@ -163,8 +163,8 @@ servers:
         remote_secondary_servers:
 #          ansible_hostname: rockserver2.lan
 #          ansible_hostname: rockserver3.lan
-#          ansible_user: root
-#          ansible_connection: ssh
+#            ansible_user: root
+#            ansible_connection: ssh
 
   # Server install variables
   vars:
