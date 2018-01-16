@@ -8,13 +8,14 @@
   docker_image:
     name: "{{ zookeeper_container }}:{{ zookeeper_ver }}"
 
+# This directory must have execute permissions to work properly
 - name: 'Create Zookeeper data directory'
   file:
-    path: {{ zookeeper_data_dir }}
+    path: "{{ zookeeper_data_dir }}"
     state: directory
-    mode: 0644
-    owner: 1000
-    group: 1000
+    mode: 0744
+    owner: root
+    group: root
 
 - name: 'Create Zookeeper directories'
   file:
