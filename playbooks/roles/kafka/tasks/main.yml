@@ -46,6 +46,14 @@
     owner: root
     group: root
 
+- name: 'Copy Kafka start_kafka script'
+  copy:
+    src: 'start-kafka.sh'
+    dest: "{{ kafka_dir }}/start-kafka.sh"
+    mode: 0644
+    owner: root
+    group: root
+
 - name: 'Build Kafka container'
   docker_image:
     name: 'rocknsm/kafka'
@@ -54,14 +62,6 @@
     path: "{{ kafka_dir }}/"
     dockerfile: 'kafka-dockerfile.j2'
   when: rock_online_install
-
-- name: 'Copy Kafka start_kafka script'
-  copy:
-    src: 'start-kafka.sh'
-    dest: "{{ kafka_dir }}/start-kafka.sh"
-    mode: 0644
-    owner: root
-    group: root
 
 - name: 'Copy Kafka server.properties file'
   copy:
