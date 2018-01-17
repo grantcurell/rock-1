@@ -1,0 +1,12 @@
+---
+
+- hosts: sensors
+  roles:
+    - sensor-common
+    - bro
+    - suricata
+    - filebeat
+    - zookeeper
+    - kafka
+
+...

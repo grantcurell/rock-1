@@ -1,33 +1,22 @@
-# main.yml is the overall playbook, but all it does is include the other playbooks that are part of the site. For more
+# site.yml is the overall playbook, but all it does is include the other playbooks that are part of the site. For more
 # information about the structure see:
 # http://docs.ansible.com/ansible/latest/playbooks_best_practices.html
 # http://docs.ansible.com/ansible/latest/intro_inventory.html
 # We follow the guidance to include naming conventions there.
 
 ---
+
 - hosts: all
-  roles:
-    - common
-    - docker
 
-- hosts: sensors
-  roles:
-    - sensor-common
-    - bro
-    - suricata
-    - filebeat
-    - zookeeper
-    - kafka
+  tasks:
 
-- hosts: master
-  roles:
-    - haproxy
-    - kibana
-    - portainer
-    - elasticsearch
-    - logstash
+  # Useful for debugging, uncomment if you don't need it. This will post all
+  # ansible related variables to the file /tmp/ansible.all
+  #- name: Dump all vars
+  #  action: template src=templates/dumpall.j2 dest=/tmp/ansible-site.all
 
-- hosts: ingest
-  roles:
-    - elasticsearch
-    - logstash
+- import_playbook: master-servers.yml
+- import_playbook: sensors.yml
+- import_playbook: ingest.yml
+
+...
