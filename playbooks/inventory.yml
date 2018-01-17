@@ -9,8 +9,17 @@ all:
 
   children:
 
-
     # Role specific breakout
+
+    common:
+      children:
+        sensors:
+        servers:
+
+    sensor-common:
+      children:
+        sensors:
+
     bro:
       children:
         sensors:

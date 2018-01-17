@@ -14,8 +14,13 @@
   #- name: Dump all vars
   #  action: template src=templates/dumpall.j2 dest=/tmp/ansible-site.all
 
+- hosts: common
   roles:
     - common
+
+- hosts: sensor-common
+  roles:
+    - sensor-common
 
 - hosts: docker
   roles:
