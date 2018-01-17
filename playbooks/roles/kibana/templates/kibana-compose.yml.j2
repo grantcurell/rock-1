@@ -8,12 +8,13 @@ services:
     ports:
       - "{{ kibana_ip }}:{{ kibana_port }}:{{ kibana_port }}"
     restart: "always"
-    volumes: 
+    volumes:
       - "{{ rocknsm_dir }}/kibana/data:/data"
     environment:
-      - ELASTICSEARCH_URL="http://localhost:9200"
+      - ELASTICSEARCH_URL="http://{{ rock_hostname }}:9200"
       - SERVER_HOST="{{ kibana_ip }}"
       - SERVER_PORT="{{ kibana_port }}"
+      - SERVER_BASEPATH="/kibana"
       - xpack.security.enabled="{{ xpack_license }}"
       - xpack.monitoring.ui.container.elasticsearch.enabled:"{{ xpack_license }}"
 # Secure Docker network that cannot be connected to host directly

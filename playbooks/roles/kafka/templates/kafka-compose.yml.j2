@@ -1,0 +1,23 @@
+---
+
+version: '2'
+services:
+  kafka:
+    image: rocknsm/kafka
+    container_name: rock-kafka
+    ports:
+      - "9092:9092"
+    volumes:
+      - /data/kafka:/tmp/kafka-logs
+      - /opt/rocknsm/kafka/server.properties:/opt/kafka/config/server.properties
+    networks:
+      - rocknsm_inside
+      - rocknsm_outside
+
+networks:
+  rocknsm_inside:
+    external: true
+  rocknsm_outside:
+    external: true
+
+...
