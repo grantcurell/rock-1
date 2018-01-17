@@ -7,6 +7,7 @@ services:
     container_name: rock-filebeat
     volumes:
       - {{ filebeat_config_location }}/filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - {{ suricata_log_location }}:{{ suricata_log_location }}
     networks:
       - rocknsm_inside
 
