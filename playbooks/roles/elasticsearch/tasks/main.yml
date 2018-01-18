@@ -18,27 +18,27 @@
     comment: "User for managing elasticsearch related things"
     group: "{{ es_group }}"
 
-- name: "Create Elasticsearch directory"
+- name: "Create Elasticsearch data directory"
   file:
-    group: "{{ es_group }}"
+    group: 1000
     mode: u+rw,g+rw
-    owner: "{{ es_user }}"
+    owner: 1000
     path: "{{ es_data_dir }}"
     state: directory
 
 - name: "Create Elasticsearch configuration directory"
   file:
-    group: "{{ es_group }}"
+    group: 1000
     mode: u+rw,g+rw
-    owner: "{{ es_user }}"
+    owner: 1000
     path: "{{ es_config_dir }}"
     state: directory
 
 - name: "Create Elasticsearch log directory"
   file:
-    group: "{{ es_group }}"
+    group: 1000
     mode: u+rw,g+rw
-    owner: "{{ es_user }}"
+    owner: 1000
     path: "{{ es_log_dir }}"
     state: directory
 
