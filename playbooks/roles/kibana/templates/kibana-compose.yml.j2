@@ -6,7 +6,7 @@ services:
     image: "{{ kibana_image }}:{{ kibana_ver }}"
     container_name: "{{ kibana_container_name }}"
     ports:
-      - "{{ kibana_ip }}:{{ kibana_port }}:{{ kibana_port }}"
+      - "{{ kibana_port }}:{{ kibana_port }}"
     restart: "always"
     volumes:
       - "{{ rocknsm_dir }}/kibana/data:/data"
@@ -17,9 +17,14 @@ services:
       - SERVER_BASEPATH="/kibana"
       - xpack.security.enabled="{{ xpack_license }}"
       - xpack.monitoring.ui.container.elasticsearch.enabled:"{{ xpack_license }}"
-# Secure Docker network that cannot be connected to host directly
+
+    networks:
+      - rocknsm_inside
+      - rocknsm_outside
+
 networks:
-  default:
-    external:
-      name: 'rocknsm_inside'
+  rocknsm_inside:
+    external: true
+  rocknsm_outside:
+    external: true
 ...
