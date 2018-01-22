@@ -7,9 +7,9 @@ Requires = docker.service
 [Service]
 Type = simple
 
-ExecStart = /usr/bin/docker-compose -f {{ rock_compose_files }}/filebeat-compose.yml.j2 up
+ExecStart = /usr/bin/docker-compose -f {{ rock_compose_files }}/filebeat-compose.yml up
 ExecStartPost = /bin/sh -c "/bin/sleep 3; /bin/ln -sf $(docker inspect --format='{{ '{{' }}.LogPath{{ '}}' }}' rock-filebeat) /var/log/filebeat/docker.log"
-ExecStop  = /usr/bin/docker-compose -f {{ rock_compose_files }}/filebeat-compose.yml.j2 down
+ExecStop  = /usr/bin/docker-compose -f {{ rock_compose_files }}/filebeat-compose.yml down
 
 Restart=always
 RestartSec=3
