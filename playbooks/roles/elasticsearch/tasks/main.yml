@@ -66,6 +66,15 @@
     owner: root
     src: templates/elasticsearch.service.j2
 
+- name: "Setting Maximum File Descriptors in limits.conf"
+  lineinfile:
+    path: /etc/security/limits.conf
+    regexp: '\* +- +nofile'
+    line: '*              -      nofile        131072'
+
+- name: "Setting Maximum File Descriptors for Current Session"
+  command: ulimit -n 131072
+
 - name: "Enable and start Elasticsearch"
   systemd:
     enabled: yes
