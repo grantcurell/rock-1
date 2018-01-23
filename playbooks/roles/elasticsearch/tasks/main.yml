@@ -73,7 +73,9 @@
     line: '*              -      nofile        131072'
 
 - name: "Setting Maximum File Descriptors for Current Session"
-  command: ulimit -n 131072
+  shell: ulimit -n 131072
+  args:
+    executable: /bin/bash
 
 - name: "Enable and start Elasticsearch"
   systemd:
