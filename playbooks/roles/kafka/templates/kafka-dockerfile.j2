@@ -26,10 +26,3 @@ RUN wget -q {{ kafka_url }} -O /tmp/{{ kafka_download_name }} && \
 EXPOSE {{ kafka_port }}
 
 CMD /usr/bin/start-kafka.sh
-
-1 file change in working directory
-View change
-commit:0511a0
-Cleaned up and made Kafka dockerfile better
-
-Converted hardcoded strings into variables, changed the scala version to 2.11 (recommend), verified the file hash of the download, and commented on unused variables
