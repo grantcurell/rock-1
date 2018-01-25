@@ -11,6 +11,19 @@
     baseurl: https://copr-be.cloud.fedoraproject.org/results/@rocknsm/rocknsm-2.1/epel-7-$basearch/
     gpgcheck: false
 
+# This is used for debugging Kafka
+- name: Install kafkacat
+  yum:
+    name: "kafkacat"
+    state: "installed"
+
+- name: Open port in firewalld for Kafka
+  firewalld:
+    port: 9092/tcp
+    permanent: true
+    immediate: true
+    state: enabled
+
 - name: 'Create Kafka data directory'
   file:
     path: "{{ kafka_data_dir }}"
@@ -22,6 +35,11 @@
     path: "{{ kafka_dir }}"
     state: directory
     mode: 0644
+
+- name: 'Create kafka log directory'
+  file:
+    path: "{{ kafka_log_dir }}"
+    state: directory
 
 # Install Kafkacat for the dockervm
 # TODO: Is this needed?
@@ -72,8 +90,8 @@
   when: rock_online_install
 
 - name: 'Copy Kafka server.properties file'
-  copy:
-    src: 'server.properties'
+  template:
+    src: 'server.properties.j2'
     dest: "{{ kafka_dir }}/server.properties"
     mode: 0644
     owner: root
@@ -82,7 +100,7 @@
 - name: 'Copy Kafka compose file'
   template:
     src: 'kafka-compose.yml.j2'
-    dest: "{{ rock_compose_files }}/kafka-compose.yml.j2"
+    dest: "{{ rock_compose_files }}/kafka-compose.yml"
     mode: 0644
     owner: root
     group: root
@@ -99,8 +117,6 @@
     seconds: 20
 
 # TODO: Need to add a dependency on zookeeper
-# A handy way for debugging whether filebeats is actually getting info in here is:
-# docker exec -it rock-kafka /opt/kafka/bin/kafka-topics.sh --zookeeper rock-zookeeper:2181 --describe --topic suricata-raw
 - name: create kafka bro topic
   command: >
     docker exec {{ kafka_container_name }} /opt/kafka/bin/kafka-topics.sh

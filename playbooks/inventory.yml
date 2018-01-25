@@ -32,9 +32,9 @@ all:
       children:
         master-servers:
 
-    haproxy:
-      children:
-        master-servers:
+    #haproxy:
+    #  children:
+    #    master-servers:
 
     elasticsearch:
       children:
@@ -64,8 +64,15 @@ all:
       children:
         master-servers:
 
+    dnsmasq:
+      children:
+        #servers:     # Uncomment to add this to the server
+
     # Broad categories for convienience
     sensors:
+
+      vars:
+        home_net: "\"[192.168.0.0/16,10.0.0.0/8,172.16.0.0/12]\""
 
       hosts:
         rocksensor1.lan:
