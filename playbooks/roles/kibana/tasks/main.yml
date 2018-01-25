@@ -26,15 +26,24 @@
 
 - name: 'Create new directories'
   file:
-    path: '{{ item }}'
+    path: "{{ rock_data_dir }}/kibana"
+    owner: 1000
+    group: 1000
+    mode: u+rw,g+rw
     state: directory
-  with_items:
-    - "{{ rocknsm_dir }}/kibana/data"
+
+- name: 'Create Kibana log directory'
+  file:
+    owner: 1000
+    group: 1000
+    mode: u+rw,g+rw
+    path: "{{ kibana_log_dir }}"
+    state: directory
 
 - name: 'Copy Kibana compose file'
   template:
     src: 'kibana-compose.yml.j2'
-    dest: "{{ rocknsm_dir }}/kibana/kibana-compose.yml"
+    dest: "{{ rock_compose_files }}/kibana-compose.yml"
     mode: 0644
     owner: root
     group: root
@@ -43,6 +52,7 @@
   service:
     name: 'kibana'
     enabled: yes
-    state: started
+    state: restarted
     daemon_reload: yes
+
 ...
