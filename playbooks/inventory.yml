@@ -64,6 +64,10 @@ all:
       children:
         master-servers:
 
+    dnsmasq:
+      children:
+        # Add servers here if needed
+
     # Broad categories for convienience
     sensors:
 
