@@ -62,6 +62,8 @@
     state: touch
   when: not rules_file.stat.exists
 
+- name: Restart Suricata
+  command: '/usr/bin/systemctl restart suricata'
 # This will install to /etc/cron.d/
 - name: Schedule pulledpork to run daily
   cron:
