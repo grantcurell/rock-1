@@ -64,8 +64,8 @@ all:
       children:
         master-servers:
 
-    dnsmasq:
-      children:
+#    dnsmasq:
+#      children:
         #servers:     # Uncomment to add this to the server
 
     # Broad categories for convienience
