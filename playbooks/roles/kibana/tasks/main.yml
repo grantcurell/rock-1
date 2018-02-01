@@ -13,15 +13,15 @@
     src: 'kibana.service.j2'
     dest: '/etc/systemd/system/kibana.service'
     mode: 0644
-    owner: root
-    group: root
+    owner: '{{ rocknsm_user }}'
+    group: '{{ rocknsm_user }}'
 
 - name: 'Link Kibana service file'
   file:
     src: '/etc/systemd/system/kibana.service'
     dest: '/etc/systemd/system/rock.target.wants/kibana.service'
-    owner: root
-    group: root
+    owner: '{{ rocknsm_user }}'
+    group: '{{ rocknsm_user }}'
     state: link
 
 - name: 'Create new directories'
@@ -32,13 +32,21 @@
     mode: u+rw,g+rw
     state: directory
 
+- name: 'Create Kibana log directory'
+  file:
+    owner: 1000
+    group: 1000
+    mode: u+rw,g+rw
+    path: "{{ kibana_log_dir }}"
+    state: directory
+
 - name: 'Copy Kibana compose file'
   template:
     src: 'kibana-compose.yml.j2'
     dest: "{{ rock_compose_files }}/kibana-compose.yml"
     mode: 0644
-    owner: root
-    group: root
+    owner: '{{ rocknsm_user }}'
+    group: '{{ rocknsm_user }}'
 
 - name: 'Enable Kibana service'
   service:
@@ -46,5 +54,5 @@
     enabled: yes
     state: restarted
     daemon_reload: yes
-    
+
 ...

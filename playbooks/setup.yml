@@ -1,0 +1,76 @@
+# This file is to be run before the rest of the Rock package is installed (before
+# site.yml). After that, it should never need to be run again on that system.
+# The purpose of this playbook is to set up the ansible administration account,
+# generate all associated RSA keys, and distribute them to all hosts ensuring
+# that the account is only accessible via SSH and only by these hosts.
+- hosts: all
+  gather_facts: no
+  user: root
+  tasks:
+# Create user for Ansible to use for management and configuration.
+# Account is created with an SSH key set.
+# Bash shell is set for this account in case any playbooks need it.
+  - user:
+      name: '{{ rocknsm_user }}'
+      comment: "Ansible Configuration Account"
+      shell: /bin/bash
+      generate_ssh_key: yes
+      ssh_key_bits: 2048
+      state: present
+# Edits sudoers file to grant new account root privileges on each host.
+  - name: Grant Ansible Account Sudo privileges
+    lineinfile:
+      dest: /etc/sudoers
+      insertafter: EOF
+      line: '{{ rocknsm_user }} ALL=(ALL) NOPASSWD: ALL'
+      regexp: '{{ rocknsm_user }} ALL=(ALL) NOPASSWD: ALL'
+      state: present
+# Create a directory in the playbook directory on the controller to contain all
+# public keys of the remote hosts.
+  - name: Create Keys Directory on Controller
+    file:
+      path: '{{ playbook_dir }}/.rock_keys'
+      state: directory
+      mode: 0644
+# Gather all public keys generated for the new accounts on the hosts and pull
+# them back to the folder created on the controller.
+  - name: Aggregate Public Keys on Controller
+    fetch:
+      src: '/home/{{ rocknsm_user }}/.ssh/id_rsa.pub'
+      dest: '{{ playbook_dir }}/.rock_keys/{{ inventory_hostname }}.pub'
+      flat: yes
+- hosts:
+    localhost
+  gather_facts: no
+  user: root
+  tasks:
+# Generates an SSH key pair for the root account on the controller. This is to
+# allow the operator to run playbooks as root on the controller without having
+# to su to the ansible configuration account every time.
+  - name: Generate Root SSH Key
+    user:
+      name: root
+      generate_ssh_key: yes
+      ssh_key_bits: 2048
+# Copies root public key into the aggregate directory.
+  - name: Move Root Key to Aggregate Folder
+    copy:
+      src: /root/.ssh/id_rsa.pub
+      dest: '{{ playbook_dir }}/.rock_keys/root_controller.pub'
+      owner: root
+      group: root
+      mode: 0644
+- hosts: all
+  gather_facts: no
+  user: root
+  tasks:
+# Moves all aggregated keys into the authorized_keys folder on the remote hosts.
+# These keys are exclusive, preventing all other hosts from communicating via
+# ssh save for the controller and the remote hosts. Also performs same action on
+# controller itself.
+  - name: Push Authorized Keys to Remote Hosts
+    authorized_key:
+      user: '{{ rocknsm_user }}'
+      key: "{{ lookup('pipe', 'cat {{ playbook_dir }}/.rock_keys/*.pub') }}"
+      state: present
+      exclusive: yes

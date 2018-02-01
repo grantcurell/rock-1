@@ -1,6 +1,6 @@
 ARG LOGSTASH_VERSION
 FROM docker.elastic.co/logstash/logstash:${LOGSTASH_VERSION}
-USER root
+USER '{{ rocknsm_user }}'
 RUN /usr/share/logstash/bin/logstash-plugin install logstash-filter-translate
 RUN /usr/share/logstash/bin/logstash-plugin install logstash-filter-tld
 RUN /usr/share/logstash/bin/logstash-plugin install logstash-filter-cidr

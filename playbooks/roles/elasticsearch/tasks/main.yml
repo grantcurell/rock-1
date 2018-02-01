@@ -55,7 +55,7 @@
     dest: "{{ es_config_dir }}/jvm.options"
     group: "{{ es_group }}"
     mode: 755
-    owner: root
+    owner: '{{ rocknsm_user }}'
     src: templates/es-jvm.options.j2
 
 - name: "Setup elasticsearch service"
@@ -63,8 +63,32 @@
     dest: /etc/systemd/system/elasticsearch.service
     group: "{{ es_group }}"
     mode: 755
-    owner: root
+    owner: '{{ rocknsm_user }}'
     src: templates/elasticsearch.service.j2
+
+# Elasticsearch will need a very large amount of file descriptors to function.
+# I could not find a good reference to estimate how many it will need given
+# the large amount of data it will be required to manage, so I picked an
+# arbitrarily large number since having extra file descriptors shouldn't break
+# anything. May need to be increased later.
+- name: "Setting Maximum File Descriptors in limits.conf"
+  lineinfile:
+    path: /etc/security/limits.conf
+    regexp: '\* +- +nofile'
+    line: '*                -       nofile        131072'
+
+- name: "Setting Maximum File Descriptors for Current Session"
+  shell: ulimit -n 131072
+  args:
+    executable: /bin/bash
+
+- name: "Link elasticsearch service"
+  file:
+    src: "/etc/systemd/system/elasticsearch.service"
+    dest: "/etc/systemd/system/rock.target.wants/elasticsearch.service"
+    group: "{{ es_group }}"
+    owner: "{{ rocknsm_user }}"
+    state: link
 
 - name: "Enable and start Elasticsearch"
   systemd:
@@ -109,7 +133,7 @@
     job: "curator --config ~/.curator/curator.yml ~/.curator/curator-actions.yml > /dev/null 2>&1"
     minute: 1
     name: "Curator maintenance"
-    user: root
+    user: '{{ rocknsm_user }}'
 
 #- name: "Restart haproxy service"
 #  systemd:

@@ -3,8 +3,8 @@
 ansible_cache: /tmp/ansible_cache
 
 rocknsm_conf_dir: /etc/rocknsm
-rocknsm_conf_user: root
-rocknsm_conf_group: root
+rocknsm_conf_user: '{{ rocknsm_user }}'
+rocknsm_conf_group: '{{ rocknsm_user }}'
 
 # How are we going to install docket?
 # Currently supports one of: yumrepo, offline
@@ -38,7 +38,7 @@ docket_x509_key: "{{docket_x509_dir}}/docket_{{ ansible_default_ipv4.address }}_
 docket_x509_cn: "{{ ansible_hostname }}_docket"
 docket_x509_o: Stenographer
 docket_x509_c: XX
-docket_x509_user: root
+docket_x509_user: '{{ rocknsm_user }}'
 docket_x509_group: stenographer
 
 # These should be overridden by host-specific vars

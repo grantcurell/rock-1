@@ -14,8 +14,9 @@ rock_online_install: true
 rock_sysctl_file: /etc/sysctl.d/10-ROCK.conf
 rock_data_dir: /data
 rocknsm_dir: /opt/rocknsm
-rock_data_user: root
-rock_data_group: root
+rocknsm_user: ansiblerock
+rock_data_user: '{{ rocknsm_user }}'
+rock_data_group: '{{ rocknsm_user }}'
 rock_monifs: "{{ ansible_interfaces | difference(['lo', ansible_default_ipv4.interface | default('lo') ])| list }}"
 rock_hostname: '{{ inventory_hostname_short }}'
 rock_fqdn: '{{ inventory_hostname }}'

@@ -29,8 +29,8 @@
     src: logrotate-fsf.conf
     dest: /etc/logrotate.d/fsf.conf
     mode: 0644
-    owner: root
-    group: root
+    owner: '{{ rocknsm_user }}'
+    group: '{{ rocknsm_user }}'
 
 - name: Configure fsf-server
   template:

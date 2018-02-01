@@ -36,6 +36,11 @@
     state: directory
     mode: 0644
 
+- name: 'Create kafka log directory'
+  file:
+    path: "{{ kafka_log_dir }}"
+    state: directory
+
 # Install Kafkacat for the dockervm
 # TODO: Is this needed?
 #- name: Install Kafkacat package
@@ -48,15 +53,15 @@
     src: 'kafka.service.j2'
     dest: '/etc/systemd/system/kafka.service'
     mode: 0644
-    owner: root
-    group: root
+    owner: '{{ rocknsm_user }}'
+    group: '{{ rocknsm_user }}'
 
 - name: 'Link Kafka service file'
   file:
     src: '/etc/systemd/system/kafka.service'
     dest: '/etc/systemd/system/rock.target.wants/kafka.service'
-    owner: root
-    group: root
+    owner: '{{ rocknsm_user }}'
+    group: '{{ rocknsm_user }}'
     state: link
 
 - name: 'Copy Kafka dockerfile'
@@ -64,16 +69,16 @@
     src: 'kafka-dockerfile.j2'
     dest: "{{ kafka_dir }}/kafka-dockerfile.j2"
     mode: 0644
-    owner: root
-    group: root
+    owner: '{{ rocknsm_user }}'
+    group: '{{ rocknsm_user }}'
 
 - name: 'Copy Kafka start_kafka script'
   copy:
     src: 'start-kafka.sh'
     dest: "{{ kafka_dir }}/start-kafka.sh"
     mode: 0644
-    owner: root
-    group: root
+    owner: '{{ rocknsm_user }}'
+    group: '{{ rocknsm_user }}'
 
 - name: 'Build Kafka container'
   docker_image:
@@ -85,26 +90,26 @@
   when: rock_online_install
 
 - name: 'Copy Kafka server.properties file'
-  copy:
-    src: 'server.properties'
+  template:
+    src: 'server.properties.j2'
     dest: "{{ kafka_dir }}/server.properties"
     mode: 0644
-    owner: root
-    group: root
+    owner: '{{ rocknsm_user }}'
+    group: '{{ rocknsm_user }}'
 
 - name: 'Copy Kafka compose file'
   template:
     src: 'kafka-compose.yml.j2'
     dest: "{{ rock_compose_files }}/kafka-compose.yml"
     mode: 0644
-    owner: root
-    group: root
+    owner: '{{ rocknsm_user }}'
+    group: '{{ rocknsm_user }}'
 
 - name: 'Enable Kafka service'
   systemd:
     name: 'kafka'
     enabled: yes
-    state: restarted
+    state: started
     daemon-reload: yes
 
 - name: 'Wait for Kafka service to start'

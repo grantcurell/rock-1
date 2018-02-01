@@ -2,7 +2,8 @@
   ################# Setup PulledPork  ##################
   ######################################################
 
-- get_url:
+- name: Grab the URL
+  get_url:
     dest: "{{ rock_cache_dir }}/{{ pulledpork_filename }}"
     mode: 420
     url: "{{ pulledpork_url }}"
@@ -13,8 +14,8 @@
   unarchive:
     creates: "/opt/pulledpork-{{ pulledpork_release }}"
     dest: /opt
-    group: root
-    owner: root
+    group: '{{ rocknsm_user }}'
+    owner: '{{ rocknsm_user }}'
     remote_src: true
     src: "{{ rock_cache_dir }}/{{ pulledpork_filename }}"
 
@@ -29,23 +30,23 @@
   file:
     path: /opt/pulledpork/pulledpork.pl
     mode: 0755
-    owner: root
-    group: root
+    owner: '{{ rocknsm_user }}'
+    group: '{{ rocknsm_user }}'
 
 - name: Create pulledpork config dir
   file:
     path: /etc/pulledpork
     mode: 0755
-    owner: root
-    group: root
+    owner: '{{ rocknsm_user }}'
+    group: '{{ rocknsm_user }}'
     state: directory
 
 - name: Configure pulledpork
   template:
     src: templates/pulledpork.conf.j2
     dest: /etc/pulledpork/pulledpork.conf
-    owner: root
-    group: root
+    owner: '{{ rocknsm_user }}'
+    group: '{{ rocknsm_user }}'
     mode: 0644
 
 - name: Check stats of rules files
@@ -56,18 +57,24 @@
 - name: Create initial pulledpork rules-related files
   file:
     path: "{{ pulledpork_engine_basepath }}/rules/pulledpork.rules"
-    owner: root
-    group: root
+    owner: '{{ rocknsm_user }}'
+    group: '{{ rocknsm_user }}'
     mode: 0644
     state: touch
   when: not rules_file.stat.exists
+
+- name: Restart Suricata
+  systemd:
+    name: suricata
+    daemon-reload: yes
+    state: restarted
 
 # This will install to /etc/cron.d/
 - name: Schedule pulledpork to run daily
   cron:
     name: "pulledpork update"
     cron_file: rocknsm_pulledpork
-    user: root
+    user: '{{ rocknsm_user }}'
     hour: "12"
     minute: "0"
     job: /opt/pulledpork/pulledpork.pl

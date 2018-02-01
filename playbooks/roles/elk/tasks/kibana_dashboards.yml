@@ -14,8 +14,8 @@
   unarchive:
     src: "{{ rock_cache_dir }}/{{ rock_dashboards_filename }}"
     dest: "{{ rocknsm_dir }}"
-    owner: root
-    group: root
+    owner: '{{ rocknsm_user }}'
+    group: '{{ rocknsm_user }}'
     creates: "{{ rocknsm_dir }}/rock-dashboards-{{ rock_dashboards_branch }}"
     remote_src: yes
 

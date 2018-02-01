@@ -79,8 +79,8 @@
     src: templates/bro-node.cfg.j2
     dest: "{{ bro_sysconfig_dir }}/node.cfg"
     mode: 0644
-    owner: root
-    group: root
+    owner: '{{ rocknsm_user }}'
+    group: '{{ rocknsm_user }}'
   notify: reload bro
 
 - name: Create broctl.cfg
@@ -88,8 +88,8 @@
     src: templates/bro-broctl.cfg.j2
     dest: "{{ bro_sysconfig_dir }}/broctl.cfg"
     mode: 0644
-    owner: root
-    group: root
+    owner: '{{ rocknsm_user }}'
+    group: '{{ rocknsm_user }}'
   notify: reload bro
 
 - name: Create bro networks.cfg
@@ -97,15 +97,15 @@
     src: bro-networks.cfg
     dest: "{{ bro_sysconfig_dir }}/networks.cfg"
     mode: 0644
-    owner: root
-    group: root
+    owner: '{{ rocknsm_user }}'
+    group: '{{ rocknsm_user }}'
   notify: reload bro
 
 - name: Add bro custom scripts dir
   file:
     path: "{{ bro_site_dir }}/scripts"
-    owner: root
-    group: root
+    owner: '{{ rocknsm_user }}'
+    group: '{{ rocknsm_user }}'
     mode: 0755
     state: directory
 
@@ -122,8 +122,8 @@
     src: bro-scripts-readme.txt
     dest: "{{ bro_site_dir }}/scripts/README.txt"
     mode: 0644
-    owner: root
-    group: root
+    owner: '{{ rocknsm_user }}'
+    group: '{{ rocknsm_user }}'
 
 - name: Checkout ROCK Bro scripts
   git:
@@ -136,8 +136,8 @@
 #  unarchive:
 #    src: "{{ rock_cache_dir }}/{{ bro_rockscripts_filename }}"
 #    dest: "{{ bro_site_dir }}/scripts/"
-#    owner: root
-#    group: root
+#    owner: '{{ rocknsm_user }}'
+#    group: '{{ rocknsm_user }}'
 #    creates: "{{ bro_site_dir }}/scripts/rock-scripts-{{ bro_rockscripts_branch | replace ('/', '-') }}"
 #    remote_src: yes
 
@@ -189,16 +189,16 @@
     src: profile.d-bro.sh
     dest: /etc/profile.d/bro.sh
     mode: 0644
-    owner: root
-    group: root
+    owner: '{{ rocknsm_user }}'
+    group: '{{ rocknsm_user }}'
 
 - name: Add broctl wrapper for admin use
   copy:
     src: broctl.sh
     dest: /usr/sbin/broctl
     mode: 0754
-    owner: root
-    group: root
+    owner: '{{ rocknsm_user }}'
+    group: '{{ rocknsm_user }}'
 
 - name: Set bro capabilities
   capabilities:

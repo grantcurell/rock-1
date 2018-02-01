@@ -20,15 +20,14 @@
   file:
     path: "{{ rocknsm_dir }}"
     mode: 0755
-    owner: root
-    group: root
+    owner: '{{ rocknsm_user }}'
+    group: '{{ rocknsm_user }}'
     state: directory
 
-# TODO: Should this be root?
 - name: "Create compose files directory"
   file:
-    group: root
+    group: '{{ rocknsm_user }}'
     mode: 755
-    owner: root
+    owner: '{{ rocknsm_user }}'
     path: "{{ rock_compose_files }}"
     state: directory

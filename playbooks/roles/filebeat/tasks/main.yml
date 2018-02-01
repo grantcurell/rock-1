@@ -14,6 +14,11 @@
     state: directory
     mode: 0754
 
+- name: 'Create filebeat log directory'
+  file:
+    path: "{{ filebeat_log_dir }}"
+    state: directory
+
 - name: "Add Filebeat configuration file"
   template:
     dest: "{{ filebeat_config_location }}/filebeat.yml"
@@ -24,16 +29,16 @@
     src: 'filebeat.service.j2'
     dest: '/etc/systemd/system/filebeat.service'
     mode: 0644
-    owner: root
-    group: root
+    owner: '{{ rocknsm_user }}'
+    group: '{{ rocknsm_user }}'
 
 - name: 'Copy Filebeat compose file'
   template:
     src: 'filebeat-compose.yml.j2'
     dest: "{{ rock_compose_files }}/filebeat-compose.yml.j2"
     mode: 0644
-    owner: root
-    group: root
+    owner: '{{ rocknsm_user }}'
+    group: '{{ rocknsm_user }}'
 
 - name: 'Enable Filebeat service'
   systemd:

@@ -60,17 +60,28 @@ all:
       children:
         sensors:
 
+    stenographer:
+      children:
+        sensors:
+
     harbor:
       children:
         master-servers:
 
+#    dnsmasq:
+#      children:
+        #servers:     # Uncomment to add this to the server
+
     # Broad categories for convienience
     sensors:
+
+      vars:
+        home_net: "\"[192.168.0.0/16,10.0.0.0/8,172.16.0.0/12]\""
 
       hosts:
         rocksensor1.lan:
           ansible_hostname: rocksensor1.lan
-          ansible_user: root
+          ansible_user: '{{ rocknsm_user }}'
           ansible_connection: ssh
 
     servers:
@@ -81,7 +92,7 @@ all:
           hosts:
             rockserver1.lan:
               ansible_hostname: rockserver1.lan
-              ansible_user: root
+              ansible_user: '{{ rocknsm_user }}'
               ansible_connection: ssh
 
         ingest:

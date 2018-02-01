@@ -20,9 +20,9 @@
   template:
     dest: "/etc/sysconfig/network-scripts/ifcfg-{{ item }}"
     force: true
-    group: root
+    group: '{{ rocknsm_user }}'
     mode: 755
-    owner: root
+    owner: '{{ rocknsm_user }}'
     src: templates/ifcfg-monif.j2
   with_items: "{{ rock_monifs }}"
 
@@ -30,8 +30,8 @@
   template:
     dest: /sbin/ifup-local
     force: true
-    group: root
+    group: '{{ rocknsm_user }}'
     mode: 755
-    owner: root
+    owner: '{{ rocknsm_user }}'
     src: templates/ifup-local.j2
   #notify: "configure monitor interfaces"
