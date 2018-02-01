@@ -49,16 +49,46 @@ spec:
         - name: ES_JAVA_OPTS
           value: -Xms{{ es_mem }}g -Xmx{{ es_mem }}g
         ports:
+        - containerPort: {{ elastic_data_port }}
+          name: http
         - containerPort: {{ elastic_management_port }}
           name: transport
         livenessProbe:
           tcpSocket:
             port: transport
         volumeMounts:
-        - name: es-host-data
-          mountPath: /data
+        - name: {{ elastic_pv_data }}
+          mountPath: {{ elastic_pv_data_path }}
+{% for item in ['elasticsearch.yml','jvm.options','log4j2.properties'] %}
+        - name: {{ elastic_config_map }}-{{ loop.index0 }}
+          mountPath: {{ elastic_config_path }}/{{ item }}
+          subPath: {{ item }}
+{% endfor %}
       volumes:
-      - name: es-host-data
-        hostPath:
-          path: {{ es_config_dir }}/data
-          type: Directory
+      - name: {{ elastic_pv_data }}
+        scaleIO:
+          gateway: {{ scaleio_gateway_url }}
+          system: scaleio
+          protectionDomain: {{ scaleio_pd_name }}
+          storagePool: {{ scaleio_sp_name }}
+          volumeName: {{ elastic_vol_name }}
+          secretRef:
+            name: sio-secret
+          fstype: xfs
+{% for i in range(3) %}
+      - name: {{ elastic_config_map }}-{{ i }}
+        configMap:
+          name: {{ elastic_config_map }}-{{ i }}
+{% endfor %}
+      nodeSelector:
+        role: sensor
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: role
+                operator: In
+                values:
+                - server
+            topologyKey: "kubernetes.io/hostname"

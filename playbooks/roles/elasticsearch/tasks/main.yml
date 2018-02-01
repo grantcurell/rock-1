@@ -6,21 +6,22 @@
 - name: "Create directories"
   file:
     group: "{{ es_group }}"
-    mode: u+rw,g+rw
     owner: "{{ es_user }}"
+    mode: u+rw,g+rw
     path: "{{ item }}"
     state: directory
   with_items:
-    - "{{ es_config_dir }}"
-    - "{{ es_config_dir }}/data"
+    - "{{ elastic_dir }}"
+    - "{{ elastic_dir }}/data"
+    - "{{ elastic_dir }}/config"
 
-- name: Install templates
+- name: Install Templates
   template:
     src: "templates/{{ item }}.yml.j2"
-    dest: "{{ es_config_dir }}/{{ item }}.yml"
-    group: "root"
-    owner: "root"
-    mode: 0644
+    dest: "{{ elastic_dir }}/{{ item }}.yml"
+    group: "{{ es_group }}"
+    owner: "{{ es_user }}"
+    mode: u+rw,g+rw
   with_items:
     - es-client
     - es-curator-config
@@ -31,18 +32,44 @@
     - es-master-pdb
     - es-master
     - es-svc
+#    - pv-data
+#    - pvc-data
+
+- name: Install Config Templates
+  template:
+    src: "templates/{{ item }}.j2"
+    dest: "{{ elastic_config_dir }}/{{ item }}"
+    group: "{{ es_group }}"
+    owner: "{{ es_user }}"
+    mode: u+rw,g+rw
+  with_items:
+    - elasticsearch.yml
+    - jvm.options
+    - log4j2.properties
+
+- name: Create Config
+  command: 'kubectl --kubeconfig="{{ kubernetes_conf_file }}" create configmap {{ elastic_config_map }}-{{ item.0 }} --from-file {{ elastic_config_dir }}/{{ item.1 }}'
+  with_indexed_items:
+    - elasticsearch.yml
+    - jvm.options
+    - log4j2.properties
+
+- name: Add Data Volume
+  command: 'scli --add_volume --protection_domain_name {{ scaleio_pd_name }} --storage_pool_name {{ scaleio_sp_name }} --size_gb {{ elastic_vol_size }} --volume_name {{ elastic_vol_name }}'
 
 - name: Deploy
-  command: 'kubectl --kubeconfig="/etc/kubernetes/admin.conf" create -f {{ es_config_dir }}/{{ item }}.yml'
+  command: 'kubectl --kubeconfig="{{ kubernetes_conf_file }}" create -f {{ elastic_dir }}/{{ item }}.yml'
   with_items:
+#    - pv-data
+#    - pvc-data
     - es-master
     - es-discovery-svc
     - es-svc
 #    - es-client
-#    - es-data
+#    - es-datas
 
 - name: Wait for deployment to finish
-  command: 'kubectl --kubeconfig=/etc/kubernetes/admin.conf rollout status -f {{ es_config_dir }}/{{ item }}.yml'
+  command: 'kubectl --kubeconfig="{{ kubernetes_conf_file }}" rollout status deployment/{{ item }}'
   with_items:
     - es-master
 #    - es-client

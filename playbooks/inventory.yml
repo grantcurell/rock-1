@@ -14,13 +14,9 @@ all:
     kubernetes:
       children:
         master-servers:
+        nodes:
 
     bro:
-
-    docker:
-      children:
-        sensors:
-        servers:
 
     kibana:
       children:
@@ -50,11 +46,11 @@ all:
 #      children:
 #-        sensors:
 
-    zookeeper:
-#      children:
-#        sensors:
-
     kafka:
+      children:
+        master-servers:
+
+    stenographer:
 #      children:
 #        sensors:
 

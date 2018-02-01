@@ -13,62 +13,83 @@
   with_items:
     - "{{ kafka_dir }}"
     - "{{ kafka_data_dir }}"
-    - "{{ kafka_config_dir}}"
+    - "{{ zookeeper_dir }}"
+    - "{{ zookeeper_data_dir }}"
 
-- name: Install Templates
+- name: Install Kafka Templates
   template:
-    src: "templates/{{ item }}.yml.j2"
-    dest: "{{ kafka_dir }}/{{ item }}.yml"
+    src: "templates/{{ item }}.j2"
+    dest: "{{ kafka_dir }}/{{ item }}"
     group: root
     owner: root
     mode: 0644
   with_items:
-    - kafka-deploy
-    - kafka-svc
-    - kafka-dockerfile
+    - kafka-zookeeper-deploy.yml
+    - kafka-service.yml
+    - kafka-pv-data.yml
+    - kafka-pvc-data.yml
+    - kafka_config_map
 
-- name: Install Properties File
+- name: Install Zookeeper Templates
   template:
-    src: "templates/server.properties.j2"
-    dest: "{{ kafka_config_dir }}/server.properties"
+    src: "templates/{{ item }}.j2"
+    dest: "{{ zookeeper_dir }}/{{ item }}"
     group: root
     owner: root
     mode: 0644
-
-- name: Copy Files
-  copy:
-    src: "files/start-kafka.sh"
-    dest: "{{ kafka_dir }}/start-kafka.sh"
-    group: root
-    owner: root
-    mode: 0644
-
-- name: Build Container
-  docker_image:
-    name: "{{ kafka_container_name }}"
-    pull: yes
-    state: present
-    path: "{{ kafka_dir }}"
-    dockerfile: kafka-dockerfile.yml
-
-- name: Deploy
-  command: 'kubectl --kubeconfig="/etc/kubernetes/admin.conf" create -f {{ kafka_dir }}/{{ item }}.yml'
   with_items:
-    - kafka-deploy
-    - kafka-svc
+    - zookeeper-pv-data.yml
+    - zookeeper-pvc-data.yml
+    - zookeeper_config_map
+
+#- name: Copy Files
+#  copy:
+#    src: "files/{{ item[1] }}"
+#    dest: "{{ item[0] }}/{{ item[1] }}"
+#    group: root
+#    owner: root
+#    mode: 0644
+#  with_nested:
+#    - ['{{ kafka_dir }}'] # TODO: Likely unnecessary now: ,'{{ zookeeper_dir }}']
+    # TODO: This stuff is now environment variables - ['start-kafka.sh','zoo.cfg']
+
+# This task uses kafka_config_map and feeds it into Kubernetes as a configuration map which it then uses
+# to build the container
+- name: Create Kafka Config
+  command: 'kubectl --kubeconfig="{{ kubernetes_conf_file }}" create configmap kafka-config-map --from-file {{ kafka_dir }}/kafka_config_map'
+
+# This does the same, but with Zookeeper
+- name: Create Zookeeper Config
+  command: 'kubectl --kubeconfig="{{ kubernetes_conf_file }}" create configmap zookeeper-config-map --from-file {{ zookeeper_dir }}/zookeeper_config_map'
+
+- name: Deploy Kafka
+  command: 'kubectl --kubeconfig="{{ kubernetes_conf_file }}" create -f {{ kafka_dir }}/{{ item }}.yml'
+  with_items:
+    - kafka-pv-data
+    - kafka-pvc-data
+    - kafka-service
+
+- name: Deploy Zookeeper
+  command: 'kubectl --kubeconfig="{{ kubernetes_conf_file }}" create -f {{ kafka_dir }}/{{ item }}.yml'
+  with_items:
+    - zookeeper-pv-data
+    - zookeeper-pvc-data
+
+- name: Run the kafka/zookeeper deploy file
+  command: 'kubectl --kubeconfig="{{ kubernetes_conf_file }}" create -f {{ kafka_dir }}/kafka-zookeeper-deploy.yml'
 
 - name: Wait for deployment to finish
-  command: 'kubectl --kubeconfig="/etc/kubernetes/admin.conf" rollout status -f {{ kafka_dir }}/{{ item }}.yml'
+  command: 'kubectl --kubeconfig="{{ kubernetes_conf_file }}" rollout status -f {{ kafka_dir }}/kafka-zookeeper-deploy.yml'
 
-- name: Create Topics
-  command: >
-    docker exec {{ kafka_container_name }} {{ kafka_install_dir }}/bin/kafka-topics.sh
-      --zookeeper zookeeper:{{ zookeeper_port }}
-      --create
-      --replication-factor 1
-      --topic {{ item }}-raw
-      --partisions 1
-  with_items:
-    - bro
-    - suricata
-    - fsf
+#- name: Create Topics
+#  command: >
+#    docker exec {{ kafka_container_name }} {{ kafka_install_dir }}/bin/kafka-topics.sh
+#      --zookeeper zookeeper:{{ zookeeper_port }}
+#      --create
+#      --replication-factor 1
+#      --topic {{ item }}-raw
+#      --partisions 1
+#  with_items:
+#    - bro
+#    - suricata
+#    - fsf
