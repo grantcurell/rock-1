@@ -42,7 +42,11 @@ processors:
 # Multiple outputs may be used.
 
 output.kafka:
-  hosts: ["rock-kafka:9092"]
+{% for host in groups['ingest'] %}
+   hosts: [server {{ hostvars[host].rock_hostname }} {{ hostvars[host].rock_hostname }}:9092 check]
+{% endfor %}
+# code above is checking for host matching port 9092 indicating the rock-kafka cluster
+#  hosts: ["rock-kafka:9092"]
 
   # Need this line to enable event timestamps
   #version: 0.10
