@@ -43,10 +43,15 @@
     - elasticsearch
   gather_facts: no
 
-- hosts: logstash
+- hosts: metricbeat
   roles:
-    - logstash
+    - metricbeat
   gather_facts: no
+
+#- hosts: logstash
+#  roles:
+#    - logstash
+#  gather_facts: no
 
 #- hosts: suricata
 #  roles:
@@ -58,10 +63,9 @@
 #    - filebeat
 #  gather_facts: no
 
-- hosts: kafka
-  roles:
-    - kafka
-  gather_facts: no
+#- hosts: kafka
+#  roles:
+#  gather_facts: no
 
 - hosts: moloch
   roles:
