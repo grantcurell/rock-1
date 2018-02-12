@@ -38,12 +38,18 @@ spec:
           value: {{ es_cluster_name }}
         - name: NODE_MASTER
           value: "false"
+        - name: NODE_DATA
+          value: "true"
         - name: NODE_INGEST
           value: "false"
         - name: HTTP_ENABLE
           value: "false"
         - name: ES_JAVA_OPTS
           value: -Xms{{ es_mem }}g -Xmx{{ es_mem }}g
+        - name: NUMBER_OF_SHARDS
+          value: {{ es_number_of_shards }}
+        - name: NUMBER_OF_REPLICAS
+          value: {{ es_number_of_replicas }}
         ports:
         - containerPort: {{ elastic_management_port }}
           name: transport

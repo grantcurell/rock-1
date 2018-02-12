@@ -6,6 +6,10 @@ es_mem: "{{ (ansible_memtotal_mb // 1024 // 2) if (ansible_memtotal_mb // 1024) 
 elastic_baseurl: https://artifacts.elastic.co/packages/5.x/yum
 elastic_gpgurl: https://artifacts.elastic.co/GPG-KEY-elasticsearch
 
+# Setting shards and replicas.  Shards based on memory of server / 30 GB and replicas set to 1
+es_number_of_shards: "{{ (ansible_mounts[0].size_total/1024/1024/1024/30)| round | int }}"
+es_number_of_replicas: 1
+
 #### Retention Configuration ####
 elastic_close_interval: 15
 elastic_delete_interval: 60

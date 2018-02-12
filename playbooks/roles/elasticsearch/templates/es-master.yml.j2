@@ -48,6 +48,10 @@ spec:
           value: "false"
         - name: ES_JAVA_OPTS
           value: -Xms{{ es_mem }}g -Xmx{{ es_mem }}g
+        - name: NUMBER_OF_SHARDS
+          value: {{ es_number_of_shards }}
+        - name: NUMBER_OF_REPLICAS
+          value: {{ es_number_of_replicas }}
         ports:
         - containerPort: {{ elastic_data_port }}
           name: http
