@@ -3,7 +3,7 @@
 #######################################################
 ---
 
-- name: Create Directory
+- name: Create Gluster Directory
   file:
     path: "{{ gluster_dir }}"
     state: directory
@@ -16,6 +16,15 @@
   yum:
     name: centos-release-gluster310
     state: present
+  when: ansible_distribution == 'CentOS'
+
+- name: "Manually install repo on Red Hat"
+  yum_repository:
+    baseurl: "http://mirror.centos.org/centos/7/storage/x86_64/gluster-{{ gluster_ver }}/"
+    description: "Gluster repository"
+    gpgcheck: no
+    name: CentOS-Gluster-3.10
+  when: ansible_distribution == 'RedHat'
 
 - name: Install GlusterFS
   yum:
@@ -49,6 +58,8 @@
     - topology.json
     - heketi.json
     - storage-class.yml
+    - heketi-deployment.json
+    - heketi-bootstrap.json
   when: inventory_hostname in groups['master-servers']
 
 - name: Copy Files
@@ -60,138 +71,421 @@
     mode: 0644
   with_items:
     - glusterfs-daemonset.json
-    - heketi-bootstrap.json
-    - heketi-deployment.json
     - heketi-service-account.json
   when: inventory_hostname in groups['master-servers']
 
+############ TODO
+# Anything in this block should only run if you want to reset the entire
+# GlusterFS cluster.
+
 - name: Flush GlusterFS Daemonset
-  command: "kubectl --kubeconfig /etc/kubernetes/admin.conf delete -f {{ gluster_dir }}/glusterfs-daemonset.json"
+  shell: |
+    kubectl --kubeconfig /etc/kubernetes/admin.conf delete -f {{ gluster_dir }}/glusterfs-daemonset.json
+    while [ $(kubectl --kubeconfig /etc/kubernetes/admin.conf get -f {{ gluster_dir }}/glusterfs-daemonset.json | wc -l) != '0' ]; do
+      echo -n .;
+      sleep 1;
+    done;
+  register: debug_output
   when: inventory_hostname in groups['master-servers']
   ignore_errors: yes
+
+- name: Debug Output
+  debug:
+    msg:
+      - "Command is: {{ debug_output.cmd }}"
+      - "Stdout is: {{ debug_output.stdout }}"
+  when: debug_enabled is defined and debug_enabled and debug_output.stdout is defined
 
 - name: Flush Service Account
-  command: "kubectl --kubeconfig /etc/kubernetes/admin.conf delete -f {{ gluster_dir }}/heketi-service-account.json"
+  shell: |
+    kubectl --kubeconfig /etc/kubernetes/admin.conf delete -f {{ gluster_dir }}/heketi-service-account.json
+    while [ $(kubectl --kubeconfig /etc/kubernetes/admin.conf get -f {{ gluster_dir }}/heketi-service-account.json | wc -l) != '0' ]; do
+      echo -n .;
+      sleep 1;
+    done;
+  register: debug_output
   when: inventory_hostname in groups['master-servers']
   ignore_errors: yes
+
+- name: Debug Output
+  debug:
+    msg:
+      - "Command is: {{ debug_output.cmd }}"
+      - "Stdout is: {{ debug_output.stdout }}"
+  when: debug_enabled is defined and debug_enabled and debug_output.stdout is defined
 
 - name: Flush Cluster Role Binding
-  command: "kubectl --kubeconfig /etc/kubernetes/admin.conf delete clusterrolebinding heketi-gluster-admin"
+  shell: |
+    kubectl --kubeconfig /etc/kubernetes/admin.conf delete clusterrolebinding heketi-gluster-admin
+    while [ $(kubectl --kubeconfig /etc/kubernetes/admin.conf get clusterrolebinding heketi-gluster-admin ]; do
+      echo -n .;
+      sleep 1;
+    done;
+  register: debug_output
   when: inventory_hostname in groups['master-servers']
   ignore_errors: yes
+
+- name: Debug Output
+  debug:
+    msg:
+      - "Command is: {{ debug_output.cmd }}"
+      - "Stdout is: {{ debug_output.stdout }}"
+  when: debug_enabled is defined and debug_enabled and debug_output.stdout is defined
 
 - name: Flush Secret
-  command: "kubectl --kubeconfig /etc/kubernetes/admin.conf delete secret heketi-config-secret"
+  shell: |
+    kubectl --kubeconfig /etc/kubernetes/admin.conf delete secret heketi-config-secret
+    while [ $(kubectl --kubeconfig /etc/kubernetes/admin.conf get secret heketi-config-secret]; do
+      echo -n .;
+      sleep 1;
+    done;
+  register: debug_output
   when: inventory_hostname in groups['master-servers']
   ignore_errors: yes
+
+- name: Debug Output
+  debug:
+    msg:
+      - "Command is: {{ debug_output.cmd }}"
+      - "Stdout is: {{ debug_output.stdout }}"
+  when: debug_enabled is defined and debug_enabled and debug_output.stdout is defined
 
 - name: Flush Bootstrap
-  command: "kubectl --kubeconfig /etc/kubernetes/admin.conf delete -f {{ gluster_dir }}/heketi-bootstrap.json"
+  shell: |
+    kubectl --kubeconfig /etc/kubernetes/admin.conf delete -f {{ gluster_dir }}/heketi-bootstrap.json
+    while [ $(kubectl --kubeconfig /etc/kubernetes/admin.conf get deployments deploy-heketi | tail -n +2 | wc -l) != '0' ]; do
+      echo -n .;
+      sleep 1;
+    done;
+  register: debug_output
   when: inventory_hostname in groups['master-servers']
   ignore_errors: yes
+
+- name: Debug Output
+  debug:
+    msg:
+      - "Command is: {{ debug_output.cmd }}"
+      - "Stdout is: {{ debug_output.stdout }}"
+  when: debug_enabled is defined and debug_enabled and debug_output.stdout is defined
 
 - name: Flush Heketi Storage
-  command: "kubectl --kubeconfig /etc/kubernetes/admin.conf delete -f {{ gluster_dir }}/heketi-storage.json"
+  shell: |
+    kubectl --kubeconfig /etc/kubernetes/admin.conf delete -f {{ gluster_dir }}/heketi-storage.json
+    while [ $(kubectl --kubeconfig /etc/kubernetes/admin.conf get -f {{ gluster_dir }}/heketi-storage.json | wc -l) != '0' ]; do
+      echo -n .;
+      sleep 1;
+    done;
+  register: debug_output
   when: inventory_hostname in groups['master-servers']
   ignore_errors: yes
+
+- name: Debug Output
+  debug:
+    msg:
+      - "Command is: {{ debug_output.cmd }}"
+      - "Stdout is: {{ debug_output.stdout }}"
+  when: debug_enabled is defined and debug_enabled and debug_output.stdout is defined
 
 - name: Flush Deployment
-  command: "kubectl --kubeconfig /etc/kubernetes/admin.conf delete -f {{ gluster_dir }}/heketi-deployment.json"
+  shell: |
+    kubectl --kubeconfig /etc/kubernetes/admin.conf delete -f {{ gluster_dir }}/heketi-deployment.json
+    while [ $(kubectl --kubeconfig /etc/kubernetes/admin.conf get -f {{ gluster_dir }}/heketi-deployment.json | wc -l) != '0' ]; do
+      echo -n .;
+      sleep 1;
+    done;
+  register: debug_output
   when: inventory_hostname in groups['master-servers']
   ignore_errors: yes
+
+- name: Debug Output
+  debug:
+    msg:
+      - "Command is: {{ debug_output.cmd }}"
+      - "Stdout is: {{ debug_output.stdout }}"
+  when: debug_enabled is defined and debug_enabled and debug_output.stdout is defined
 
 - name: Flush Storage Class
-  command: "kubectl --kubeconfig /etc/kubernetes/admin.conf delete -f {{ gluster_dir }}/storage-class.yml"
+  shell: |
+    kubectl --kubeconfig /etc/kubernetes/admin.conf delete -f {{ gluster_dir }}/storage-class.yml
+    while [ $(kubectl --kubeconfig /etc/kubernetes/admin.conf get -f {{ gluster_dir }}/storage-class.yml | wc -l) != '0' ]; do
+      echo -n .;
+      sleep 1;
+    done;
+  register: debug_output
   when: inventory_hostname in groups['master-servers']
   ignore_errors: yes
 
+- name: Debug Output
+  debug:
+    msg:
+      - "Command is: {{ debug_output.cmd }}"
+      - "Stdout is: {{ debug_output.stdout }}"
+  when: debug_enabled is defined and debug_enabled and debug_output.stdout is defined
+
+#########################################################
+################ END TODO
+
 - name: Deploy GlusterFS Daemonset
-  command: "kubectl --kubeconfig /etc/kubernetes/admin.conf create -f {{ gluster_dir }}/glusterfs-daemonset.json"
+  shell: |
+    kubectl --kubeconfig /etc/kubernetes/admin.conf create -f {{ gluster_dir }}/glusterfs-daemonset.json
+    GLUSTER_WANTED=$(kubectl --kubeconfig /etc/kubernetes/admin.conf get -f {{ gluster_dir }}/glusterfs-daemonset.json | tail -n +2 | awk '{ print $2}')
+    while [ $(kubectl --kubeconfig /etc/kubernetes/admin.conf get -f {{ gluster_dir }}/glusterfs-daemonset.json | tail -n +2 | awk '{ print $6}') != $GLUSTER_WANTED ]; do
+      echo -n .;
+      sleep 1;
+    done;
+  register: debug_output
   when: inventory_hostname in groups['master-servers']
+
+- name: Debug Output
+  debug:
+    msg:
+      - "Command is: {{ debug_output.cmd }}"
+      - "Stdout is: {{ debug_output.stdout }}"
+  when: debug_enabled is defined and debug_enabled and debug_output.stdout is defined
 
 - name: Label Nodes
   command: "kubectl --kubeconfig /etc/kubernetes/admin.conf label node {{ item }} storagenode=glusterfs"
   when: inventory_hostname in groups['master-servers']
   ignore_errors: yes
+  register: debug_output
   with_items:
     - "{{ groups['all'] }}"
 
+- name: Debug Output
+  debug:
+    msg:
+      - "Command is: {{ debug_output.cmd }}"
+      - "Stdout is: {{ debug_output.stdout }}"
+  when: debug_enabled is defined and debug_enabled and debug_output.stdout is defined
+
 - name: Create Service Account
-  command: "kubectl --kubeconfig /etc/kubernetes/admin.conf create -f {{ gluster_dir }}/heketi-service-account.json"
+  shell: |
+    kubectl --kubeconfig /etc/kubernetes/admin.conf create -f {{ gluster_dir }}/heketi-service-account.json
+    while [ $(kubectl --kubeconfig /etc/kubernetes/admin.conf get -f {{ gluster_dir }}/heketi-service-account.json | wc -l) == '0' ]; do
+      echo -n .;
+      sleep 1;
+    done;
+  register: debug_output
   when: inventory_hostname in groups['master-servers']
+
+- name: Debug Output
+  debug:
+    msg:
+      - "Command is: {{ debug_output.cmd }}"
+      - "Stdout is: {{ debug_output.stdout }}"
+  when: debug_enabled is defined and debug_enabled and debug_output.stdout is defined
 
 - name: Create Cluster Role Binding
-  command: "kubectl --kubeconfig /etc/kubernetes/admin.conf create clusterrolebinding heketi-gluster-admin --clusterrole=edit --serviceaccount=default:heketi-service-account"
+  shell: |
+    kubectl --kubeconfig /etc/kubernetes/admin.conf create clusterrolebinding heketi-gluster-admin --clusterrole=edit --serviceaccount=default:heketi-service-account
+    while [ $(kubectl --kubeconfig /etc/kubernetes/admin.conf get clusterrolebinding heketi-gluster-admin | wc -l) == '0' ]; do
+      echo -n .;
+      sleep 1;
+    done;
+  register: debug_output
   when: inventory_hostname in groups['master-servers']
+
+- name: Debug Output
+  debug:
+    msg:
+      - "Command is: {{ debug_output.cmd }}"
+      - "Stdout is: {{ debug_output.stdout }}"
+  when: debug_enabled is defined and debug_enabled and debug_output.stdout is defined
 
 - name: Create Secret
-  command: "kubectl --kubeconfig /etc/kubernetes/admin.conf create secret generic heketi-config-secret --from-file {{ gluster_dir }}/heketi.json"
+  shell: |
+    kubectl --kubeconfig /etc/kubernetes/admin.conf create secret generic heketi-config-secret --from-file={{ gluster_dir }}/heketi.json
+    while [ $(kubectl --kubeconfig /etc/kubernetes/admin.conf get secret heketi-config-secret | wc -l) == '0' ]; do
+      echo -n .;
+      sleep 1;
+    done;
+  register: debug_output
   when: inventory_hostname in groups['master-servers']
+
+- name: Debug Output
+  debug:
+    msg:
+      - "Command is: {{ debug_output.cmd }}"
+      - "Stdout is: {{ debug_output.stdout }}"
+  when: debug_enabled is defined and debug_enabled and debug_output.stdout is defined
 
 - name: Deploy Bootstrap
-  command: "kubectl --kubeconfig /etc/kubernetes/admin.conf create -f {{ gluster_dir }}/heketi-bootstrap.json"
+  shell: |
+    kubectl --kubeconfig /etc/kubernetes/admin.conf create -f {{ gluster_dir }}/heketi-bootstrap.json
+    while [ $(kubectl --kubeconfig /etc/kubernetes/admin.conf get deployment deploy-heketi | grep deploy-heketi | awk '{ print $5 }') == '0' ]; do
+      echo -n .;
+      sleep 1;
+    done;
+  register: debug_output
   when: inventory_hostname in groups['master-servers']
 
-- name: Wait for Heketi & GlusterFS Pods to Enter Ready State
-  shell: "GLUSTER_READY=0; while [ $GLUSTER_READY -lt 1 ]; do GLUSTER_READY=1; for stat in $(kubectl --kubeconfig {{ kubernetes_conf_file }} get pods | grep -E '(deploy-heketi)|(glusterfs)' | awk '{ print $2 }'); do if [ $stat != '1/1' ]; then GLUSTER_READY=0; echo -n .; sleep 1; fi done; done;"
-  when: inventory_hostname in groups['master-servers']
+- name: Debug Output
+  debug:
+    msg:
+      - "Command is: {{ debug_output.cmd }}"
+      - "Stdout is: {{ debug_output.stdout }}"
+  when: debug_enabled is defined and debug_enabled and debug_output.stdout is defined
 
 - name: Get Heketi Pod Name
-  shell: "kubectl --kubeconfig /etc/kubernetes/admin.conf get pods | grep deploy-heketi | awk '{ print $1}'"
+  shell: "kubectl --kubeconfig /etc/kubernetes/admin.conf get pods | grep -i running | grep deploy-heketi | awk '{ print $1}'"
   register: heketi_pod_name
   when: inventory_hostname in groups['master-servers']
 
+- name: Debug Output
+  debug:
+    msg:
+      - "Command is: {{ heketi_pod_name.cmd }}"
+      - "Stdout is: {{ heketi_pod_name.stdout }}"
+  when: debug_enabled is defined and debug_enabled and debug_output.stdout is defined
+
 - name: Copy Heketi Topology File to Container
   command: "kubectl --kubeconfig /etc/kubernetes/admin.conf cp {{ gluster_dir }}/topology.json {{ heketi_pod_name.stdout }}:/topology.json"
+  register: debug_output
   when: inventory_hostname in groups['master-servers']
+
+- name: Debug Output
+  debug:
+    msg:
+      - "Command is: {{ debug_output.cmd }}"
+      - "Stdout is: {{ debug_output.stdout }}"
+  when: debug_enabled is defined and debug_enabled and debug_output.stdout is defined
 
 - name: ABOUT TO DESTROY DATA ON ALL DEVICES PROVIDED FOR STORAGE IN INVENTORY FILE
   pause:
     seconds: 10
 
+# TODO - this needs a guard - what if someone forgets to define the data disk
+# or they put in the wrong thing
 - name: WIPEING DATA
-  shell: "dmsetup remove_all; wipefs -af /dev/sdb"
+  shell: "dmsetup remove_all; wipefs -af {{ item }}"
+  register: debug_output
+  with_items:
+    - "{{ data_disk_devices }}"
+
+- name: Debug Output
+  debug:
+    msg:
+      - "Command is: {{ debug_output.cmd }}"
+      - "Stdout is: {{ debug_output.stdout }}"
+  when: debug_enabled is defined and debug_enabled and debug_output.stdout is defined
 
 - name: Deploy Topology
   command: "kubectl --kubeconfig /etc/kubernetes/admin.conf exec {{ heketi_pod_name.stdout }} -- heketi-cli topology load --json /topology.json"
-  register: debugs
+  register: debug_output
   when: inventory_hostname in groups['master-servers']
+
+- name: Debug Output
+  debug:
+    msg:
+      - "Command is: {{ debug_output.cmd }}"
+      - "Stdout is: {{ debug_output.stdout }}"
+  when: debug_enabled is defined and debug_enabled and debug_output.stdout is defined
 
 - name: Setup Storage
   command: "kubectl --kubeconfig /etc/kubernetes/admin.conf exec {{ heketi_pod_name.stdout }} heketi-cli setup-openshift-heketi-storage"
+  register: debug_output
   when: inventory_hostname in groups['master-servers']
+
+- name: Debug Output
+  debug:
+    msg:
+      - "Command is: {{ debug_output.cmd }}"
+      - "Stdout is: {{ debug_output.stdout }}"
+  when: debug_enabled is defined and debug_enabled and debug_output.stdout is defined
 
 - name: Copy Heketi Storage File
   command: "kubectl --kubeconfig /etc/kubernetes/admin.conf cp {{ heketi_pod_name.stdout }}:/heketi-storage.json {{ gluster_dir }}/heketi-storage.json"
+  register: debug_output
   when: inventory_hostname in groups['master-servers']
+
+- name: Debug Output
+  debug:
+    msg:
+      - "Command is: {{ debug_output.cmd }}"
+      - "Stdout is: {{ debug_output.stdout }}"
+  when: debug_enabled is defined and debug_enabled and debug_output.stdout is defined
 
 - name: Create Heketi Storage
-  command: "kubectl --kubeconfig /etc/kubernetes/admin.conf create -f {{ gluster_dir }}/heketi-storage.json"
+  shell: |
+    kubectl --kubeconfig /etc/kubernetes/admin.conf create -f {{ gluster_dir }}/heketi-storage.json
+    while [ $(kubectl --kubeconfig /etc/kubernetes/admin.conf get job heketi-storage-copy-job | grep heketi | awk '{print $3}') == '0' ]; do
+      echo -n .;
+      sleep 1;
+    done;
+  register: dubeg_output
   when: inventory_hostname in groups['master-servers']
 
-- name: Wait for Heketi Bootstrap to Complete
-  shell: "while [ $(kubectl --kubeconfig /etc/kubernetes/admin.conf get job/heketi-storage-copy-job | grep heketi | awk '{print $3}') -lt 1 ]; do echo -n .; sleep 1; done;"
-  when: inventory_hostname in groups['master-servers']
+- name: Debug Output
+  debug:
+    msg:
+      - "Command is: {{ debug_output.cmd }}"
+      - "Stdout is: {{ debug_output.stdout }}"
+  when: debug_enabled is defined and debug_enabled and debug_output.stdout is defined
 
 - name: Cleanup Heketi Bootstrap
   command: "kubectl --kubeconfig /etc/kubernetes/admin.conf delete all,service,jobs,deployment,secret --selector deploy-heketi"
+  register: debug_output
   when: inventory_hostname in groups['master-servers']
+
+- name: Debug Output
+  debug:
+    msg:
+      - "Command is: {{ debug_output.cmd }}"
+      - "Stdout is: {{ debug_output.stdout }}"
+  when: debug_enabled is defined and debug_enabled and debug_output.stdout is defined
 
 - name: Deploy Heketi
-  command: "kubectl --kubeconfig /etc/kubernetes/admin.conf create -f {{ gluster_dir }}/heketi-deployment.json"
+  command: 'kubectl --kubeconfig /etc/kubernetes/admin.conf create -f {{ gluster_dir }}/heketi-deployment.json'
+  register: debug_output
   when: inventory_hostname in groups['master-servers']
 
-- name: Wait for Heketi Service
-  shell: "HEKETI_IP=0;while [ $HEKETI_IP -lt 1 ]; do HEKETI_IP=$(kubectl --kubeconfig /etc/kubernetes/admin.conf get svc | grep -E '^heketi\\s+' | awk '{ print $3}' | wc -l ); sleep 1; done; echo -n $(kubectl --kubeconfig /etc/kubernetes/admin.conf get svc | grep -E '^heketi\\s+' | awk '{ print $3}')"
+- name: Debug Output
+  debug:
+    msg:
+      - "Command is: {{ debug_output.cmd }}"
+      - "Stdout is: {{ debug_output.stdout }}"
+  when: debug_enabled is defined and debug_enabled and debug_output.stdout is defined
+
+- name: Get Cluster IP
+  shell: |
+    HEKETI_IP='';
+    while [ -z $HEKETI_IP ]; do
+      HEKETI_IP=$(kubectl --kubeconfig /etc/kubernetes/admin.conf get svc | grep -E '^heketi\s+' | awk '{ print $3}');
+      sleep 1;
+    done;
+    echo -n $(kubectl --kubeconfig /etc/kubernetes/admin.conf get svc | grep -E '^heketi\s+' | awk '{ print $3}')
   when: inventory_hostname in groups['master-servers']
   register: heketi_ip
 
+- name: Debug Output
+  debug:
+    msg:
+      - "Command is: {{ heketi_ip.cmd }}"
+      - "Stdout is: {{ heketi_ip.stdout }}"
+  when: debug_enabled is defined and debug_enabled and debug_output.stdout is defined
+
 - name: Set Cluster IP in Storage Class
   command: "sed -i 's/heketi_cluster_ip/{{ heketi_ip.stdout }}/g' {{ gluster_dir }}/storage-class.yml"
+  register: debug_output
   when: inventory_hostname in groups['master-servers']
+
+- name: Debug Output
+  debug:
+    msg:
+      - "Command is: {{ debug_output.cmd }}"
+      - "Stdout is: {{ debug_output.stdout }}"
+  when: debug_enabled is defined and debug_enabled and debug_output.stdout is defined
 
 - name: Deploy Storage Class
   command: "kubectl --kubeconfig /etc/kubernetes/admin.conf create -f {{ gluster_dir }}/storage-class.yml"
+  register: debug_output
   when: inventory_hostname in groups['master-servers']
+
+- name: Debug Output
+  debug:
+    msg:
+      - "Command is: {{ debug_output.cmd }}"
+      - "Stdout is: {{ debug_output.stdout }}"
+  when: debug_enabled is defined and debug_enabled and debug_output.stdout is defined
 
 ...

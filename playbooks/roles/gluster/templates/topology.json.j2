@@ -10,13 +10,15 @@
                 "{{ hostvars[host].inventory_hostname }}"
               ],
               "storage": [
-                "{{ hostvars[host].ansible_default_ipv4.address}}"
+                "{{ hostvars[host].ansible_default_ipv4.address }}"
               ]
             },
             "zone": 1
           },
           "devices": [
-            "/dev/sdb"
+{% for dev in hostvars[host].data_disk_devices %}
+            "{{ dev }}"
+{% endfor%}
           ]
         }{% if not loop.last %},{% endif %}
 {% endfor %}
