@@ -37,6 +37,10 @@ all:
       children:
         sensors:
 
+    metricbeat:
+      children:
+        master-servers:
+
     filebeat:
       children:
         sensors:
