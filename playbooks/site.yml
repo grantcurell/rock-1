@@ -30,7 +30,7 @@
 
 - hosts: gluster
   roles:
-    #- gluster
+    - gluster
   gather_facts: no
 
 - hosts: kibana
@@ -60,7 +60,7 @@
 
 - hosts: kafka
   roles:
-    #- kafka
+    - kafka
   gather_facts: no
 
 - hosts: bro
