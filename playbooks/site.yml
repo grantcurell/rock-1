@@ -33,14 +33,14 @@
     - gluster
   gather_facts: no
 
-- hosts: kibana
-  roles:
-    - kibana
-  gather_facts: no
-
 - hosts: elasticsearch
   roles:
     - elasticsearch
+  gather_facts: no
+
+- hosts: kafka
+  roles:
+    - kafka
   gather_facts: no
 
 - hosts: logstash
@@ -58,14 +58,19 @@
 #    - filebeat
 #  gather_facts: no
 
-- hosts: kafka
-  roles:
-    - kafka
-  gather_facts: no
-
 - hosts: bro
   roles:
     - bro
+  gather_facts: no
+
+- hosts: moloch
+  roles:
+    - moloch
+  gather_facts: no
+
+- hosts: kibana
+  roles:
+    - kibana
   gather_facts: no
 
 #- hosts: stenographer
