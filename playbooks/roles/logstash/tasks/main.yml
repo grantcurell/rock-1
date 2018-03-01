@@ -1,48 +1,69 @@
 ######################################################
-################### Setup Logstash ###################
+################# Setup Logstash #####################
 ######################################################
---- 
+---
 
--
-  name: Install Logstash package
-  yum:
-    name: logstash
-    state: installed
-    
--
-  name: "Install Bro-Kafka configuration for Logstash"
-  copy: 
-    dest: /etc/logstash/conf.d/kafka-bro.conf
-    group: "{{ logstash_group }}"
-    mode: 416
+- name: "Create Logstash directory"
+  file:
+    path: "{{ logstash_dir }}"
+    mode: u+rw,g+rw
     owner: "{{ logstash_user }}"
-    src: logstash-kafka-bro.conf
-  notify: "Restart Logstash"
-  when: "with_logstash and with_bro and with_kafka"
-- 
-  name: "Install Suricata-Kafka configuration for Logstash"
-  copy: 
-    dest: /etc/logstash/conf.d/kafka-suricata.conf
     group: "{{ logstash_group }}"
-    mode: 416
+    state: directory
+
+- name: Install Logstash templates
+  template:
+    src: "templates/{{ item }}.j2"
+    dest: "{{ logstash_dir }}/{{ item }}"
     owner: "{{ logstash_user }}"
-    src: logstash-kafka-suricata.conf
-  notify: "Restart Logstash"
-  when: "with_logstash and with_suricata and with_kafka"
-- 
-  name: "Install FSF-Kafka configuration for Logstash"
-  copy: 
-    dest: /etc/logstash/conf.d/kafka-fsf.conf
     group: "{{ logstash_group }}"
-    mode: 416
+    mode: 0644
+  with_items:
+    - deploy.yml
+    - kafka-bro.conf
+    - kafka-fsf.conf
+    - kafka-suricata.conf
+    - logstash.yml
+
+- name: Copy Config Files
+  copy:
+    src: "files/{{ item }}"
+    dest: "{{ logstash_dir }}/{{ item }}"
     owner: "{{ logstash_user }}"
-    src: logstash-kafka-fsf.conf
-  notify: "Restart Logstash"
-  when: "with_logstash and with_fsf and with_kafka"
-- 
-  name: "Enable and start Logstash"
-  service: 
-    enabled: "{{ enable_logstash }}"
-    name: logstash
-    state: "{{ 'started' if enable_logstash else 'stopped' }}"
-  when: with_logstash
+    group: "{{ logstash_group }}"
+    mode: 0644
+  with_items:
+    - pipelines.yml
+    - log4j2.properties
+
+- name: Flush ConfigMaps
+  command: 'kubectl delete configmap logstash'
+  ignore_errors: true
+
+- name: Create Main ConfigMap
+  shell: |
+    kubectl create configmap logstash \
+    --from-file {{ logstash_dir }}/logstash.yml \
+    --from-file {{ logstash_dir }}/pipelines.yml \
+    --from-file {{ logstash_dir }}/log4j2.properties \
+    --from-file {{ logstash_dir }}/kafka-bro.conf \
+    --from-file {{ logstash_dir }}/kafka-suricata.conf \
+    --from-file {{ logstash_dir }}/kafka-fsf.conf
+
+- name: Flush Deployment
+  shell: |
+    kubectl delete -f {{ logstash_dir }}/deploy.yml
+    while [ $(kubectl get -f {{ logstash_dir }}/deploy.yml | tail -n +2 | wc -l) != '0' ]; do
+      echo -n .;
+      sleep 1;
+    done;
+    sleep 5;
+  ignore_errors: yes
+
+- name: Deploy Logstash
+  shell: |
+    kubectl create -f {{ logstash_dir }}/deploy.yml
+    while [ $(kubectl get -f {{ logstash_dir }}/deploy.yml | tail -n +2 | awk '{ print $5}') == '0' ]; do
+      echo -n .;
+      sleep 1;
+    done;

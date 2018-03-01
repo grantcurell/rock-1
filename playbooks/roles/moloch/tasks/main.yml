@@ -1,0 +1,90 @@
+######################################################
+############### Setup Moloch container ###############
+######################################################
+---
+
+- name: 'Create directories'
+  file:
+    path: "{{ moloch_dir }}"
+    owner: "{{ moloch_user }}"
+    group: "{{ moloch_group }}"
+    mode: "{{ moloch_dir_mode }}"
+    state: directory
+
+- name: 'Copy config files'
+  template:
+    src: "templates/{{ item }}"
+    dest: "{{ moloch_dir }}/{{ item }}"
+    mode: "{{ moloch_file_mode }}"
+    owner: "{{ moloch_user }}"
+    group: "{{ moloch_group }}"
+  with_items:
+    - auto_init
+    - config.ini
+    - bootstrap.yml
+    - deploy.yml
+    - svc.yml
+
+- name: "Clean up kube configmap"
+  command: "kubectl delete configmap moloch"
+  ignore_errors: true
+
+- name: "Clean up kube for deployment "
+  command: "kubectl delete -f {{ moloch_dir }}/{{ item }}.yml"
+  with_items:
+    - bootstrap
+    - deploy
+    - svc
+  ignore_errors: true
+
+- name: "Wait for deployment to cleanup"
+  shell: |
+    while [ $(kubectl get pods | grep moloch | wc -l) -gt 0 ]; do
+      echo -n .;
+      sleep 1;
+    done;
+
+- name: "Create kube config"
+  shell: |
+    kubectl --kubeconfig={{ kubernetes_conf_file }} create configmap moloch \
+    --from-file {{ moloch_dir }}/config.ini
+
+- name: Deploy Bootstrap
+  command: kubectl create -f {{ moloch_dir }}/bootstrap.yml
+
+- name: Get Bootstrap pod name
+  shell: |
+    while [ "$(kubectl get pods | grep moloch-bootstrap | head -n 1 | awk '{ print $2}')" != "1/1" ]; do
+      sleep 1;
+    done;
+    echo -n "$(kubectl get pods | grep moloch-bootstrap | head -n 1 | awk '{ print $1 }')"
+  register: moloch_bootstrap_pod
+
+- name: Copy init script
+  command: "kubectl cp {{ moloch_dir }}/auto_init {{ moloch_bootstrap_pod.stdout }}:/tmp/auto_init"
+
+- name: Stop moloch services
+  shell: "kubectl exec -ti {{ moloch_bootstrap_pod.stdout }} -- /bin/bash -c 'systemctl stop molochcapture molochviewer'"
+  ignore_errors: yes
+
+- name: Configure Elasticsearch for moloch
+  shell: "kubectl exec -ti {{ moloch_bootstrap_pod.stdout }} -- /usr/bin/expect /tmp/auto_init"
+  register: debug_output
+  ignore_errors: yes
+
+- name: Debut Outout
+  debug: "msg={{ debug_output.stdout }}"
+
+- name: Add user
+  command: "kubectl exec -ti {{ moloch_bootstrap_pod.stdout }} -- {{ moloch_path }}/bin/moloch_add_user.sh -c {{ moloch_path }}/etc/config.ini {{ moloch_login }} {{ moloch_login }} {{ moloch_pass }} --admin --webauth"
+
+- name: Remove Bootstrap
+  command: kubectl delete -f {{ moloch_dir }}/bootstrap.yml
+
+- name: "Deploy moloch via kube"
+  command: "kubectl create -f {{ moloch_dir }}/{{ item }}.yml"
+  with_items:
+    - deploy
+    - svc
+
+...

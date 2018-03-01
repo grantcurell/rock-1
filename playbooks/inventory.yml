@@ -1,9 +1,91 @@
+---
+# The inventory defines which hosts belong to which groups and what variables are applied to them. The playbooks
+# themselves in our scheme do not define any variables. The names you see on the far left here correspond to the limit
+# function you can run with the ansible-playbook command. For example ansible-playbook site.yml --limit sensor would
+# look at this inventory file and see the hosts that are part of the sensor group. When site.yml imports the sensors.yml
+# file, sensor.yml will only apply itself to the servers listed in the sensors group in this inventory file.
+
 all:
-  hosts:
-    laptop.rock
-    servicesvm.rock
+
   children:
-    elasticsearchservers:
+
+    # Role specific breakout
+
+    kubernetes:
+      children:
+        master-servers:
+        nodes:
+
+    gluster:
+      children:
+        master-servers:
+        nodes:
+
+    kibana:
+      children:
+        master-servers:
+
+    elasticsearch:
+      children:
+        master-servers:
+
+    logstash:
+      children:
+        master-servers:
+
+    suricata:
+      children:
+        master-servers:
+
+    filebeat:
+      children:
+        sensors:
+
+    kafka:
+      children:
+        master-servers:
+
+    bro:
+      children:
+        master-servers:
+
+    master-servers:
+
+      vars:
+        data_disk_devices:
+        - /dev/sdb
+        home_net: "[192.168.0.0/16,10.0.0.0/8,172.16.0.0/12]"
+
       hosts:
-        dockervm.rock:
-        elasticnodes.rock:
+        rockserver1.lan:
+          ansible_hostname: rockserver1.lan
+          ansible_user: root
+          ansible_connection: ssh
+
+    nodes:
+
+      children:
+
+        sensors:
+
+          vars:
+            data_disk_devices:
+            - /dev/sdb
+            home_net: "[192.168.0.0/16,10.0.0.0/8,172.16.0.0/12]"
+
+          hosts:
+            rocksensor1.lan:
+              ansible_hostname: rocksensor1.lan
+              ansible_connection: ssh
+
+        servers:
+
+          vars:
+            data_disk_devices:
+            - /dev/sdb
+
+          hosts:
+            rockserver3.lan:
+              ansible_hostname: rockserver3.lan
+              ansible_user: root
+              ansible_connection: ssh

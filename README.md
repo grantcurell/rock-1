@@ -1,6 +1,94 @@
-## Response Operation Collections Kit Reference Build
+# **WARNING**
+This branch is under very active development. Do not expect it to be stable. Use Master if you want to try the project out (though it will not have Kubernetes)
 
-[![Join the chat at https://gitter.im/rocknsm/Lobby](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/rocknsm/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) 
+# **Temporary Instructions**
+\*These instructions are subject to change
+
+# Quick Start Guide
+1. Install 2 CentOS 64bit machines. For the testing machines, minimum recommended hardware is:
+* 8 GB RAM
+* 2 processors
+* 20 GB disk space
+* 2 network cards
+
+2. Get the virtual machines up and running from a fresh CentOS-7-x86_64-Minimal-1708.iso install (or other CentOS 64 bit images)
+
+3. After getting a network connection on the virtual machines, run these commands to install updates, software, and reboot:
+```bash
+yum update -y
+yum install -y vim git
+yum install -y open-vm-tools #open-vm-tools is the virtual machine tools for VMware products. This does not work with Oracle VirtualBox or Microsoft Hyper-V
+reboot now
+```
+
+4. Install ansible on the Linux/Mac host that you will be deploying from
+```bash
+yum install -y ansible
+```
+
+5. You will need a DNS server to resolve the IP address of both the sensor and server virtual machines for the system to work properly. The goal is to have something like this setup:
+
+  ![Systems Setup Guide - DNS Server](images/Systems%20Setup%20Guide%20-%20DNS%20Server.png)
+
+  or this
+
+  ![Systems Setup Guide - DNS Server](images/Systems%20Setup%20Guide%20-%20Multirole.png)
+
+6. Optional: Install ssh keys so you don't need to type in the ssh password when you run the ansible-playbook command. Note you will run these commands on the Linux host with Ansible installed
+```bash
+ssh-keygen -f ~/.ssh/id_rsa -t rsa -N '' # this creates a key with no password in the default location
+ssh-copy-id root@rocksensor1.lan #this prompts you for the root password of the rocksensor1 machine
+ssh-copy-id root@rockserver1.lan #this prompts you for the root password of the rockserver1 machine
+```
+
+7. Make sure to make a snapshot of the sensor and server virtual machines before running ansible-playbook for the first time. This will allow you to revert to a non-modified CentOS machine since the playbooks do not clean up after themselves when running them more than once.
+
+8. On your Linux host with Ansible installed, clone the project from Github to it:
+```bash
+rm -rf /opt/rock && git clone -b <github_branch> <github_url> /opt/rock && cd /opt/rock/playbooks
+# The rm command deletes anything that is already there.
+# The git command clones the project.
+# The cd command places you in the correct directory for the ansible-playbook command
+# Example:
+# rm -rf /opt/rock && git clone -b logstash_feature https://github.com/tfplenum/rock /opt/rock && cd /opt/rock/playbooks
+```
+
+9. Start the installer using the "ansible-playbook" command. To run only sensor/server related playbooks, use the "--limit" flag. Note: If you installed ssh keys you can omit the `--ask-pass` argument
+```bash
+ansible-playbook site.yml --ask-pass
+ansible-playbook site.yml --ask-pass --limit "sensors"
+ansible-playbook site.yml --ask-pass --limit "servers"
+```
+
+## See Also
+
+* [Traffic Flow](docs/Traffic%20Flow.md)
+* [Quick DNS Server Setup](docs/Quick%20DNS%20Server%20Setup.md)
+* [Install CentOS Repositories on RedHat](docs/Install%20CentOS%20Repo%20on%20RedHat.md)
+* [Suggested Developer Environment Setup Guide](docs/Suggested%20Developer%20Environment%20Setup%20Guide.md)
+
+
+|
+
+|
+
+|
+
+|
+
+|
+
+# OUT OF DATE NOTICE
+
+*ALL OF THE BELOW IS CURRENTLY OUT OF DATE*
+
+
+## Response Operation Collections Kit Reference Build
+test
+If you have questions after trying the code and the documentation, please see
+our community message boards at http://community.rocknsm.io. This is for discussion
+of troubleshooting or general information outside of bugs that you might find.
+You can file bugs on the [Issue Tracker](http://github.com/rocknsm/rock/issues/).
 
 See the [ROCK 2.0 User Guide](https://rocknsm.gitbooks.io/rocknsm-guide/content/).
 
@@ -16,7 +104,7 @@ See [Getting Started with ROCK 2.0](docs/guide/getting-started.adoc).
 ### Vagrant
 **NOTE:**
 This Vagrantfile is configured to give the VM 8GB of RAM.  If your system can't do that you should buy a new system or adjust the `vm.memory` value.  Anything below 8 is going to run like poopoo. You will also need to have a host-only adapter configured named `vboxnet0`.
-``` 
+```
 git clone https://github.com/rocknsm/rock.git
 cd rock
 vagrant up
@@ -34,7 +122,7 @@ cd rock/bin
 sudo ./deploy_rock.sh
 ```
 
-## Minimum Hardware Recommendations 
+## Minimum Hardware Recommendations
 #### (For anything other than a Vagrant build)
 
 **NOTE:** This is a shadow of a recommendation of a guideline.  Your mileage may vary.  No returns or refunds.
@@ -134,7 +222,7 @@ worker-1-2   worker  localhost        running   20485  ???    02 Dec 17:12:36
 ```
 
 ## Basic Troubleshooting
-    
+
 #### Functions Check:
 ```
 # After the initial build, the ES cluster will be yellow because the marvel index will think it's missing a replica.  Run this to fix this issue.  This job will run from cron just after midnight every day.
@@ -164,18 +252,18 @@ sudo netstat -planet | grep node
 ```
 
 ## Key web interfaces:
-    
+
 IPADDRESS = The management interface of the box, or "localhost" if you did the vagrant build.
 
 http://IPADDRESS - Kibana
 
 
 ## Full Packet Capture
-   
-Google's Stenographer is installed and configured in this build.  However, it is disabled by default.  There are a few reasons for this: First, it can be too much for Vagrant builds on meager hardware.  Second, you really need to make sure you've mounted /data over sufficient storage before you start saving full packets.  Once you're ready to get nuts, enable and start the service with `systemctl enable stenographer.service` and then `systemctl start stenographer.service`.  Stenographer is already stubbed into the `/usr/local/bin/rock_{start,stop,status}` scripts, you just need to uncomment it if you're going to use it. 
+
+Google's Stenographer is installed and configured in this build.  However, it is disabled by default.  There are a few reasons for this: First, it can be too much for Vagrant builds on meager hardware.  Second, you really need to make sure you've mounted /data over sufficient storage before you start saving full packets.  Once you're ready to get nuts, enable and start the service with `systemctl enable stenographer.service` and then `systemctl start stenographer.service`.  Stenographer is already stubbed into the `/usr/local/bin/rock_{start,stop,status}` scripts, you just need to uncomment it if you're going to use it.
 
 ## THANKS
-   
+
 This architecture is made possible by the efforts of the Missouri National Guard Cyber Team for donating talent and resources to further development.
 
 
@@ -184,5 +272,3 @@ This architecture is made possible by the efforts of the Missouri National Guard
 The Ansible playbook that drives this build strives not to use any external roles or other dependencies. The reasoning behind this is to make the rock playbook a "one-stop" reference for a manual build. This allows users to use the build process as a guide when doing larger scale production roll outs without having to decipher a labyrinth of dependencies.
 
 Templated config files have comment sections added near key config items with useful info.  They don't all have it, but they get added as remembered.
-
-

@@ -1,0 +1,13 @@
+#######################################################
+###################  Gluster Install ##################
+#######################################################
+---
+
+# Uninstall GlusterFS
+- include_tasks: remove.yml
+  when: remove
+# Install GlusterFS, this will fail spectacularly if this is not a fresh install,
+# or remove is not run first
+- include_tasks: install.yml
+  when: install
+...
