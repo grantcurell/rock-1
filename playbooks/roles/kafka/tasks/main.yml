@@ -25,7 +25,6 @@
     - deploy.yml
     - kafka-service.yml
     - server.properties
-    - zookeeper_config_map
 
 - name: Install Zookeeper Templates
   template:
@@ -35,7 +34,8 @@
     owner: root
     mode: 0644
   with_items:
-    - zookeeper_config_map
+    - deploy-zc.yml
+    - zookeeper-svc.yml
 
 - name: Flush Kafka Service
   command: 'kubectl delete -f {{ kafka_dir}}/kafka-service.yml'
