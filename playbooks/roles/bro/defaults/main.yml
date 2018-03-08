@@ -5,7 +5,6 @@ bro_image: "dwharve/bro"
 bro_ver: "icdm"
 bro_dir: "{{ install_dir }}/bro"
 bro_loggers: 1
-bro_interface: ens224
 bro_workers: 2
 bro_fanout_id: 42
 bro_mail_to: root@localhost
