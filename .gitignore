@@ -12,6 +12,7 @@
 .kitchen.local.yml
 .kitchen/
 .vagrant
+.vs
 /cookbooks
 Berksfile.lock
 Gemfile.lock

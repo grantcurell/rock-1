@@ -13,15 +13,15 @@
   yum:
     name: "centos-release-gluster{{ gluster_ver | replace('.','') }}"
     state: present
-  when: ansible_distribution == 'CentOS'
+  #when: ansible_distribution == 'CentOS'
 
-- name: "Manually install repo on Red Hat"
-  yum_repository:
-    baseurl: "http://mirror.centos.org/centos/7/storage/x86_64/gluster-{{ gluster_ver }}/"
-    description: "Gluster repository"
-    gpgcheck: no
-    name: "CentOS-Gluster{{ gluster_ver }}"
-  when: ansible_distribution == 'RedHat'
+#- name: "Manually install repo on Red Hat"
+#  yum_repository:
+#    baseurl: "http://mirror.centos.org/centos/7/storage/x86_64/gluster-{{ gluster_ver }}/"
+#    description: "Gluster repository"
+#    gpgcheck: no
+#    name: "CentOS-Gluster{{ gluster_ver }}"
+#  when: ansible_distribution == 'RedHat'
 
 - name: Install GlusterFS
   yum:
@@ -221,7 +221,7 @@
   command: "kubectl exec {{ heketi_pod_name.stdout }} -- heketi-cli topology load --json /topology.json"
   register: debug_output
   when: inventory_hostname in groups['master-servers']
-
+  
 - name: Debug Output
   debug:
     msg:

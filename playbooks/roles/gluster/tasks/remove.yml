@@ -156,18 +156,18 @@
   yum:
     name: "{{ item }}"
     state: absent
-  when: ansible_distribution == 'CentOS'
   with_items:
     - "centos-release-gluster{{ centos_gluster_ver }}"
+  #when: ansible_distribution == 'CentOS'
 
-- name: "Remove RedHat repo"
-  yum_repository:
-    baseurl: "http://mirror.centos.org/centos/7/storage/x86_64/gluster-{{ gluster_ver }}/"
-    description: "Gluster repository"
-    gpgcheck: no
-    name: CentOS-Gluster-3.10
-    state: absent
-  when: ansible_distribution == 'RedHat'
+#- name: "Remove RedHat repo"
+#  yum_repository:
+#    baseurl: "http://mirror.centos.org/centos/7/storage/x86_64/gluster-{{ gluster_ver }}/"
+#    description: "Gluster repository"
+#    gpgcheck: no
+#    name: CentOS-Gluster-3.10
+#    state: absent
+#  when: ansible_distribution == 'RedHat'
 
 - name: Remove possible artifacts
   file:
