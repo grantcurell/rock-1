@@ -407,6 +407,6 @@
   when: inventory_hostname in groups['master-servers']
 
 - name: Add Var configmap
-  command: "kubectl create configmap vars --from-file=v{{ kube_dir }}/vars.yml"
+  command: "kubectl create configmap vars --from-file={{ kube_dir }}/vars.yml"
 
 ...
