@@ -76,7 +76,7 @@
 
 - name: Delete CPU Pin Script
   file:
-    path: "{{ bro_dir }}"/brocpu.py
+    path: "{{ bro_dir }}/brocpu.py"
     state: absent
 
 - name: Flush Deployments
