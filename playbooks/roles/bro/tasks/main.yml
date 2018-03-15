@@ -29,6 +29,7 @@
     - networks.cfg.conf
     - kafka.bro.conf
     - local.bro.conf
+    - brocpu.py
 
 - name: Install templates
   template:
@@ -57,6 +58,26 @@
     --from-file {{ bro_dir }}/networks.cfg.conf \
     --from-file {{ bro_dir }}/kafka.bro.conf \
     --from-file {{ bro_dir }}/local.bro.conf
+
+- name: Map CPU Pin Env Variable (if bro_cpus variable assigned in inventory.yml)
+  shell: export BRO_CPU=$(python brocpu.py -c {{ bro_cpus }})
+  when: bro_cpus != 0
+
+- name: Map CPU Pin Env Variable (if bro_cpus variable not assigned in inventory.yml)
+  shell: export BRO_CPU=$(python {{ bro_dir }}/brocpu.py -c {{ ansible_processor_vcpus }})
+  when: bro_cpus = 0
+
+- name: Insert CPU pin line in node.cfg
+  lineinfile:
+    path: /opt/bro/etc/node.cfg
+    state: present
+    line: 'pin_cpus={{ ansible_env.BRO_CPU }}'
+    insertafter: 'lb_procs='
+
+- name: Delete CPU Pin Script
+  file:
+    path: {{ bro_dir }}/brocpu.py
+    state: absent
 
 - name: Flush Deployments
   command: 'kubectl --kubeconfig="{{ kubernetes_conf_file }}" delete -f {{ bro_dir }}/deploy.yml'

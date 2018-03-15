@@ -58,6 +58,9 @@ all:
           - "172.16.0.0/12"
         serivces_cidr: "10.11.4.240/29"
         bpf_filter: ""
+# Please fill in the number of CPU cores to which you'd like to pin bro
+# instances. By default, bro will pin instances to all available CPUs.
+        bro_cpus: 0
 
       hosts:
         rockserver1.lan:
