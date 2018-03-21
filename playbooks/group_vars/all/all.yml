@@ -4,6 +4,7 @@ version: 3.0
 online_install: true
 debug_enabled: true
 install_user: root
+rocknsm_user: assessor
 install_group: root
 install_dir: /opt/dmss
 sysctl_file: /etc/sysctl.d/dmss.conf
