@@ -69,7 +69,7 @@ all:
       hosts:
         rockserver1.lan:
           ansible_hostname: rockserver1.lan
-          ansible_user: root
+          ansible_user: {{ rocknsm_user }}
           ansible_connection: ssh
           management_ipv4: 10.11.4.237
           data_disk_devices:
@@ -97,7 +97,7 @@ all:
           hosts:
             rockserver3.lan:
               ansible_hostname: rockserver3.lan
-              ansible_user: root
+              ansible_user: {{ rocknsm_user }}
               ansible_connection: ssh
               management_ipv4: 10.11.4.238
               data_disk_devices:
