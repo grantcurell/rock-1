@@ -1,0 +1,77 @@
+---
+
+- hosts: localhost
+
+  tasks:
+
+  # Delete the known hosts key file from all the other hosts
+  - name: Delete existing known hosts
+    file:
+      path: /root/.ssh/known_hosts
+      state: absent
+
+  # Create user for Ansible to use for management and configuration.
+  # Account is created with an SSH key set.
+  # Bash shell is set for this account in case any playbooks need it.
+  - name: Generate root SSH key on localhost
+    user:
+      name: root
+      generate_ssh_key: yes
+      ssh_key_bits: 2048
+      state: present
+
+  # Create a directory in the playbook directory on the controller to contain all
+  # public keys of the remote hosts.
+  - name: Create keys directory on Ansible controller
+    file:
+      path: '{{ playbook_dir }}/.rock_keys'
+      state: directory
+      mode: 0644
+
+  # Copies root public key into the aggregate directory.
+  - name: Move Root Key to Aggregate Folder
+    copy:
+      src: /root/.ssh/id_rsa.pub
+      dest: '{{ playbook_dir }}/.rock_keys/root_controller.pub'
+      owner: root
+      group: root
+      mode: 0644
+
+- hosts: all
+
+  tasks:
+
+  # Delete the known hosts key file from all the other hosts
+  - name: Delete existing known hosts
+    file:
+      path: /root/.ssh/known_hosts
+      state: absent
+
+  # Generates an SSH key pair for the root account on the controller. This is to
+  # allow the operator to run playbooks as root on the controller without having
+  # to su to the ansible configuration account every time.
+  - name: Generate root ssh key on all other hosts
+    user:
+      name: root
+      generate_ssh_key: yes
+      ssh_key_bits: 2048
+      state: present
+
+  # Gather all public keys generated for the new accounts on the hosts and pull
+  # them back to the folder created on the controller.
+  - name: Aggregate public keys on controller
+    fetch:
+      src: '/root/.ssh/id_rsa.pub'
+      dest: '{{ playbook_dir }}/.rock_keys/{{ inventory_hostname }}.pub'
+      flat: yes
+
+  # Moves all aggregated keys into the authorized_keys folder on the remote hosts.
+  # These keys are exclusive, preventing all other hosts from communicating via
+  # ssh save for the controller and the remote hosts. Also performs same action on
+  # controller itself.
+  - name: Push Authorized Keys to Remote Hosts
+    authorized_key:
+      user: root
+      key: "{{ lookup('pipe', 'cat {{ playbook_dir }}/.rock_keys/*.pub') }}"
+      state: present
+      exclusive: yes
