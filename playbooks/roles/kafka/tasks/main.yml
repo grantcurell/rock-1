@@ -22,7 +22,7 @@
     owner: root
     mode: 0644
   with_items:
-    - deploy.yml
+    - deploy-kafka.yml
     - kafka-service.yml
     - server.properties
 
@@ -64,19 +64,30 @@
   command: 'kubectl create configmap kafka --from-file {{ kafka_dir }}/server.properties'
 
 # This does the same, but with Zookeeper
-- name: Create Zookeeper Config
-  command: 'kubectl create configmap zookeeper --from-file {{ zookeeper_dir }}/zookeeper_config_map'
+#- name: Create Zookeeper Config
+#  command: 'kubectl create configmap zookeeper --from-file {{ zookeeper_dir }}/zookeeper_config_map'
 
-- name: Run the kafka/zookeeper deploy file
+- name: Run the kafka deploy file
   shell: |
-    kubectl apply -f {{ kafka_dir }}/deploy.yml
-    while [ $(kubectl get -f {{ kafka_dir }}/deploy.yml | tail -n +2 | awk '{ print $3}') == '0' ]; do
+    kubectl apply -f {{ kafka_dir }}/deploy-kafka.yml
+    while [ $(kubectl get -f {{ kafka_dir }}/deploy-kafka.yml | tail -n +2 | awk '{ print $3}') == '0' ]; do
       echo -n .;
       sleep 1;
     done;
 
 - name: Deploy Kafka Service
   command: 'kubectl create -f {{ kafka_dir}}/kafka-service.yml'
+
+- name: Run the zookeeper deploy file
+  shell: |
+    kubectl apply -f {{ zookeeper_dir }}/deploy-zk.yml
+    while [ $(kubectl get -f {{ zookeeper_dir }}/deploy-zk.yml | tail -n +2 | awk '{ print $3}') == '0' ]; do
+      echo -n .;
+      sleep 1;
+    done;
+
+- name: Deploy Zookeeper Service
+  command: 'kubectl create -f {{ zookeeper_dir }}/zookeeper-svc.yml'
 
 #- name: Create Topics
 #  command: >
