@@ -1,0 +1,31 @@
+---
+# This is a separate inventory specifically to be used with the setup.yml playbook to generate the ssh keys for the system.
+# Should only be used for that purpose; once setup.yml has run, the regular inventory should be used thereafter.
+
+all:
+
+  children:
+    sensors:
+
+      vars:
+        home_net: "\"[192.168.0.0/16,10.0.0.0/8,172.16.0.0/12]\""
+
+      hosts:
+        rocksensor1.lan:
+          ansible_hostname: rocksensor1.lan
+          ansible_user: root
+          ansible_connection: ssh
+
+    servers:
+
+      children:
+
+        master-servers:
+          hosts:
+            rockserver1.lan:
+              ansible_hostname: rockserver1.lan
+              ansible_user: root
+              ansible_connection: ssh
+
+        ingest:
+          # currently nothing here
