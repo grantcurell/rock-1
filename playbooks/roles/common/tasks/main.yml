@@ -2,12 +2,12 @@
 ############### ROCKNSM Customization ################
 ######################################################
 - name: Check known hosts
-  stat: 
+  stat:
     path: /root/.ssh/known_hosts
   register: know_hosts_check
 
 - name: Check ssh key
-  stat: 
+  stat:
     path: /root/.ssh/id_rsa
   register: ssh_key_check
 
@@ -31,6 +31,7 @@
   when: deployer is defined
 
 # main.yml - Common tasks for ROCK
+- import_tasks: 00_preflight.yml
 - import_tasks: set_hostname.yml
 - import_tasks: minimum_hardware_check.yml
 - import_tasks: configure_yum_repos.yml
