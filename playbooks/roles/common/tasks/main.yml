@@ -39,6 +39,7 @@
   when: deployer is defined
 
 # main.yml - Common tasks for ROCK
+- import_tasks: 00_preflight.yml
 - import_tasks: set_hostname.yml
 - import_tasks: minimum_hardware_check.yml
 - import_tasks: configure_yum_repos.yml
