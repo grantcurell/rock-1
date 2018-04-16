@@ -13,10 +13,10 @@ all:
           - "192.168.0.0/16"
           - "10.0.0.0/8"
           - "172.16.0.0/12"
-        serivces_cidr: "192.168.1.0/24"
+        serivces_cidr: "192.168.57.0/24"
         bpf_filter: ""
-        es_mem: 2
-        es_masters: 3
+        es_mem: 1
+        es_masters: 2
         pcap_bpf_filter: ""
         es_datas: 0
         elastic_pv_size: 1000
@@ -28,33 +28,33 @@ all:
         rockserver1.lan:
           ansible_user: root
           ansible_connection: ssh
-          management_ipv4: 192.168.1.199
+          management_ipv4: 192.168.57.3
           data_disk_devices:
-          - /dev/vdb
+          - /dev/sdb
     nodes:
       children:
         sensors:
           hosts:
             rocksensor1.lan:
               ansible_connection: ssh
-              management_ipv4: 192.168.1.198
+              management_ipv4: 192.168.57.5
               bro_workers: 2
               monitor_interfaces:
-              - ens4
+              - enp0s3
               data_disk_devices:
-              - /dev/vdb
+              - /dev/sdb
           vars:
-            dns_ip: 192.168.1.50
+            dns_ip: 192.168.57.2
         servers:
           hosts:
             rockserver2.lan:
               ansible_user: root
               ansible_connection: ssh
-              management_ipv4: 192.168.1.194
+              management_ipv4: 192.168.57.4
               data_disk_devices:
-              - /dev/vdb
+              - /dev/sdb
           vars:
-            dns_ip: 192.168.1.50
+            dns_ip: 192.168.57.2
     nodes_to_remove:
       hosts:
         rocksensor1.lan:

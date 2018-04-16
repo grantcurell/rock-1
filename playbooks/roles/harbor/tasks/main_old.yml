@@ -1,0 +1,103 @@
+head_msg "Installing and configuring Harbor"
+
+HARBOR_FILES="${FILES_FOLDER}harbor/"
+
+# TODO: Right now Harbor uses the /data directory to store everything. It really should be the $INSTALL_DIR/var folder or
+# something. There are already some people asking about it: https://github.com/vmware/harbor/issues/2023, but currently
+# there doesn't seem to be a public solution.
+
+# TODO: Right now we are using bluefin, but this should be configurable
+
+# Check to see if harbor is already installed.
+# TODO: This is technically a bit of a hack. Harbor installs several images so it is possible
+# that while this one may be there, others could be missing. This should be rectified.
+if [ ! "$(docker images -q vmware/harbor-db:v${HARBOR_VSN} 2> /dev/null)" ]; then
+
+  mkdir -p "${HARBOR_LOCATION}"
+  mkdir -p "${HARBOR_FILES}"
+
+  info_msg "Harbor not already installed. Beginning install."
+
+  wget_plus https://storage.googleapis.com/harbor-releases/release-1.4.0/harbor-offline-installer-v1.4.0.tgz "${HARBOR_FILES}"
+  # Hmmm... don't know about this line......
+  #wget_plus "https://github.com/vmware/harbor/releases/download/v${HARBOR_VSN}/harbor-offline-installer-v${HARBOR_VSN}.tgz" "${HARBOR_FILES}"
+
+  info_msg "Installing Harbor..."
+  # The strip 1 argument removes the top level directory before extracting. In this case, that is the harbor directory itself.
+  # We want this behavior to make the code more portable because $HARBOR_LOCATION is /xxxxx/xxxxx/harbor. You don't want
+  # /xxxxx/xxxxx/harbor/harbor.
+  tar xfz "${HARBOR_FILES}harbor-offline-installer-v${HARBOR_VSN}.tgz" -C "${HARBOR_LOCATION}" --strip 1
+
+  # Modify the harbor configuration file
+  sed -i -e 's/hostname = reg\.mydomain\.com/hostname = dockervm\.dmss/g' "${HARBOR_LOCATION}/harbor.cfg"
+  sed -i -e 's/db_password = root123/db_password = password/g' "${HARBOR_LOCATION}/harbor.cfg"
+  sed -i -e 's/harbor_admin_password = Harbor12345/harbor_admin_password = password/g' "${HARBOR_LOCATION}/harbor.cfg"
+
+  # Stop photon's built in HTTP server
+  systemctl stop httpd
+  systemctl disable httpd
+
+  # Install harbor
+  bash "${HARBOR_LOCATION}/install.sh"
+
+  info_msg 'Installing Harbor as a service. Start/stop with systemctl start|stop harbor'
+
+  cp -f "${HARBOR_FILES}harbor.service" "${SYSTEMD_DIRECTORY}"
+
+  # Due to variable location of docker-compose, I decided to use which to
+  # find it rather than hard code a location
+  sed -i "s~DCINSTALLDC~$(which docker-compose)~g" "${SYSTEMD_DIRECTORY}harbor.service"
+  sed -i "s~HHINSTALLHH~${HARBOR_LOCATION}~g" "${SYSTEMD_DIRECTORY}harbor.service"
+
+  enable_service harbor
+
+  x=1
+
+  # Upload all the images downloaded into the harbor instance
+  info_msg "Uploading images to harbor instance on $DOCKER_NAME"
+
+  while [ ! "$(ping -c 1 ${DOCKER_NAME})" ]; do
+    err_msg "Cannot resolve ${DOCKER_NAME}. Cannot push images to harbor."
+
+	set +e
+	prompt "Could not push images to $DOCKER_NAME. Do you want to retry (y/n)?" "y"
+        [ ${REPLY} = 'n' ] && break
+	set -e
+  done
+
+  # TODO: Not sure why, but the error handler erroneously detects an error here
+  set +e
+  # TODO: Should definitely check they are up instead of waiting for 20 seconds.
+  read -p "Waiting 20 seconds for containers to start" -t 20
+  # TODO: need to delete out the images not in use by docker and the old images
+  if [ "$(ping -c 1 ${DOCKER_NAME})" ]; then
+    # Log in to harbor
+    # TODO: When time permits, we should add a function to perform hostname verification to make sure the host is in format XXXX.YYYY
+    docker login --username="${HARBOR_USERNAME}" --password="${HARBOR_PASSWORD}" "${DOCKER_NAME}"
+
+    # TODO: Delete out the long name images
+
+    # Here I am grabbing each image with the tag bluefin and then getting the third column which is the image ID
+    for image in $(docker images | grep "${PROJECT_NAME}" | awk '{print $3}'); do
+
+      # Get the name of the image that is associated with the respective image
+      # number from the above for loop
+      name=$(docker images | grep "${PROJECT_NAME}" | awk '{print $1}' | sed -n "${x}p")
+      echo "$image and $name"
+
+      # Bash speak for increment x by 1
+      let "x++"
+
+      # Retag all the images for the registry. Format hostname/project_name/name:version
+      docker tag "${image}" "$DOCKER_NAME/library/$name:latest"
+
+      # Push the image to Harbor
+      info_msg "Pushing $name to Harbor..."
+      docker push "$DOCKER_NAME/library/$name:latest"
+    done
+  fi
+  set -e
+
+else
+  warn_msg "vmware/harbor-db:v${HARBOR_VSN}: Already exists. Will not reinstall. Remove manually for update."
+fi

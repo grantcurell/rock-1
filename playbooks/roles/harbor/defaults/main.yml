@@ -4,6 +4,8 @@
 #### Harbor configuration variables ####
 # All Harbor configuration variables for Harbor install itself.  
 
-harbor_ver: '1.2.2'
+rock_hostname: "ansible_controller"
+rocknsm_dir: "/opt/rockdir/"
+harbor_ver: '1.4.0'
 harbor_port: '80'
 harbor_firewall_port: '81'

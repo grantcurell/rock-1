@@ -2,26 +2,48 @@
 ###################  Harbor Install ###################
 #######################################################
 ---
+- name: "Create directory for harbor"
+  file:
+    path: "{{ rocknsm_dir }}"
+    state: directory
+    mode: 0740
+
+- name: "Install Docker"
+  yum:
+    name: docker
+    state: installed
+
+- name: start docker
+  systemd:
+    name: docker
+    enabled: yes
+    state: started
 
 - name: "Download Harbor {{ harbor_ver }} build"
   unarchive:
-    src: "https://github.com/vmware/harbor/releases/download/v{{ harbor_ver }}/harbor-online-installer-v{{ harbor_ver }}.tgz"
+    src: "https://storage.googleapis.com/harbor-releases/release-{{ harbor_ver }}/harbor-online-installer-v{{ harbor_ver }}.tgz"
     dest: "{{ rocknsm_dir }}"
     mode: 0740
     remote_src: true
 
+- name: "Download docker-compose 1.21.0"
+  get_url:
+    url: "https://github.com/docker/compose/releases/download/1.21.0/docker-compose-Linux-x86_64"
+    dest: "/usr/bin/docker-compose"
+    mode: 0740
+
 - name: 'Fix Harbor config'
   block:
-    - name: 'Set up harbor.cfg'
-      replace:
+   - name: 'Set up harbor.cfg'
+     replace:
         path: "{{ rocknsm_dir }}/harbor/harbor.cfg"
         regexp: '(\s+)hostname = reg\.mydomain\.com(\s+.*)?$'
         replace: '\1hostname = {{ rock_hostname }}\2'
-    - replace:
+   - replace:
         path: "{{ rocknsm_dir }}/harbor/harbor.cfg"
         regexp: '(\s+)db_password = root123(\s+.*)?$'
         replace: '\1db_password = password\2'
-    - replace:
+   - replace: 
         path: "{{ rocknsm_dir }}/harbor/harbor.cfg"
         regexp: '(\s+)harbor_admin_password = Harbor12345(\s+.*)?$'
         replace: '\1harbor_admin_password = password\2'
@@ -29,8 +51,9 @@
 - name: 'Fix Harbor docker-compose file'
   replace:
     path: "{{ rocknsm_dir }}/harbor/docker-compose.yml"
-    regexp: '(\s+)80:80(.*)$'
-    replace: '\1{{ harbor_firewall_port }}:{{ harbor_port }}\2' #this doesn't work because the variable name is not being expanded. Double qoutes doesn't seem to work either. NEEDS TO BE FIXED!
+    regexp: '80:80'
+    replace: '{{ harbor_firewall_port }}:{{ harbor_port }}' #this doesn't work because the variable name is not being expanded. Double qoutes doesn't seem to work either. NEEDS TO BE FIXED!
+#    replace: '\1{{ harbor_firewall_port }}:{{ harbor_port }}\2' #this doesn't work because the variable name is not being expanded. Double qoutes doesn't seem to work either. NEEDS TO BE FIXED!
 
 # Depending on the OS there may already be a httpd running
 - name: 'Check if pre-existing httpd service exists'
@@ -71,13 +94,13 @@
     owner: root
     group: root
 
-- name: 'Import existing Docker images into Harbor'
-  shell: "sh {{ rocknsm_dir }}/harbor/import_harbor_images.sh"
-
-- name: 'Zeroing import script passwords'
-  replace:
-    path: "{{ rocknsm_dir }}/harbor/import_harbor_images.sh"
-    regexp: '(\s+)docker login --username="admin" --password="password"(\s+.*)?$'
-    replace: '\1docker login\2'
+#- name: 'Import existing Docker images into Harbor'
+#  shell: "sh {{ rocknsm_dir }}/harbor/import_harbor_images.sh"
+#
+#- name: 'Zeroing import script passwords'
+#  replace:
+#    path: "{{ rocknsm_dir }}/harbor/import_harbor_images.sh"
+#    regexp: '(\s+)docker login --username="admin" --password="password"(\s+.*)?$'
+#    replace: '\1docker login\2'
 
 ...
