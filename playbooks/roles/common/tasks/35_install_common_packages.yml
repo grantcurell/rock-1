@@ -8,36 +8,41 @@
 #    - { pkg: chrony, state: installed }
 #    - { pkg: postfix, state: installed }
 
-- name: Yum Utils Check
-  shell: rpm -qa yum-utils
-  register: results
-  args:
-    warn: false
-  changed_when: false
-
-- name: Clean Yum Transactions
-  shell: "yum-complete-transaction --cleanup-only && yum clean all"
-  when: results.stdout.find('is not installed') != -1
-
 - name: Enable RHSM repositories on RHEL nodes
   shell: "subscription-manager repos --enable={{ item }}"
   with_items: "{{ redhat_repos }}"
   when: ansible_distribution == 'RedHat'
 
 - name: Install packages
-  yum:
-    name: "{{ item }}"
-    state: installed
-  when: (item.test is undefined) or (item.test)
-  with_items:
-    - "{{ package_list }}"
+  shell: rpm-ostree install NetworkManager-glib sshpass
+  register: result
+  failed_when: result.rc != 0 and not (result.rc == 1 and "'is already requested' in result.stderr")
 
-- name: Enable Cockpit
-  systemd:
-    name: "{{ item }}"
-    state: started
-    enabled: yes
-    daemon_reload: yes
-  with_items:
+- name: Install etcd on master
+  shell: rpm-ostree install etcd
+  register: result
+  failed_when: result.rc != 0 and not (result.rc == 1 and "'is already requested' in result.stderr")
+  when: inventory_hostname in groups['master-server'] 
+
+  #- cockpit
+  #- cockpit-dashboard
+  #- cockpit-machines
+  #- cockpit-networkmanager
+  #- cockpit-packagekit
+  #- cockpit-storaged
+  #- cockpit-system
+  #- cockpit-kubernetes
+  # python-gobject
+
+# TODO: Need to fix cockpit
+#- name: Enable Cockpit
+#  systemd:
+#    name: "{{ item }}"
+#    state: started
+#    enabled: yes
+#    daemon_reload: yes
+#  with_items:
     # - cockpit cockpit uses a socket to listen
-    - cockpit.socket
+#    - cockpit.socket
+
+...

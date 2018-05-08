@@ -1,0 +1,19 @@
+---
+
+- name: Install Kubelet
+  atomic_container:
+    name: kubelet
+    image: registry.centos.org/centos/kubernetes-kubelet
+    backend: ostree
+    state: latest
+    system: True
+
+- name: Install kube-proxy
+  atomic_container:
+    name: kube-proxy
+    image: registry.centos.org/centos/kubernetes-proxy
+    backend: ostree
+    state: latest
+    system: True
+
+...

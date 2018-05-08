@@ -2,10 +2,10 @@ SHELL=/bin/bash
 
 # Confirm Ansible is installed.
 CHECK := $(shell command -v ansible-playbook 2> /dev/null)
-INVENTORY='inventory/dev/inventory.yml'
+INVENTORY='inventory/dev/atomic_inventory.yml'
 PLAYBOOK='site.yml'
 
-.PHONY: all dev rerun common common-nokeys kubernetes ceph elasticsearch logstash kibana metricbeat kafka bro moloch suricata stenographer docket kubernetes-rerun ceph-rerun elasticsearch-rerun logstash-rerun kibana-rerun metricbeat-rerun kafka-rerun bro-rerun moloch-rerun suricata-rerun
+.PHONY: all preflight dev rerun common common-nokeys kubernetes ceph elasticsearch logstash kibana metricbeat kafka bro moloch suricata stenographer docket kubernetes-rerun ceph-rerun elasticsearch-rerun logstash-rerun kibana-rerun metricbeat-rerun kafka-rerun bro-rerun moloch-rerun suricata-rerun
 
 # Default target, build *and* run tests
 all:
@@ -24,7 +24,7 @@ rerun:
 	ansible-playbook $(PLAYBOOK) -i $(INVENTORY)
 
 common:
-	ansible-playbook $(PLAYBOOK) -i $(INVENTORY) -e genkeys=true --ask-pass -t common
+	ansible-playbook $(PLAYBOOK) -i $(INVENTORY) -e genkeys=true --ask-pass -t common,genkeys
 
 common-nokeys:
 	ansible-playbook $(PLAYBOOK) -i $(INVENTORY) -t common

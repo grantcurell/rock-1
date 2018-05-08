@@ -1,0 +1,118 @@
+---
+# The inventory defines which hosts belong to which groups and what variables are applied to them. The playbooks
+# themselves in our scheme do not define any variables. The names you see on the far left here correspond to the limit
+# function you can run with the ansible-playbook command. For example ansible-playbook site.yml --limit sensor would
+# look at this inventory file and see the hosts that are part of the sensor group. When site.yml imports the sensors.yml
+# file, sensor.yml will only apply itself to the servers listed in the sensors group in this inventory file.
+
+all:
+  vars:
+    home_net:
+      - "192.168.0.0/16"
+      - "10.0.0.0/8"
+      - "172.16.0.0/12"
+    services_cidr: "192.168.1.32/28"
+    bpf_filter: ""
+    es_mem: 3
+    es_masters: 4
+    pcap_bpf_filter: ""
+    es_datas: 0
+    elastic_pv_size: 7
+    kafka_pv_size: 1
+    zookeeper_pv_size: 1
+    zookeeper_replicas: 3
+    pcap_pv_size: 6
+    zookeeper_mem: 1
+    kafka_mem: 1
+    dns_ip: 192.168.1.50
+
+  children:
+
+    ceph:
+      children:
+        nodes:
+
+    elasticsearch:
+      children:
+        nodes:
+
+    logstash:
+      children:
+        elasticsearch:
+
+    kibana:
+      children:
+        master-server:
+
+    metricbeat:
+      children:
+        nodes:
+
+    kafka:
+      children:
+        sensors:
+        remote-sensors:
+
+    bro:
+      children:
+        sensors:
+        remote-sensors:
+
+    moloch:
+      children:
+        sensors:
+        remote-sensors:
+
+    suricata:
+      children:
+        sensors:
+        remote-sensors:
+
+    # This role is not yet completed. Do not use.
+    stenographer:
+
+    # This role is not yet completed. Do not use.
+    docket:
+
+    nodes:
+
+      children:
+
+        sensors:
+          hosts:
+            bunkbotsensor1.lan:
+              ansible_user: root
+              ansible_connection: ssh
+              management_ipv4: 192.168.1.82
+              bro_workers: 2
+              monitor_interfaces:
+              - ens34
+              data_disk_devices:
+              - /dev/sdb
+
+        remote-sensors:
+
+        servers:
+
+          hosts:
+            bunkbotserv2.lan:
+              ansible_user: root
+              ansible_connection: ssh
+              management_ipv4: 192.168.1.81
+              data_disk_devices:
+              - /dev/sdb
+
+        master-server:
+          hosts:
+            bunkbotserv1.lan:
+              ansible_user: root
+              ansible_connection: ssh
+              management_ipv4: 192.168.1.80
+              data_disk_devices:
+              - /dev/sdb
+
+    nodes_to_remove:
+      hosts:
+        bunkbotsensor1.lan:
+        bunkbotserv2.lan:
+        bunkbotserv1.lan:

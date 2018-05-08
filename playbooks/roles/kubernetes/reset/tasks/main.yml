@@ -18,17 +18,6 @@
     - docker
     - kubelet
 
-- name: Remove Kubernetes Packages to clear cache
-  yum:
-    name: "{{ item }}"
-    state: absent
-  with_items:
-    - kubeadm
-    - kubelet
-    - kubectl
-  ignore_errors: yes
-  when: inventory_hostname in groups['nodes_to_remove']
-
 - name: Remove Artifacts
   file:
     path: "{{ item }}"

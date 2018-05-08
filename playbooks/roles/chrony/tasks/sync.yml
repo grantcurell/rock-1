@@ -3,7 +3,7 @@
 # This requires the chronyd service to be stopped temporarily to perform a manual chronyd command.
 
 - name: Make sure Chronyd Service is running on master
-  service:
+  systemd:
     name: chronyd
     state: restarted
   when: inventory_hostname in groups['master-server']

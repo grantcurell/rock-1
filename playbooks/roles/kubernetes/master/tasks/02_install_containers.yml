@@ -1,0 +1,27 @@
+---
+
+- name: Install Kubernetes API Server Container
+  atomic_container:
+    name: kube-apiserver
+    image: registry.centos.org/centos/kubernetes-apiserver
+    backend: ostree
+    state: latest
+    system: True
+
+- name: Install Kubernetes Controller
+  atomic_container:
+    name: kube-controller-manager
+    image: registry.centos.org/centos/kubernetes-controller-manager
+    backend: ostree
+    state: latest
+    system: True
+
+- name: Install Kubernetes Scheduler
+  atomic_container:
+    name: kube-scheduler
+    image: registry.centos.org/centos/kubernetes-scheduler
+    backend: ostree
+    state: latest
+    system: True
+
+...

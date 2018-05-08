@@ -3,11 +3,6 @@
 ######################################################
 ---
 
-- name: 'Install python-docker-py'
-  yum:
-    name: 'python-docker-py.noarch'
-    state: 'installed'
-
 - name: Download Kube State Metric Containers
   docker_image:
     name: "{{ item }}"

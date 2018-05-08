@@ -5,7 +5,7 @@ online_install: true
 debug_enabled: true
 install_user: root
 install_group: root
-install_dir: /opt/rock
+install_dir: /etc/rock
 sysctl_file: /etc/sysctl.d/rock.conf
 fqdn: default.svc.cluster.local
 
@@ -27,7 +27,7 @@ xpack_license: 'true'
 # Kubernetes
 kubernetes_conf_file: /etc/kubernetes/admin.conf
 kube_dir: "{{ install_dir }}/kubernetes"
-kube_version: "1.10.1"
+kube_version: "1.10.1" # Do not mess with this unless you know what you're doing
 
 # Bro
 pulled_pork_oinkcode: 796f26a2188c4c953ced38ff3ec899d8ae543350
@@ -38,26 +38,6 @@ pulled_pork_repo: https://github.com/shirkdog/pulledpork.git
 kafka_fqdn: "kafka.{{ fqdn }}"
 kafka_port: 9092
 kafka_retention: 168
-
-# Common
-package_list:
-  - tcpreplay
-  - tcpdump
-  - vim
-  - chrony
-  - postfix
-  - cockpit
-  - cockpit-dashboard
-  - cockpit-machines
-  - cockpit-networkmanager
-  - cockpit-packagekit
-  - cockpit-storaged
-  - cockpit-system
-  - python-gobject
-  - NetworkManager-glib
-  - nmap
-  - mlocate
-  - python-docker-py.noarch
 
 # RockNSM
 #rocknsm_baseurl: https://packagecloud.io/rocknsm/2/el/7/$basearch

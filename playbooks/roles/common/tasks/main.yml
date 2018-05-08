@@ -1,21 +1,22 @@
 ---
 
 # main.yml - Common tasks for ROCK
-- import_tasks: 05_configure_yum_repos.yml
 - import_tasks: 15_set_hostname.yml
-- import_tasks: 20_minimum_hardware_check.yml
-#- import_tasks: 25_configure_rock_repo.yml
 - import_tasks: 30_disable_selinux.yml
 - import_tasks: 35_install_common_packages.yml
 - import_tasks: 40_create_directories.yml
 - import_tasks: 45_disable_ipv6.yml
-- import_tasks: 50_disable_firewall.yml
 - import_tasks: 55_banner.yml
 
-# TODO: This should be in production, but takes too long for a dev
-# environment
-#- name: Update all system packages to latest
-  #yum: name=* state=latest
+- name: Upgrade the atomic host platform to the latest version
+  atomic_host:
+    revision: latest
+
+- name: Subscribe to the continuous release
+  shell: ostree remote add --set=gpg-verify=false centos-atomic-continuous https://ci.centos.org/artifacts/sig-atomic/rdgo/centos-continuous/ostree/repo/
+
+- name: Swap to that release
+  shell: rpm-ostree rebase -r centos-atomic-continuous:centos-atomic-host/7/x86_64/devel/smoketested 
 
 - import_tasks: 95_reboot.yml
 

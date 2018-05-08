@@ -1,4 +1,5 @@
 ---
+
 # By default the cluster will not scehdule pods on the master for security reasons.
 # The below task removes that restriction.
 - name: 'Remove master taint from master'
@@ -10,3 +11,5 @@
 
 - name: Add Var configmap
   command: "kubectl create configmap vars --from-file {{ kube_dir }}/vars.yml"
+
+...

@@ -1,5 +1,8 @@
 ---
-- name: Install ceph-deploy
-  yum:
-    name: "{{ ceph_deploy_rpm }}"
-    state: installed
+
+- name: Install packages
+  shell: "rpm-ostree install {{ ceph_deploy_rpm }}"
+  register: result
+  failed_when: result.rc != 0 and not (result.rc == 1 and "'is already requested' in result.stderr")
+
+...
