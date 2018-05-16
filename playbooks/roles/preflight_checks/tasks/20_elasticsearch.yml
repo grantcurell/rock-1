@@ -19,4 +19,8 @@
     msg: "elastic_mem (elasticsearch memory) consumes elastic_mem*2 for performance reasons. Your host has {{ ansible_memory_mb.real.total * 1024 }} and you have requested {{ elastic_mem * 2 * 1024 }}MB for Elasticsearch."
   when: inventory_hostname in groups['elasticsearch'] and (elastic_mem * 2 * 1024) > ansible_memory_mb.real.total
 
+- name: Verify Elasticsearch Maximum Cores does not exceed total cores available.
+  fail:
+    msg: "You have specified a maximum number of cores for ElasticSearch that exceeds total cores available."
+  when: inventory_hostname in groups['elasticsearch'] and ({{ ansible_processor_cores }} * {{ ansible_processor_count }}) > {{ elastic_cpu_maximum }}  
 ...
