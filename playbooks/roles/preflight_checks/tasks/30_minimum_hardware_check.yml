@@ -34,7 +34,7 @@
 
 - assert:
     that:
-      - ({{ ansible_processor_cores }} * {{ ansible_processor_count }}) <= elastic_cpu_maximum
+      - ({{ ansible_processor_cores }} * {{ ansible_processor_count }}) <= {{ elastic_cpu_maximum }}
     msg: "You have specified a number of Elastic CPU cores in excess of total cores available."
   when: serverlocal is defined and serverlocal
 
