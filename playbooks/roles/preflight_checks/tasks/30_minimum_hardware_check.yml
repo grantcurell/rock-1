@@ -32,6 +32,12 @@
     msg: "Not enough CPU Cores (2+ required)! Aborting server install."
   when: serverlocal is defined and serverlocal
 
+- assert:
+    that:
+      - ({{ ansible_processor_cores }} * {{ ansible_processor_count }}) <= elastic_cpu_maximum
+    msg: "You have specified a number of Elastic CPU cores in excess of total cores available."
+  when: serverlocal is defined and serverlocal
+
 # Verify minimum memory and CPU Core requirements for sensor install
 - assert:
     that:
