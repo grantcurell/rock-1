@@ -22,5 +22,5 @@
 - name: Verify Elasticsearch Maximum Cores does not exceed total cores available.
   fail:
     msg: "You have specified a maximum number of cores for ElasticSearch that exceeds total cores available."
-  when: inventory_hostname in groups['elasticsearch'] and ( ansible_processor_vcpus > elastic_cpu_maximum ) 
+  when: inventory_hostname in groups['elasticsearch'] and ( elastic_cpu_maximum > ansible_processor_vcpus)
 ...
